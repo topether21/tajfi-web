@@ -1,5 +1,4 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import axios from 'axios';
 
 export type Asset = {
     id: number;
@@ -16,19 +15,13 @@ const LOADED = 2;
 
 const fetchAssets = async (start: number, size: number) => {
     console.log("fetching assets", start, size);
-    const promises = Array.from({ length: size }, (_, index) => {
-        const id = start + index + 1; // Pokémon API IDs start at 1
-        return axios.get(`https://pokeapi.co/api/v2/pokemon/${id}`);
-    });
-
-    const responses = await Promise.all(promises);
-    return responses.map((response, index) => {
-        const pokemon = response.data;
+    return Array.from({ length: size }, (_, index) => {
+        const id = start + index;
         return {
-            id: start + index,
-            name: pokemon.name,
+            id,
+            name: `Asset ${id}`,
             price: Math.floor(Math.random() * 100) / 100,
-            image: pokemon.sprites.front_default,
+            image: `https://placehold.co/600x400?text=${id}`,
             satoshiPrice: 100000000,
             ordinalNumber: 1,
             types: ["normal"],
@@ -36,30 +29,43 @@ const fetchAssets = async (start: number, size: number) => {
     });
 };
 
+const PAGE_SIZE = 20; // Define a constant for the page size
+const INITIAL_LOAD_SIZE = 20; // Define a constant for the initial load size
+
 export const useAssets = () => {
     const [assets, setAssets] = useState<Asset[]>([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
     const itemStatusMap = useRef<{ [key: number]: number }>({}).current;
 
     const isItemLoaded = (index: number) => !!itemStatusMap[index];
 
-    const loadMoreItems = useCallback(async (startIndex: number, stopIndex: number) => {
+    const loadMoreItems = useCallback(async () => {
+        const startIndex = currentIndex;
+        const stopIndex = startIndex + PAGE_SIZE - 1;
+        console.log("loading more items", startIndex, stopIndex);
+
         for (let index = startIndex; index <= stopIndex; index++) {
             itemStatusMap[index] = LOADING;
         }
-        const newAssets = await fetchAssets(startIndex, stopIndex - startIndex + 1);
+
+        const newAssets = await fetchAssets(startIndex, PAGE_SIZE);
         setAssets(prevAssets => [...prevAssets, ...newAssets]);
+
         for (let index = startIndex; index <= stopIndex; index++) {
             itemStatusMap[index] = LOADED;
         }
-    }, [itemStatusMap]);
+
+        setCurrentIndex(stopIndex + 1);
+    }, [currentIndex, itemStatusMap]);
 
     useEffect(() => {
         const loadInitialAssets = async () => {
-            const initialAssets = await fetchAssets(0, 100);
+            const initialAssets = await fetchAssets(0, INITIAL_LOAD_SIZE);
             setAssets(initialAssets);
+            setCurrentIndex(INITIAL_LOAD_SIZE);
         };
         loadInitialAssets();
     }, []);
 
-    return { assets, isItemLoaded, loadMoreItems };
+    return { assets, isItemLoaded, loadMoreItems, currentIndex };
 };

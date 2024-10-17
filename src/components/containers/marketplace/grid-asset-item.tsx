@@ -2,7 +2,6 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Bitcoin, Zap } from "lucide-react";
-import Image from 'next/image';
 import type { Asset } from "./use-assets";
 
 
@@ -55,12 +54,12 @@ export const GridAssetItem = ({ item }: GridAssetItemProps) => {
             </CardHeader>
             <CardContent>
                 <div className="relative w-full h-0 pb-[100%] overflow-hidden rounded-lg bg-black/5">
-                    <Image
+                    {/* <Image
                         src={item.image}
                         alt={item.name}
                         layout="fill"
                         objectFit="contain"
-                    />
+                    /> */}
                 </div>
             </CardContent>
             <CardFooter className="flex justify-between items-center bg-black/5 px-6 py-4">
