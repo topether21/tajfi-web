@@ -52,10 +52,6 @@ export const ModernAssetMarketplace = () => {
                             <ShoppingBag className="w-4 h-4 mr-2" />
                             Marketplace
                         </Link>
-                        <Link href="/draft" className="flex items-center text-white hover:text-orange-500">
-                            <ShoppingBag className="w-4 h-4 mr-2" />
-                            My Drafts
-                        </Link>
                     </nav>
                 </div>
                 <ConnectWalletButton />

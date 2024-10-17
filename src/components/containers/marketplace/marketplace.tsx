@@ -32,7 +32,6 @@ export const AssetsMarketplace = () => {
                 <h1 className="text-2xl font-bold">Taproot Assets Marketplace</h1>
                 <div className="flex gap-4">
                     <Button variant="outline">Connect Wallet</Button>
-                    <Button>List Asset</Button>
                     <Toggle
                         pressed={isGridView}
                         onPressedChange={setIsGridView}
