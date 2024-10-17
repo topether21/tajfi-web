@@ -7,7 +7,7 @@ export type Asset = {
     image: string;
     satoshiPrice: number;
     ordinalNumber: number;
-    types: string[];
+    categories: string[];
 };
 
 const LOADING = 1;
@@ -24,7 +24,7 @@ const fetchAssets = async (start: number, size: number) => {
             image: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${id + 1}.png`,
             satoshiPrice: 100000000,
             ordinalNumber: 1,
-            types: ["normal"],
+            categories: ["normal"],
         };
     });
 };
@@ -67,5 +67,5 @@ export const useAssets = () => {
         loadInitialAssets();
     }, []);
 
-    return { assets, isItemLoaded, loadMoreItems, currentIndex };
+    return { assets, isItemLoaded, loadMoreItems, currentIndex, categories: ["normal", "rare", "epic", "legendary"] };
 };

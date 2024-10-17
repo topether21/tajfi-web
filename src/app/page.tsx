@@ -1,7 +1,17 @@
+'use client';
 import { ModernAssetMarketplace } from "@/components/containers/home/home";
 
-export default function Home() {
+const fetchData = async () => {
+  const data = {};
+  return data;
+};
+
+const Home = async () => {
+  const data = await fetchData();
+
   return (
-    <ModernAssetMarketplace />
+    <ModernAssetMarketplace data={data} />
   );
-}
+};
+
+export default Home;

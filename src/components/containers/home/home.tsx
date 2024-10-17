@@ -13,7 +13,7 @@ const animatedDots = Array.from({ length: 20 }, (_, index) => ({
     id: `dot-${index}-${Date.now()}-${Math.random()}`,
 }));
 
-export const ModernAssetMarketplace = () => {
+export const ModernAssetMarketplace = ({ data }: { data: any }) => {
     const sceneRef = useRef(null)
 
     return (

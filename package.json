@@ -30,7 +30,8 @@
 		"react-window": "^1.8.10",
 		"react-window-infinite-loader": "^1.0.9",
 		"tailwind-merge": "^2.5.4",
-		"tailwindcss-animate": "^1.0.7"
+		"tailwindcss-animate": "^1.0.7",
+		"taproot_assets": "."
 	},
 	"devDependencies": {
 		"@types/matter-js": "^0.19.7",

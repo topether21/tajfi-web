@@ -46,9 +46,9 @@ export const GridAssetItem = ({ item }: GridAssetItemProps) => {
                     </Badge>
                 </div>
                 <div className="flex space-x-2">
-                    {item.types?.map((type) => (
-                        <Badge key={type} className={`${typeColors[type]} text-white text-xs`}>
-                            {type}
+                    {item.categories?.map((category) => (
+                        <Badge key={category} className={`${typeColors[category]} text-white text-xs`}>
+                            {category}
                         </Badge>
                     ))}
                 </div>
