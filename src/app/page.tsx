@@ -1,3 +1,4 @@
 import { ModernAssetMarketplace } from "@/components/containers/home/home";
-const Home = () => <ModernAssetMarketplace />
-export default Home;
+export default function Home() {
+    return <ModernAssetMarketplace />;
+}

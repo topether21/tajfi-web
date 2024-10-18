@@ -18,7 +18,7 @@ export const ConnectWalletButton = () => {
     return (
         <Button
             size="sm"
-            className="bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-lg transition duration-300 ease-in-out transform hover:scale-105"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-lg transition duration-300 ease-in-out transform hover:scale-105"
             onClick={handleConnectWallet}
             disabled={isConnecting}
         >
