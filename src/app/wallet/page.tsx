@@ -3,7 +3,9 @@ import WalletContainer from "@/components/containers/wallet/wallet";
 
 export default function WalletPage() {
     return (
-        <WalletContainer />
+        <div className="h-screen flex flex-col">
+            <WalletContainer />
+        </div>
     )
 }
 

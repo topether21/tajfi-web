@@ -5,6 +5,7 @@ import { Wallet } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/lib/auth-context'
 
 interface ConnectWalletButtonProps {
     size?: 'default' | 'sm' | 'lg' | 'icon';
@@ -19,21 +20,30 @@ export const ConnectWalletButton: React.FC<ConnectWalletButtonProps> = ({
     isHero = false,
 }) => {
     const [isConnecting, setIsConnecting] = useState(false)
+    const { profile, login, logout } = useAuth();
     const router = useRouter()
+
     const handleConnectWallet = () => {
         setIsConnecting(true)
         setTimeout(() => {
             setIsConnecting(false)
             console.log('Wallet connected!')
+            login({ address: '1234567890' })
             if (onClick) onClick();
             router.push('/wallet')
         }, 2000)
     }
 
+    const handleLogout = () => {
+        logout();
+        console.log('Logged out!')
+        router.push('/')
+    }
+
     return (
         <Button
             size={isHero ? 'lg' : size}
-            onClick={handleConnectWallet}
+            onClick={profile ? handleLogout : handleConnectWallet}
             disabled={isConnecting}
             className={cn(
                 isHero
@@ -53,7 +63,7 @@ export const ConnectWalletButton: React.FC<ConnectWalletButtonProps> = ({
             ) : (
                 <>
                     {!isHero && <Wallet className="w-4 h-4 mr-2" />}
-                    Connect Wallet
+                    {profile ? 'Logout' : 'Connect Wallet'}
                 </>
             )}
         </Button>

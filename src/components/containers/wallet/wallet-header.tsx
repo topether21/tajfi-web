@@ -23,7 +23,7 @@ export const WalletHeader = () => {
                 </div>
 
                 {/* Info Cards */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                <div className=" grid-cols-2 sm:grid-cols-4 gap-4 mb-8 hidden md:grid">
                     <InfoCard title="BALANCE" value="0" />
                     <InfoCard title="INSCRIPTIONS" value="0" />
                     <InfoCard title="TOKENS" value="0" />
