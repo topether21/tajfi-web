@@ -44,16 +44,7 @@ export const AssetsMarketplace = () => {
     const [sortBy, setSortBy] = useState("price")
     const containerRef = useRef<HTMLDivElement>(null)
 
-    const filteredAssets = useMemo(() => assets
-        .filter(asset =>
-            asset.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-            (category === "All" || asset.categories.includes(category))
-        )
-        .sort((a, b) => {
-            if (sortBy === "price") return a.price - b.price
-            if (sortBy === "rarity") return b.ordinalNumber - a.ordinalNumber
-            return 0
-        }), [assets, searchTerm, category, sortBy])
+    const filteredAssets = useFilteredAssets(assets, searchTerm, category, sortBy)
 
     return (
         <div className="flex flex-col h-full bg-blue-200">

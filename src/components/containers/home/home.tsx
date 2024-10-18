@@ -1,51 +1,22 @@
 "use client"
-import { useRef, useState, useEffect } from 'react'
+
+import { useRef } from 'react'
 import { motion } from 'framer-motion'
-import { Bitcoin, ChevronRight, Github, Twitter, Home, ShoppingBag } from 'lucide-react'
-import { Button } from "@/components/ui/button"
+import { Bitcoin, ChevronRight, Github, Twitter } from 'lucide-react'
 import { Card, CardContent } from "@/components/ui/card"
 import { ConnectWalletButton } from './connect-wallet'
 import { topCollections } from './home-data'
 import Image from 'next/image'
 import Link from 'next/link'
 import { APP_DESCRIPTION, APP_NAME, HOME_FEATURED_COLLECTIONS_DESCRIPTION } from '@/lib/constants'
+import { AnimatedBackground } from './animated-background'
 
 export const ModernAssetMarketplace = () => {
     const sceneRef = useRef(null)
-    const [animatedDots, setAnimatedDots] = useState<{ id: string, x: number, y: number }[]>([]);
-
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            const dots = Array.from({ length: 20 }, (_, index) => ({
-                id: `dot-${index}-${Date.now()}-${Math.random()}`,
-                x: Math.random() * window.innerWidth,
-                y: Math.random() * window.innerHeight,
-            }));
-            setAnimatedDots(dots);
-        }
-    }, []);
-
     return (
         <div className="relative min-h-screen flex flex-col bg-gray-900 text-white overflow-hidden">
-            {/* Animated background elements */}
-            {animatedDots.map((dot) => (
-                <motion.div
-                    key={dot.id}
-                    className="absolute w-2 h-2 bg-orange-500 rounded-full opacity-50"
-                    animate={{
-                        x: [dot.x, Math.random() * window.innerWidth],
-                        y: [dot.y, Math.random() * window.innerHeight],
-                    }}
-                    transition={{
-                        duration: Math.random() * 10 + 10,
-                        repeat: Number.POSITIVE_INFINITY,
-                        repeatType: "reverse",
-                    }}
-                />
-            ))}
-
+            <AnimatedBackground />
             <div ref={sceneRef} className="absolute inset-0 z-0" />
-
             <header className="bg-black bg-opacity-50 backdrop-blur-md py-4 px-6 flex justify-between items-center z-20 relative">
                 <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-2">
