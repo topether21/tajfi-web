@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Bitcoin, Zap } from "lucide-react";
 import type { Asset } from "./use-assets";
 import Image from "next/image";
+import { CELL_PADDING, MIN_CARD_HEIGHT, MIN_ROW_HEIGHT } from "@/lib/constants";
 
 
 interface GridAssetItemProps {
@@ -37,7 +38,7 @@ export const GridAssetItem = ({ item }: GridAssetItemProps) => {
     };
 
     return (
-        <Card className="m-2 overflow-hidden transition-all duration-300 hover:shadow-lg">
+        <Card className="m-2 overflow-hidden transition-all duration-300 hover:shadow-lg" style={{ height: MIN_CARD_HEIGHT }}>
             <CardHeader className="space-y-1">
                 <div className="flex justify-between items-center">
                     <CardTitle className="text-xl font-semibold capitalize text-foreground">{item.name}</CardTitle>
