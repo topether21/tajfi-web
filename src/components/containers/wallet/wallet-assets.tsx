@@ -1,14 +1,13 @@
-'use client'
+"use client"
 
-import React, { useState, useRef } from 'react'
-import { useAssets } from './use-assets'
-import { FilterControls } from './filter-controls'
-import { AssetsDisplay } from './assets-display'
-import { Header } from '../layout/header'
-import { MobileNavbar } from '../layout/mobile-navbar'
-import { useFilteredAssets } from './use-filtered-assets'
+import { FilterControls } from "@/components/containers/marketplace/filter-controls";
+import { AssetsDisplay } from "@/components/containers/marketplace/assets-display";
+import { useRef } from "react";
+import { useFilteredAssets } from "@/components/containers/marketplace/use-filtered-assets";
+import { useState } from "react";
+import { useAssets } from "@/components/containers/marketplace/use-assets";
 
-export const AssetsMarketplace = () => {
+export const WalletAssets = () => {
     const { assets, isItemLoaded, loadMoreItems } = useAssets();
     const [isGridView, setIsGridView] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
@@ -16,10 +15,8 @@ export const AssetsMarketplace = () => {
     const containerRef = useRef<HTMLDivElement>(null);
 
     const filteredAssets = useFilteredAssets(assets, searchTerm, "All", sortBy);
-
     return (
-        <div className="flex flex-col h-full bg-background">
-            <Header />
+        <>
             <FilterControls
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
@@ -35,7 +32,7 @@ export const AssetsMarketplace = () => {
                 loadMoreItems={loadMoreItems}
                 containerRef={containerRef}
             />
-            <MobileNavbar />
-        </div>
-    );
+        </>
+    )
 }
+

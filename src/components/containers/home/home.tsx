@@ -2,14 +2,13 @@
 
 import { useRef } from 'react'
 import { motion } from 'framer-motion'
-import { ChevronRight, Github, Twitter } from 'lucide-react'
-import { Card, CardContent } from "@/components/ui/card"
-import { topCollections } from './home-data'
+import { Github, Twitter } from 'lucide-react'
 import Image from 'next/image'
 import { APP_DESCRIPTION, APP_NAME, HOME_FEATURED_COLLECTIONS_DESCRIPTION } from '@/lib/constants'
 import { AnimatedBackground } from './animated-background'
 import { Header } from '../layout/header'
 import { MobileNavbar } from '../layout/mobile-navbar'
+import { ConnectWalletButton } from './connect-wallet'
 
 export const ModernAssetMarketplace = () => {
     const sceneRef = useRef(null)
@@ -46,29 +45,8 @@ export const ModernAssetMarketplace = () => {
                         >
                             {HOME_FEATURED_COLLECTIONS_DESCRIPTION}
                         </motion.p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {topCollections.map((collection) => (
-                                <Card key={collection.id} className="bg-card bg-opacity-50 backdrop-blur-md border-border hover:border-primary transition-all duration-300 transform hover:scale-105">
-                                    <CardContent className="p-4">
-                                        <div className="flex items-center space-x-4">
-                                            <Image
-                                                src={collection.image}
-                                                alt={collection.name}
-                                                width={64}
-                                                height={64}
-                                                className="rounded-full ring-2 ring-primary"
-                                            />
-                                            <div className="flex-1">
-                                                <h3 className="text-lg font-semibold text-foreground">{collection.name}</h3>
-                                                <p className="text-sm text-muted-foreground">Items: {collection.items}</p>
-                                                <p className="text-sm text-primary">Floor: {collection.floorPrice} BTC</p>
-                                            </div>
-                                            <ChevronRight className="w-5 h-5 text-primary" />
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            ))}
-                        </div>
+
+                        <ConnectWalletButton isHero />
                     </div>
                     <motion.div
                         className="lg:w-1/2 flex justify-center"

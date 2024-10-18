@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Home, Store, Wallet } from 'lucide-react'
+import { Home, Wallet } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 
 export const MobileNavbar = () => {
@@ -9,12 +9,6 @@ export const MobileNavbar = () => {
                 <Button variant="ghost" size="icon" className="text-foreground">
                     <Home className="h-6 w-6" />
                     <span className="sr-only">Home</span>
-                </Button>
-            </Link>
-            <Link href="/marketplace" passHref>
-                <Button variant="ghost" size="icon" className="text-foreground">
-                    <Store className="h-6 w-6" />
-                    <span className="sr-only">Marketplace</span>
                 </Button>
             </Link>
             <Link href="/wallet" passHref>

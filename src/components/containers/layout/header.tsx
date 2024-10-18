@@ -14,11 +14,6 @@ export const Header = () => {
                         <span className="font-bold text-xl">{APP_NAME}</span>
                     </div>
                 </Link>
-                <nav className="hidden md:flex space-x-4">
-                    <Link href="/marketplace" className="flex items-center text-foreground hover:text-primary">
-                        Marketplace
-                    </Link>
-                </nav>
             </div>
             <ConnectWalletButton />
         </header>

@@ -29,8 +29,9 @@ const fetchAssets = async (start: number, size: number) => {
     });
 };
 
-const PAGE_SIZE = 20; // Define a constant for the page size
-const INITIAL_LOAD_SIZE = 20; // Define a constant for the initial load size
+const PAGE_SIZE = 20;
+const INITIAL_LOAD_SIZE = 20;
+const MAX_ITEMS = 200;
 
 export const useAssets = () => {
     const [assets, setAssets] = useState<Asset[]>([]);
@@ -40,15 +41,20 @@ export const useAssets = () => {
     const isItemLoaded = (index: number) => !!itemStatusMap[index];
 
     const loadMoreItems = useCallback(async () => {
+        if (assets.length >= MAX_ITEMS) {
+            console.log("Maximum number of items reached");
+            return;
+        }
+
         const startIndex = currentIndex;
-        const stopIndex = startIndex + PAGE_SIZE - 1;
+        const stopIndex = Math.min(startIndex + PAGE_SIZE - 1, MAX_ITEMS - 1);
         console.log("loading more items", startIndex, stopIndex);
 
         for (let index = startIndex; index <= stopIndex; index++) {
             itemStatusMap[index] = LOADING;
         }
 
-        const newAssets = await fetchAssets(startIndex, PAGE_SIZE);
+        const newAssets = await fetchAssets(startIndex, stopIndex - startIndex + 1);
         setAssets(prevAssets => [...prevAssets, ...newAssets]);
 
         for (let index = startIndex; index <= stopIndex; index++) {
@@ -56,7 +62,7 @@ export const useAssets = () => {
         }
 
         setCurrentIndex(stopIndex + 1);
-    }, [currentIndex, itemStatusMap]);
+    }, [assets.length, currentIndex, itemStatusMap]);
 
     useEffect(() => {
         const loadInitialAssets = async () => {

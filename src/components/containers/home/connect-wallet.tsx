@@ -3,24 +3,43 @@ import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Wallet } from 'lucide-react'
 import { Button } from "@/components/ui/button"
+import { cn } from '@/lib/utils'
+import { useRouter } from 'next/navigation'
 
-export const ConnectWalletButton = () => {
+interface ConnectWalletButtonProps {
+    size?: 'default' | 'sm' | 'lg' | 'icon';
+    variant?: 'primary' | 'secondary';
+    onClick?: () => void;
+    isHero?: boolean;
+}
+
+export const ConnectWalletButton: React.FC<ConnectWalletButtonProps> = ({
+    size = 'default',
+    onClick,
+    isHero = false,
+}) => {
     const [isConnecting, setIsConnecting] = useState(false)
-
+    const router = useRouter()
     const handleConnectWallet = () => {
         setIsConnecting(true)
         setTimeout(() => {
             setIsConnecting(false)
             console.log('Wallet connected!')
+            if (onClick) onClick();
+            router.push('/wallet')
         }, 2000)
     }
 
     return (
         <Button
-            size="sm"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold rounded-lg transition duration-300 ease-in-out transform hover:scale-105"
+            size={isHero ? 'lg' : size}
             onClick={handleConnectWallet}
             disabled={isConnecting}
+            className={cn(
+                isHero
+                    ? "mt-8 px-10 py-5 bg-primary text-white text-xl font-bold rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:bg-primary-dark hover:shadow-xl"
+                    : ""
+            )}
         >
             {isConnecting ? (
                 <>
@@ -33,11 +52,10 @@ export const ConnectWalletButton = () => {
                 </>
             ) : (
                 <>
-                    <Wallet className="w-4 h-4 mr-2" />
+                    {!isHero && <Wallet className="w-4 h-4 mr-2" />}
                     Connect Wallet
                 </>
             )}
         </Button>
     )
 }
-
