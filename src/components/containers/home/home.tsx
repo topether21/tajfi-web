@@ -2,14 +2,14 @@
 
 import { useRef } from 'react'
 import { motion } from 'framer-motion'
-import { Bitcoin, ChevronRight, Github, Twitter } from 'lucide-react'
+import { ChevronRight, Github, Twitter } from 'lucide-react'
 import { Card, CardContent } from "@/components/ui/card"
-import { ConnectWalletButton } from './connect-wallet'
 import { topCollections } from './home-data'
 import Image from 'next/image'
-import Link from 'next/link'
 import { APP_DESCRIPTION, APP_NAME, HOME_FEATURED_COLLECTIONS_DESCRIPTION } from '@/lib/constants'
 import { AnimatedBackground } from './animated-background'
+import { Header } from '../layout/header'
+import { MobileNavbar } from '../layout/mobile-navbar'
 
 export const ModernAssetMarketplace = () => {
     const sceneRef = useRef(null)
@@ -17,20 +17,7 @@ export const ModernAssetMarketplace = () => {
         <div className="relative min-h-screen flex flex-col bg-background text-foreground overflow-hidden">
             <AnimatedBackground />
             <div ref={sceneRef} className="absolute inset-0 z-0" />
-            <header className="bg-card bg-opacity-50 backdrop-blur-md py-4 px-6 flex justify-between items-center z-20 relative">
-                <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-2">
-                        <Bitcoin className="w-8 h-8 text-primary" />
-                        <span className="font-bold text-xl">{APP_NAME}</span>
-                    </div>
-                    <nav className="hidden md:flex space-x-4">
-                        <Link href="/marketplace" className="flex items-center text-foreground hover:text-primary">
-                            Marketplace
-                        </Link>
-                    </nav>
-                </div>
-                <ConnectWalletButton />
-            </header>
+            <Header />
 
             <main className="flex-grow flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-12 relative z-10">
                 <div className="container mx-auto max-w-6xl flex flex-col lg:flex-row">
@@ -121,6 +108,7 @@ export const ModernAssetMarketplace = () => {
                     </div>
                 </div>
             </footer>
+            <MobileNavbar />
         </div>
     )
 }

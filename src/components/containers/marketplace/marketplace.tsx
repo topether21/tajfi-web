@@ -3,18 +3,17 @@
 import { useState, useRef, useMemo } from 'react'
 import { VariableSizeGrid as Grid, VariableSizeList as List } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
-import { Home, Search, Bell, User, Grid as GridIcon, List as ListIcon } from 'lucide-react'
-import { Button } from "@/components/ui/button"
+import { Grid as GridIcon, List as ListIcon } from 'lucide-react'
 import { Toggle } from "@/components/ui/toggle"
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { type Asset, useAssets } from './use-assets'
 import { GridAssetItem } from './grid-asset-item';
 import { ListAssetItem } from './list-asset-item';
-import { APP_NAME, CELL_PADDING, CELL_WIDTH, LIST_ITEM_HEIGHT, MIN_ROW_HEIGHT } from '../../../lib/constants'
+import { CELL_PADDING, CELL_WIDTH, LIST_ITEM_HEIGHT, MIN_ROW_HEIGHT } from '../../../lib/constants'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
-
-
+import { Header } from '../layout/header'
+import { MobileNavbar } from '../layout/mobile-navbar'
 const calculateColumnCount = (width: number) => {
     return Math.max(1, Math.floor(width / (CELL_WIDTH + 2 * CELL_PADDING)));
 }
@@ -38,50 +37,33 @@ export const useFilteredAssets = (assets: Asset[], searchTerm: string, category:
 
 export const AssetsMarketplace = () => {
     const { assets, isItemLoaded, loadMoreItems, categories } = useAssets();
-    const [isGridView, setIsGridView] = useState(true)
-    const [searchTerm, setSearchTerm] = useState("")
-    const [category, setCategory] = useState(categories?.[0] ?? "All")
-    const [sortBy, setSortBy] = useState("price")
-    const containerRef = useRef<HTMLDivElement>(null)
+    const [isGridView, setIsGridView] = useState(true);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [category, setCategory] = useState(categories?.[0] ?? "All");
+    const [sortBy, setSortBy] = useState("price");
+    const containerRef = useRef<HTMLDivElement>(null);
 
-    const filteredAssets = useFilteredAssets(assets, searchTerm, category, sortBy)
+    const filteredAssets = useFilteredAssets(assets, searchTerm, category, sortBy);
 
     return (
-        <div className="flex flex-col h-full bg-blue-200">
-            <div className="justify-between items-center p-4 bg-white border-b hidden md:flex">
-                <h1 className="text-2xl font-bold">{APP_NAME}</h1>
-                <div className="flex gap-4">
-                    <Button variant="outline">Connect Wallet</Button>
-                </div>
-            </div>
-
-            <div className="flex justify-between items-center p-4 bg-white border-b md:hidden">
-                <h1 className="text-xl font-bold">Marketplace</h1>
-                <Toggle
-                    pressed={isGridView}
-                    onPressedChange={setIsGridView}
-                    aria-label="Toggle view"
-                >
-                    {isGridView ? <GridIcon className="h-4 w-4" /> : <ListIcon className="h-4 w-4" />}
-                </Toggle>
-            </div>
-
-            <div className="container mx-auto flex flex-col md:flex-row gap-4 p-4 bg-white border-b">
+        <div className="flex flex-col h-full bg-background">
+            <Header />
+            <div className="container mx-auto flex-col md:flex-row gap-4 p-4 bg-background border-b border-border hidden md:flex">
                 <div className="relative flex-grow">
                     <Input
                         type="text"
                         placeholder="Search assets..."
-                        className="pl-8 bg-gray-800 text-gray-100 border-gray-700"
+                        className="pl-8 bg-input text-foreground border-border"
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
 
                 <Select value={category} onValueChange={setCategory}>
-                    <SelectTrigger className="w-full md:w-[180px] bg-gray-800 text-gray-100 border-gray-700">
+                    <SelectTrigger className="w-full md:w-[180px] bg-input text-foreground border-border">
                         <SelectValue placeholder="Category" />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-800 text-gray-100 border-gray-700">
+                    <SelectContent className="bg-input text-foreground border-border">
                         {categories?.map(category => (
                             <SelectItem key={category} value={category}>{category}</SelectItem>
                         ))}
@@ -89,10 +71,10 @@ export const AssetsMarketplace = () => {
                 </Select>
 
                 <Select value={sortBy} onValueChange={setSortBy}>
-                    <SelectTrigger className="w-full md:w-[180px] bg-gray-800 text-gray-100 border-gray-700">
+                    <SelectTrigger className="w-full md:w-[180px] bg-input text-foreground border-border">
                         <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
-                    <SelectContent className="bg-gray-800 text-gray-100 border-gray-700">
+                    <SelectContent className="bg-input text-foreground border-border">
                         <SelectItem value="price">Price: Low to High</SelectItem>
                         <SelectItem value="rarity">Rarity: High to Low</SelectItem>
                     </SelectContent>
@@ -102,15 +84,13 @@ export const AssetsMarketplace = () => {
                     onPressedChange={setIsGridView}
                     aria-label="Toggle view"
                 >
-                    {isGridView ? <GridIcon className="h-4 w-4" /> : <ListIcon className="h-4 w-4" />}
+                    {isGridView ? <GridIcon className="h-4 w-4 text-foreground" /> : <ListIcon className="h-4 w-4 text-foreground" />}
                 </Toggle>
             </div>
 
-
-            <div ref={containerRef} className="container mx-auto flex-grow overflow-auto bg-red-200">
+            <div ref={containerRef} className="container mx-auto flex-grow overflow-auto bg-card">
                 <AutoSizer>
                     {({ width, height }) => {
-                        console.log("width", width, "height", height, "items", filteredAssets.length)
                         const columnCount = calculateColumnCount(width);
                         const columnWidth = calculateColumnWidth(width, columnCount);
                         const rowCount = Math.ceil(filteredAssets.length / columnCount);
@@ -150,6 +130,7 @@ export const AssetsMarketplace = () => {
                                                         padding: CELL_PADDING,
                                                         boxSizing: 'border-box',
                                                     }}
+                                                    className="bg-background"
                                                 >
                                                     <GridAssetItem item={filteredAssets[index]} />
                                                 </div>
@@ -184,24 +165,7 @@ export const AssetsMarketplace = () => {
                 </AutoSizer>
             </div>
 
-            <nav className="fixed bottom-0 left-0 right-0 h-14 bg-white border-t flex justify-around items-center z-10 md:hidden">
-                <Button variant="ghost" size="icon">
-                    <Home className="h-6 w-6" />
-                    <span className="sr-only">Home</span>
-                </Button>
-                <Button variant="ghost" size="icon">
-                    <Search className="h-6 w-6" />
-                    <span className="sr-only">Search</span>
-                </Button>
-                <Button variant="ghost" size="icon">
-                    <Bell className="h-6 w-6" />
-                    <span className="sr-only">Notifications</span>
-                </Button>
-                <Button variant="ghost" size="icon">
-                    <User className="h-6 w-6" />
-                    <span className="sr-only">Profile</span>
-                </Button>
-            </nav>
+            <MobileNavbar />
         </div>
     )
 }

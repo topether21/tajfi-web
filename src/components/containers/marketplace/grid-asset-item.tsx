@@ -37,11 +37,11 @@ export const GridAssetItem = ({ item }: GridAssetItemProps) => {
     };
 
     return (
-        <Card className="w-full max-w-xs overflow-hidden transition-all duration-300 hover:shadow-lg bg-gradient-to-br from-orange-100 to-orange-200">
+        <Card className="w-full max-w-xs overflow-hidden transition-all duration-300 hover:shadow-lg">
             <CardHeader className="space-y-1">
                 <div className="flex justify-between items-center">
-                    <CardTitle className="text-xl font-semibold capitalize">{item.name}</CardTitle>
-                    <Badge variant="outline" className="font-mono text-xs">
+                    <CardTitle className="text-xl font-semibold capitalize text-foreground">{item.name}</CardTitle>
+                    <Badge variant="outline" className="font-mono text-xs text-muted-foreground">
                         #{item.ordinalNumber?.toString().padStart(8, '0')}
                     </Badge>
                 </div>
@@ -63,12 +63,12 @@ export const GridAssetItem = ({ item }: GridAssetItemProps) => {
                     />
                 </div>
             </CardContent>
-            <CardFooter className="flex justify-between items-center bg-black/5 px-6 py-4">
+            <CardFooter className="flex justify-between items-center bg-muted px-6 py-4">
                 <div className="flex items-center space-x-2">
-                    <Bitcoin className="h-4 w-4 text-orange-500" />
-                    <span className="text-base font-semibold">{formatSatoshis(item.satoshiPrice)} BTC</span>
+                    <Bitcoin className="h-4 w-4 text-primary" />
+                    <span className="text-base font-semibold text-foreground">{formatSatoshis(item.satoshiPrice)} BTC</span>
                 </div>
-                <Button className="bg-orange-500 hover:bg-orange-600 text-white text-sm">
+                <Button className="bg-primary hover:bg-primary-foreground text-primary-foreground text-sm">
                     <Zap className="mr-2 h-3 w-3" />
                     Buy
                 </Button>
