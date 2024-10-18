@@ -9,13 +9,14 @@ import AutoSizer from 'react-virtualized-auto-sizer'
 import { type Asset, useAssets } from './use-assets'
 import { GridAssetItem } from './grid-asset-item';
 import { ListAssetItem } from './list-asset-item';
-import { CELL_PADDING, CELL_WIDTH, LIST_ITEM_HEIGHT, MIN_ROW_HEIGHT } from '../../../lib/constants'
+import { CELL_WIDTH, LIST_ITEM_HEIGHT, MIN_ROW_HEIGHT } from '../../../lib/constants'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Header } from '../layout/header'
 import { MobileNavbar } from '../layout/mobile-navbar'
+
 const calculateColumnCount = (width: number) => {
-    return Math.max(1, Math.floor(width / (CELL_WIDTH + 2 * CELL_PADDING)));
+    return Math.max(1, Math.floor(width / CELL_WIDTH));
 }
 
 const calculateColumnWidth = (width: number, columnCount: number) => {
@@ -36,14 +37,13 @@ export const useFilteredAssets = (assets: Asset[], searchTerm: string, category:
 };
 
 export const AssetsMarketplace = () => {
-    const { assets, isItemLoaded, loadMoreItems, categories } = useAssets();
+    const { assets, isItemLoaded, loadMoreItems } = useAssets();
     const [isGridView, setIsGridView] = useState(true);
     const [searchTerm, setSearchTerm] = useState("");
-    const [category, setCategory] = useState(categories?.[0] ?? "All");
     const [sortBy, setSortBy] = useState("price");
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const filteredAssets = useFilteredAssets(assets, searchTerm, category, sortBy);
+    const filteredAssets = useFilteredAssets(assets, searchTerm, "All", sortBy);
 
     return (
         <div className="flex flex-col h-full bg-background">
@@ -58,18 +58,6 @@ export const AssetsMarketplace = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
-
-                <Select value={category} onValueChange={setCategory}>
-                    <SelectTrigger className="w-full md:w-[180px] bg-input text-foreground border-border">
-                        <SelectValue placeholder="Category" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-input text-foreground border-border">
-                        {categories?.map(category => (
-                            <SelectItem key={category} value={category}>{category}</SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-
                 <Select value={sortBy} onValueChange={setSortBy}>
                     <SelectTrigger className="w-full md:w-[180px] bg-input text-foreground border-border">
                         <SelectValue placeholder="Sort by" />
@@ -88,7 +76,7 @@ export const AssetsMarketplace = () => {
                 </Toggle>
             </div>
 
-            <div ref={containerRef} className="container mx-auto flex-grow overflow-auto bg-card">
+            <div ref={containerRef} className="container mx-auto flex-grow overflow-auto">
                 <AutoSizer>
                     {({ width, height }) => {
                         const columnCount = calculateColumnCount(width);
@@ -127,7 +115,6 @@ export const AssetsMarketplace = () => {
                                                         ...style,
                                                         width: columnWidth,
                                                         height: MIN_ROW_HEIGHT,
-                                                        padding: CELL_PADDING,
                                                         boxSizing: 'border-box',
                                                     }}
                                                     className="bg-background"

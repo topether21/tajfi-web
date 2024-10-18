@@ -37,7 +37,7 @@ export const GridAssetItem = ({ item }: GridAssetItemProps) => {
     };
 
     return (
-        <Card className="w-full max-w-xs overflow-hidden transition-all duration-300 hover:shadow-lg">
+        <Card className="m-2 overflow-hidden transition-all duration-300 hover:shadow-lg">
             <CardHeader className="space-y-1">
                 <div className="flex justify-between items-center">
                     <CardTitle className="text-xl font-semibold capitalize text-foreground">{item.name}</CardTitle>

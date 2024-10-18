@@ -22,7 +22,7 @@ export const AnimatedBackground = () => {
             {animatedDots.map((dot) => (
                 <motion.div
                     key={dot.id}
-                    className="absolute w-2 h-2 bg-orange-500 rounded-full opacity-50"
+                    className="absolute w-2 h-2 bg-primary rounded-full opacity-50"
                     animate={{
                         x: [dot.x, Math.random() * window.innerWidth],
                         y: [dot.y, Math.random() * window.innerHeight],
