@@ -10,7 +10,7 @@ import AutoSizer from 'react-virtualized-auto-sizer'
 import { type Asset, useAssets } from './use-assets'
 import { GridAssetItem } from './grid-asset-item';
 import { ListAssetItem } from './list-asset-item';
-import { CELL_PADDING, CELL_WIDTH, LIST_ITEM_HEIGHT, MIN_ROW_HEIGHT } from './contants'
+import { APP_NAME, CELL_PADDING, CELL_WIDTH, LIST_ITEM_HEIGHT, MIN_ROW_HEIGHT } from '../../../lib/constants'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 
@@ -58,7 +58,7 @@ export const AssetsMarketplace = () => {
     return (
         <div className="flex flex-col h-full bg-blue-200">
             <div className="justify-between items-center p-4 bg-white border-b hidden md:flex">
-                <h1 className="text-2xl font-bold">Taproot Assets Marketplace</h1>
+                <h1 className="text-2xl font-bold">{APP_NAME}</h1>
                 <div className="flex gap-4">
                     <Button variant="outline">Connect Wallet</Button>
                 </div>

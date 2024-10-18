@@ -8,6 +8,7 @@ import { ConnectWalletButton } from './connect-wallet'
 import { topCollections } from './home-data'
 import Image from 'next/image'
 import Link from 'next/link'
+import { APP_DESCRIPTION, APP_NAME, HOME_FEATURED_COLLECTIONS_DESCRIPTION } from '@/lib/constants'
 
 export const ModernAssetMarketplace = () => {
     const sceneRef = useRef(null)
@@ -49,15 +50,10 @@ export const ModernAssetMarketplace = () => {
                 <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-2">
                         <Bitcoin className="w-8 h-8 text-orange-500" />
-                        <span className="font-bold text-xl">Taproot Assets Market</span>
+                        <span className="font-bold text-xl">{APP_NAME}</span>
                     </div>
                     <nav className="hidden md:flex space-x-4">
-                        <Button variant="ghost" className="text-white hover:text-orange-500">
-                            <Home className="w-4 h-4 mr-2" />
-                            Home
-                        </Button>
                         <Link href="/marketplace" className="flex items-center text-white hover:text-orange-500">
-                            <ShoppingBag className="w-4 h-4 mr-2" />
                             Marketplace
                         </Link>
                     </nav>
@@ -73,7 +69,7 @@ export const ModernAssetMarketplace = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
                     >
-                        Taproot Assets Market
+                        {APP_NAME}
                     </motion.h1>
                     <motion.p
                         className="max-w-2xl mx-auto text-xl text-gray-300 mb-6"
@@ -81,7 +77,7 @@ export const ModernAssetMarketplace = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2 }}
                     >
-                        Explore the future of digital asset trading with Taproot Assets.
+                        {APP_DESCRIPTION}
                     </motion.p>
                     <motion.p
                         className="max-w-2xl mx-auto text-md text-gray-400 mb-10"
@@ -89,7 +85,7 @@ export const ModernAssetMarketplace = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.4 }}
                     >
-                        Discover, trade, and own unique digital artifacts inscribed on individual satoshis with Taproot.
+                        {HOME_FEATURED_COLLECTIONS_DESCRIPTION}
                     </motion.p>
                 </div>
 
@@ -129,8 +125,8 @@ export const ModernAssetMarketplace = () => {
             <footer className="bg-black bg-opacity-50 backdrop-blur-md text-white py-8 px-4 relative z-10">
                 <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center">
                     <div className="mb-4 md:mb-0">
-                        <h3 className="text-xl font-bold mb-2">Taproot Assets Market</h3>
-                        <p className="text-sm text-gray-400">The premier marketplace for modern Taproot Assets</p>
+                        <h3 className="text-xl font-bold mb-2">{APP_NAME}</h3>
+                        <p className="text-sm text-gray-400">{APP_DESCRIPTION}</p>
                     </div>
                     <div className="flex space-x-4">
                         <a href="https://github.com/taproot-assets" className="text-gray-400 hover:text-orange-500 transition-colors">
