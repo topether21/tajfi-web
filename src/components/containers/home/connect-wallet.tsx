@@ -41,31 +41,48 @@ export const ConnectWalletButton: React.FC<ConnectWalletButtonProps> = ({
     }
 
     return (
-        <Button
-            size={isHero ? 'lg' : size}
-            onClick={profile ? handleLogout : handleConnectWallet}
-            disabled={isConnecting}
-            className={cn(
-                isHero
-                    ? "mt-8 px-10 py-5 bg-primary text-white text-xl font-bold rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:bg-primary-dark hover:shadow-xl"
-                    : ""
+        <>
+            {!profile && (
+                <Button
+                    size={isHero ? 'lg' : size}
+                    onClick={handleConnectWallet}
+                    disabled={isConnecting}
+                    className={cn(
+                        isHero
+                            ? "mt-8 px-10 py-5 bg-primary text-white text-xl font-bold rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:bg-primary-dark hover:shadow-xl"
+                            : ""
+                    )}
+                >
+                    {isConnecting ? (
+                        <>
+                            <motion.div
+                                className="w-4 h-4 border-t-2 border-r-2 border-white rounded-full mr-2"
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
+                            />
+                            Connecting...
+                        </>
+                    ) : (
+                        <>
+                            {!isHero && <Wallet className="w-4 h-4 mr-2" />}
+                            Connect Wallet
+                        </>
+                    )}
+                </Button>
             )}
-        >
-            {isConnecting ? (
-                <>
-                    <motion.div
-                        className="w-4 h-4 border-t-2 border-r-2 border-white rounded-full mr-2"
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-                    />
-                    Connecting...
-                </>
-            ) : (
-                <>
-                    {!isHero && <Wallet className="w-4 h-4 mr-2" />}
-                    {profile ? 'Logout' : 'Connect Wallet'}
-                </>
+            {profile && (
+                <Button
+                    size={isHero ? 'lg' : size}
+                    onClick={handleLogout}
+                    className={cn(
+                        isHero
+                            ? "mt-8 px-10 py-5 bg-primary text-white text-xl font-bold rounded-lg shadow-lg transition-transform transform hover:scale-105 hover:bg-primary-dark hover:shadow-xl"
+                            : ""
+                    )}
+                >
+                    Logout
+                </Button>
             )}
-        </Button>
+        </>
     )
 }

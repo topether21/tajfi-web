@@ -1,0 +1,4 @@
+const primary = "";
+
+
+export { primary };

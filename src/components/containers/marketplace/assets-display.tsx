@@ -4,7 +4,7 @@ import AutoSizer from 'react-virtualized-auto-sizer';
 import { GridAssetItem } from './grid-asset-item';
 import { ListAssetItem } from './list-asset-item';
 import { CELL_WIDTH, LIST_ITEM_HEIGHT, MIN_ROW_HEIGHT } from '../../../lib/constants';
-import { Asset } from './use-assets';
+import type { Asset } from './use-assets';
 
 interface AssetsDisplayProps {
     filteredAssets: Asset[];

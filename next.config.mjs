@@ -21,6 +21,12 @@ const nextConfig = {
 				hostname: "img.itch.zone",
 			},
 		],
+		// localPatterns: [
+		// 	{
+		// 		pathname: "/assets/images/**",
+		// 		search: "",
+		// 	},
+		// ],
 	},
 };
 

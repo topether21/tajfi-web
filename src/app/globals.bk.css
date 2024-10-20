@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+html,
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+@layer utilities {
+	.text-balance {
+		text-wrap: balance;
+	}
+}
+
+@layer base {
+	:root {
+		--background: #ffffff; /* HSL(0, 0%, 100%) */
+		--foreground: #1a1a1a; /* HSL(240, 10%, 3.9%) */
+		--card: #ffffff; /* HSL(0, 0%, 100%) */
+		--card-foreground: #1a1a1a; /* HSL(240, 10%, 3.9%) */
+		--popover: #ffffff; /* HSL(0, 0%, 100%) */
+		--popover-foreground: #1a1a1a; /* HSL(240, 10%, 3.9%) */
+		--primary: #007f4d; /* HSL(142.1, 76.2%, 36.3%) */
+		--primary-foreground: #fff5f5; /* HSL(355.7, 100%, 97.3%) */
+		--secondary: #f3f3f3; /* HSL(240, 4.8%, 95.9%) */
+		--secondary-foreground: #1a1a1a; /* HSL(240, 5.9%, 10%) */
+		--muted: #f3f3f3; /* HSL(240, 4.8%, 95.9%) */
+		--muted-foreground: #767676; /* HSL(240, 3.8%, 46.1%) */
+		--accent: #f3f3f3; /* HSL(240, 4.8%, 95.9%) */
+		--accent-foreground: #1a1a1a; /* HSL(240, 5.9%, 10%) */
+		--destructive: #d93636; /* HSL(0, 84.2%, 60.2%) */
+		--destructive-foreground: #fafafa; /* HSL(0, 0%, 98%) */
+		--border: #e6e6e6; /* HSL(240, 5.9%, 90%) */
+		--input: #e6e6e6; /* HSL(240, 5.9%, 90%) */
+		--ring: #007f4d; /* HSL(142.1, 76.2%, 36.3%) */
+		--radius: 0.5rem;
+		--chart-1: #e63946; /* HSL(12, 76%, 61%) */
+		--chart-2: #2a9d8f; /* HSL(173, 58%, 39%) */
+		--chart-3: #264653; /* HSL(197, 37%, 24%) */
+		--chart-4: #f4a261; /* HSL(43, 74%, 66%) */
+		--chart-5: #f4a261; /* HSL(27, 87%, 67%) */
+	}
+
+	.dark {
+		--background: #1a1a1a; /* HSL(20, 14.3%, 4.1%) */
+		--foreground: #f2f2f2; /* HSL(0, 0%, 95%) */
+		--card: #3d3d3d; /* HSL(24, 9.8%, 10%) */
+		--card-foreground: #f2f2f2; /* HSL(0, 0%, 95%) */
+		--popover: #171717; /* HSL(0, 0%, 9%) */
+		--popover-foreground: #f2f2f2; /* HSL(0, 0%, 95%) */
+		--primary: #009f6b; /* HSL(142.1, 70.6%, 45.3%) */
+		--primary-foreground: #1a1a1a; /* HSL(144.9, 80.4%, 10%) */
+		--secondary: #262626; /* HSL(240, 3.7%, 15.9%) */
+		--secondary-foreground: #fafafa; /* HSL(0, 0%, 98%) */
+		--muted: #262626; /* HSL(0, 0%, 15%) */
+		--muted-foreground: #a3a3a3; /* HSL(240, 5%, 64.9%) */
+		--accent: #2b2b2b; /* HSL(12, 6.5%, 15.1%) */
+		--accent-foreground: #fafafa; /* HSL(0, 0%, 98%) */
+		--destructive: #993333; /* HSL(0, 62.8%, 30.6%) */
+		--destructive-foreground: #f7f7f7; /* HSL(0, 85.7%, 97.3%) */
+		--border: #262626; /* HSL(240, 3.7%, 15.9%) */
+		--input: #262626; /* HSL(240, 3.7%, 15.9%) */
+		--ring: #007f4d; /* HSL(142.4, 71.8%, 29.2%) */
+		--chart-1: #0077b6; /* HSL(220, 70%, 50%) */
+		--chart-2: #2a9d8f; /* HSL(160, 60%, 45%) */
+		--chart-3: #f4a261; /* HSL(30, 80%, 55%) */
+		--chart-4: #8e44ad; /* HSL(280, 65%, 60%) */
+		--chart-5: #d7263d; /* HSL(340, 75%, 55%) */
+	}
+}
+
+@layer base {
+	* {
+		@apply border-border;
+	}
+	body {
+		@apply bg-background text-foreground;
+	}
+}

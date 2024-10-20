@@ -4,7 +4,7 @@ import { ConnectWalletButton } from "../home/connect-wallet"
 import { APP_NAME } from "@/lib/constants";
 import Link from "next/link";
 
-export const Header = () => {
+export const DesktopHeader = () => {
     return (
         <header className="bg-card bg-opacity-50 backdrop-blur-md py-4 px-6 flex justify-between items-center z-20 relative">
             <div className="flex items-center space-x-4">
