@@ -2,34 +2,37 @@
 
 import type { ReactNode } from 'react';
 import type React from 'react';
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useMemo, useState } from 'react';
+import { connectWallet, type WalletKeys } from './wallet';
 
-interface Profile {
-    address: string;
-}
 
 interface AuthContextType {
-    profile: Profile | null;
-    login: (profile: Profile) => void;
+    profile: WalletKeys | null;
+    login: () => Promise<void>;
     logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-    const [profile, setProfile] = useState<Profile | null>(null);
+    const [profile, setProfile] = useState<WalletKeys | null>(null);
 
-    const login = (profile: Profile) => {
-        setProfile(profile);
+    const login = async () => {
+        const wallet = await connectWallet();
+        setProfile(wallet);
     };
 
     const logout = () => {
         setProfile(null);
     };
 
+    // biome-ignore lint/correctness/useExhaustiveDependencies: only profile is changing
+    const auth = useMemo(() => ({ profile, login, logout }), [profile]);
+
+    console.log('profile', profile);
+
     return (
-        <AuthContext.Provider value={{ profile, login, logout }
-        }>
+        <AuthContext.Provider value={auth}>
             {children}
         </AuthContext.Provider>
     );

@@ -28,7 +28,7 @@ export const ConnectWalletButton: React.FC<ConnectWalletButtonProps> = ({
         setTimeout(() => {
             setIsConnecting(false)
             console.log('Wallet connected!')
-            login({ address: '1234567890' })
+            login()
             if (onClick) onClick();
             router.push('/wallet/send')
         }, 2000)

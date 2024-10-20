@@ -21,13 +21,18 @@ const nextConfig = {
 				hostname: "img.itch.zone",
 			},
 		],
-		// localPatterns: [
-		// 	{
-		// 		pathname: "/assets/images/**",
-		// 		search: "",
-		// 	},
-		// ],
 	},
+	// webpack: (config, { isServer }) => {
+	// 	// Add WebAssembly support
+	// 	if (!isServer) {
+	// 		config.experiments.asyncWebAssembly = true;
+	// 		config.module.rules.push({
+	// 		test: /\.wasm$/,
+	// 		type: 'webassembly/async',
+	// 	});
+	// 	}
+	// 	return config;
+	// },
 };
 
 export default nextConfig;
