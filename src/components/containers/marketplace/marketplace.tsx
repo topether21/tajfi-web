@@ -4,8 +4,7 @@ import React, { useState, useRef } from 'react'
 import { useAssets } from './use-assets'
 import { FilterControls } from './filter-controls'
 import { AssetsDisplay } from './assets-display'
-import { Header } from '../layout/header'
-import { MobileNavbar } from '../layout/mobile-navbar'
+import { DesktopHeader } from '../layout/header'
 import { useFilteredAssets } from './use-filtered-assets'
 
 export const AssetsMarketplace = () => {
@@ -19,7 +18,7 @@ export const AssetsMarketplace = () => {
 
     return (
         <div className="flex flex-col h-full bg-background">
-            <Header />
+            <DesktopHeader />
             <FilterControls
                 searchTerm={searchTerm}
                 setSearchTerm={setSearchTerm}
@@ -35,7 +34,6 @@ export const AssetsMarketplace = () => {
                 loadMoreItems={loadMoreItems}
                 containerRef={containerRef}
             />
-            <MobileNavbar />
         </div>
     );
 }

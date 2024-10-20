@@ -30,7 +30,7 @@ export const ConnectWalletButton: React.FC<ConnectWalletButtonProps> = ({
             console.log('Wallet connected!')
             login({ address: '1234567890' })
             if (onClick) onClick();
-            router.push('/wallet')
+            router.push('/wallet/send')
         }, 2000)
     }
 

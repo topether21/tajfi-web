@@ -6,17 +6,16 @@ import { Github, Twitter } from 'lucide-react'
 import Image from 'next/image'
 import { APP_DESCRIPTION, APP_NAME, HOME_FEATURED_COLLECTIONS_DESCRIPTION } from '@/lib/constants'
 import { AnimatedBackground } from './animated-background'
-import { Header } from '../layout/header'
-import { MobileNavbar } from '../layout/mobile-navbar'
+import { DesktopHeader } from '../layout/header'
 import { ConnectWalletButton } from './connect-wallet'
 
-export const ModernAssetMarketplace = () => {
+export const HomeContainer = () => {
     const sceneRef = useRef(null)
     return (
         <div className="relative min-h-screen flex flex-col bg-background text-foreground overflow-hidden">
             <AnimatedBackground />
             <div ref={sceneRef} className="absolute inset-0 z-0" />
-            <Header />
+            <DesktopHeader />
 
             <main className="flex-grow flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-12 relative z-10">
                 <div className="container mx-auto max-w-6xl flex flex-col lg:flex-row">
@@ -86,7 +85,6 @@ export const ModernAssetMarketplace = () => {
                     </div>
                 </div>
             </footer>
-            <MobileNavbar />
         </div>
     )
 }

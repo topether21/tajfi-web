@@ -1,4 +1,4 @@
-import { ModernAssetMarketplace } from "@/components/containers/home/home";
-export default function Home() {
-    return <ModernAssetMarketplace />;
+import { HomeContainer } from "@/components/containers/home/home";
+export default function HomePage() {
+    return <HomeContainer />;
 }
