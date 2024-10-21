@@ -6,7 +6,7 @@ const ReceivePage: React.FC = () => {
     return (
         <div className="flex flex-col items-center justify-start h-full p-4 text-white">
             <div className="w-full max-w-md mt-4">
-                <Card className="flex flex-col items-center justify-start h-full text-white p-4">
+                <Card className="flex flex-col items-center justify-start h-full text-white p-4 bg-background">
                     <CardHeader className="flex items-center justify-between w-full">
                         <h1 className="text-2xl font-bold">Receive BTC</h1>
                     </CardHeader>

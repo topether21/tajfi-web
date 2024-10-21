@@ -7,6 +7,7 @@ import { Select } from '@/components/ui/select';
 import { QrCode } from 'lucide-react';
 import { SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 import { Card, CardHeader, CardFooter, CardContent } from '@/components/ui/card'; // Import Card components
+import { SendKeywordInput } from '@/components/containers/wallet/send-keyword';
 
 const SendPage: React.FC = () => {
     const [address, setAddress] = useState('');
@@ -16,7 +17,8 @@ const SendPage: React.FC = () => {
     return (
         <div className="flex flex-col items-center justify-start h-full p-4 text-white">
             <div className="w-full max-w-md mt-4">
-                <Card className="flex flex-col items-center justify-start h-full text-white p-4">
+                <SendKeywordInput />
+                {/* <Card className="flex flex-col items-center justify-start h-full text-white p-4">
                     <CardHeader className="flex items-center justify-between w-full">
                         <h1 className="text-2xl font-bold">Send BTC</h1>
                     </CardHeader>
@@ -69,7 +71,7 @@ const SendPage: React.FC = () => {
                             Confirm
                         </Button>
                     </CardFooter>
-                </Card>
+                </Card> */}
             </div>
         </div>
     );

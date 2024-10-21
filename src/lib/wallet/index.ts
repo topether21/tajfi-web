@@ -142,7 +142,7 @@ export const connectWallet = async (provider = '') => {
     const ordinalsPublicKey = await getNostrPubKey();
     // const serverAuthResponse = await auth(ordinalsPublicKey);
     // console.log("serverAuthResponse", serverAuthResponse);
-    await signInvoiceV2(ordinalsPublicKey);
+    // await signInvoiceV2(ordinalsPublicKey);
     return {
         walletName,
         ordinalsPublicKey,
