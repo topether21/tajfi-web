@@ -136,13 +136,103 @@ const signInvoiceV1 = async (ordinalsPublicKey: string) => {
     console.log("Updated PSBT Hex:", updatedPsbtHex);
 };
 
+const signInvoiceV3 = async (ordinalsPublicKey) => {
+    const hexPsbt = PSBT_HEX;
+    const psbt = bitcoin.Psbt.fromHex(hexPsbt); // Load the PSBT from hex
+    console.log("Original PSBT (Base64):", psbt.toBase64());
+
+    const addressInfo = getAddressInfo(ordinalsPublicKey); // Ensure correct address info
+    console.log("Address Info:", addressInfo);
+
+    // Validate the output script in the address information
+    if (!addressInfo.output) {
+        throw new Error('Invalid address information: output script is undefined.');
+    }
+
+    //console.log("Output Script:", addressInfo.output.toString('hex'));
+
+    //console.log("PSBT Inputs:", psbt.data.inputs);
+    //console.log("PSBT", psbt);
+
+    //console.log("Updated PSBT (Base64):", psbt.toBase64());
+    // Manually specify the output script and value
+    const outputScriptHex = '5120b13d978b232b64d366daa79ea56acfd29aa18b3ecbfd9ee0d1dd897f40ae5d62';
+    const outputScriptBuffer = Buffer.from(outputScriptHex, 'hex');
+    const utxoValue = BigInt(56); // Value in satoshis
+
+    const inputIndex = 0; // The input index you are working with
+
+    // Define non-Taproot fields to remove
+    const nonTaprootFields = [
+        'nonWitnessUtxo',
+        'redeemScript',
+        'witnessScript',
+        'bip32Derivation',
+    ];
+
+    // Safely remove non-Taproot fields
+    nonTaprootFields.forEach((field) => {
+        if (psbt.data.inputs[inputIndex][field]) {
+            delete psbt.data.inputs[inputIndex][field];
+        }
+    });
+
+    // Update the input with witnessUtxo
+    console.log("Updated Input with Witness UTXO:", psbt.data.inputs[0]);
+    console.log("Full psbt", psbt);
+
+    // Calculate the SigHash for key path spend (BIP-0086)
+    const sigHash = psbt.__CACHE.__TX.hashForWitnessV1(
+        0, // Input index
+        [outputScriptBuffer], // Output script
+        [BigInt(56)], // Value of the UTXO in satoshis
+        bitcoin.Transaction.SIGHASH_DEFAULT // Default SigHash
+    );
+
+    console.log("SigHash (Hex):", Buffer.from(sigHash).toString('hex'));
+
+    // Use Nostr to sign the SigHash with Schnorr
+    const sigHashHex = Buffer.from(sigHash).toString('hex');
+    const signed = await window.nostr?.signSchnorr(sigHashHex);
+    if (!signed) {
+        throw new Error('Failed to sign PSBT');
+    }
+    console.log("Signed:", signed);
+
+    // Add the Schnorr signature as a tapKeySig
+    psbt.updateInput(0, {
+        tapKeySig: Buffer.from(signed, 'hex'), // Taproot key signature
+    });
+
+    psbt.updateInput(0, {
+        witnessUtxo: {
+            script: outputScriptBuffer,
+            value: utxoValue,
+        },
+    });
+
+    console.log("Updated PSBT (Base64):", psbt.toBase64());
+    console.log("Final PSBT:", psbt);
+
+    // Finalize the PSBT input
+    psbt.finalizeAllInputs();
+
+    // Get the final PSBT in hex
+    const updatedPsbtHex = psbt.toHex();
+    console.log("Updated PSBT Hex:", updatedPsbtHex);
+
+    return updatedPsbtHex; // Return the final PSBT for further processing
+};
+
+
+
 
 export const connectWallet = async (provider = '') => {
     const walletName = provider?.split('.')[0] || 'alby';
     const ordinalsPublicKey = await getNostrPubKey();
     // const serverAuthResponse = await auth(ordinalsPublicKey);
     // console.log("serverAuthResponse", serverAuthResponse);
-    await signInvoiceV2(ordinalsPublicKey);
+    await signInvoiceV3(ordinalsPublicKey);
     return {
         walletName,
         ordinalsPublicKey,
