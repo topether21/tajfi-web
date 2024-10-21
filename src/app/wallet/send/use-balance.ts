@@ -1,14 +1,16 @@
+import useSWR from 'swr';
 import { mockListBalances } from "@/lib/wallet/api";
-import { useEffect, useState } from "react";
-import { useAsync } from "react-use";
 
 export const useBalance = () => {
-    const [balance, setBalance] = useState(0);
-    const { value, loading, error } = useAsync(mockListBalances);
+    const fetcher = () => mockListBalances().then(data => data.balance);
+    const { data: balance = 0, error } = useSWR('wallet-balance', fetcher, {
+        refreshInterval: 5000
+    });
 
-    useEffect(() => {
-        setBalance(1000);
-    }, []);
-
-    return balance;
+    const loading = !error && !balance;
+    return {
+        balance,
+        loading,
+        error,
+    };
 };

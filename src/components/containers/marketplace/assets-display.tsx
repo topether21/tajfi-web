@@ -11,7 +11,7 @@ interface AssetsDisplayProps {
     isGridView: boolean;
     isItemLoaded: (index: number) => boolean;
     loadMoreItems: (startIndex: number, stopIndex: number) => Promise<void>;
-    containerRef: React.RefObject<HTMLDivElement>;
+    containerRef: React.RefObject<HTMLDivElement | null>;
 }
 
 const calculateColumnCount = (width: number) => Math.max(1, Math.floor(width / CELL_WIDTH));

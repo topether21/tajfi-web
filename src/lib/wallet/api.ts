@@ -82,10 +82,13 @@ export const listBalances = async () => {
     return fetchFromApi('/wallet/balances', 'GET', {});
 };
 
-export const mockListBalances = async () => {
-    return setTimeout(() => {
-        return Promise.resolve([
-            { asset_id: 'sats', balance: Math.floor(Math.random() * 1 / 100 * 10e8) },
-        ]);
-    }, 1000);
+export const mockListBalances = async (): Promise<{ assetId: string, balance: number }> => {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            console.log('mockListBalances');
+            resolve(
+                { assetId: 'sats', balance: Math.floor(Math.random() * 1000) },
+            );
+        }, 1000);
+    });
 };
