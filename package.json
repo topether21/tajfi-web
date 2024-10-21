@@ -37,7 +37,8 @@
 		"tailwind-merge": "^2.5.4",
 		"tailwindcss-animate": "^1.0.7",
 		"taproot_assets": ".",
-		"tiny-secp256k1": "^2.2.3"
+		"tiny-secp256k1": "^2.2.3",
+		"uint8array-tools": "^0.0.9"
 	},
 	"devDependencies": {
 		"@types/matter-js": "^0.19.7",
