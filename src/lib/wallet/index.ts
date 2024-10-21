@@ -5,11 +5,22 @@ import { PSBT_HEX } from './data';
 
 bitcoin.initEccLib(ecc);
 
+declare global {
+    interface Window {
+        nostr?: {
+            enable: () => Promise<void>;
+            getPublicKey: () => Promise<string>;
+            signSchnorr: (hex: string) => Promise<string>;
+        };
+    }
+}
+
 export type WalletKeys = {
     ordinalsPublicKey: string;
     paymentPublicKey: string;
     ordinalsAddress: string;
     paymentAddress: string;
+    token: string;
 };
 
 const getNostrPubKey = async () => {
@@ -45,7 +56,10 @@ const signInvoice = async (ordinalsPublicKey: string) => {
     console.log("addressInfo", addressInfo);
 
     // Sign the PSBT using Nostr
-    const signed = await window.nostr.signSchnorr(hexPsbt);
+    const signed = await window.nostr?.signSchnorr(hexPsbt);
+    if (!signed) {
+        throw new Error('Failed to sign PSBT');
+    }
     console.log("signed", signed);
 
     // Convert the signature to Uint8Array
@@ -70,43 +84,19 @@ const signInvoice = async (ordinalsPublicKey: string) => {
     console.log("Updated PSBT Hex:", updatedPsbtHex);
 };
 
-const serverAuth = async (ordinalsPublicKey: string, signature = 'valid_signature') => {
-    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/wallet/connect`;
-    console.log(apiUrl);
-    const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        },
-        body: JSON.stringify({
-            public_key: ordinalsPublicKey,
-            signature,
-        }),
-    });
-
-    if (!response.ok) {
-        throw new Error('Failed to connect wallet');
-    }
-
-    const data = await response.json();
-    return data;
-};
 
 export const connectWallet = async (provider = '') => {
     const walletName = provider?.split('.')[0] || 'alby';
     const ordinalsPublicKey = await getNostrPubKey();
-    // const serverAuthResponse = await serverAuth(ordinalsPublicKey);
+    // const serverAuthResponse = await auth(ordinalsPublicKey);
     // console.log("serverAuthResponse", serverAuthResponse);
-    // await enableBTC();
     await signInvoice(ordinalsPublicKey);
-    // const serverAuthResponse = await serverAuth(ordinalsPublicKey);
     return {
         walletName,
         ordinalsPublicKey,
         paymentPublicKey: '',
         ordinalsAddress: '',
         paymentAddress: '',
-        // token: serverAuthResponse.token,
+        token: '',
     };
 };
