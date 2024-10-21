@@ -1,13 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
-import { QrCode } from 'lucide-react';
-import { SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
-import { Card, CardHeader, CardFooter, CardContent } from '@/components/ui/card'; // Import Card components
-import { BalanceWithDiff } from '@/lib/wallet/balance';
 import { useCycle, useRootClick } from './wip';
 import NumberFlow, { type Value } from "@number-flow/react";
 import { motion } from 'framer-motion'; // Import motion from framer-motion
