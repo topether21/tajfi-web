@@ -1,4 +1,4 @@
-import { Send, Download } from 'lucide-react';
+import { Send, Download, History } from 'lucide-react';
 import Link from 'next/link';
 
 const ActionButton = ({ Icon, label, href }: { Icon: React.ElementType; label: string; href: string }) => {
@@ -21,6 +21,7 @@ export const DesktopWalletHeader = () => {
                 <div className="flex justify-around mt-8">
                     <ActionButton Icon={Send} label="Send" href="/wallet/send" />
                     <ActionButton Icon={Download} label="Receive" href="/wallet/receive" />
+                    <ActionButton Icon={History} label="History" href="/wallet/history" />
                 </div>
             </div>
         </div>

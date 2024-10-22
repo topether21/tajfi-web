@@ -16,20 +16,20 @@ type SendCompleteBody = {
     psbt: string;
 };
 
-const fetchFromApi = async <T>(endpoint: string, method: string, body: T) => {
+const fetchFromApi = async <T>(endpoint: string, method: string, body: T, requireAuth = true) => {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}${endpoint}`;
     console.log(endpoint, apiUrl);
-
-    const authToken = localStorage.getItem('authToken');
-    if (!authToken) {
-        throw new Error('No auth token found');
-    }
 
     const headers: HeadersInit = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
     };
-    if (authToken) {
+
+    if (requireAuth) {
+        const authToken = localStorage.getItem('authToken');
+        if (!authToken) {
+            throw new Error('No auth token found');
+        }
         headers.Authorization = `Bearer ${authToken}`;
     }
 
@@ -51,7 +51,7 @@ export const auth = async (ordinalsPublicKey: string, signature = 'valid_signatu
         public_key: ordinalsPublicKey,
         signature,
     };
-    const response: { token: string } = await fetchFromApi('/wallet/connect', 'POST', body);
+    const response: { token: string } = await fetchFromApi('/wallet/connect', 'POST', body, false);
     localStorage.setItem('authToken', response.token);
     return response;
 };
@@ -80,6 +80,10 @@ export const sendComplete = async ({ psbt }: { psbt: string }) => {
 
 export const listBalances = async () => {
     return fetchFromApi('/wallet/balances', 'GET', {});
+};
+
+export const decodeInvoice = async ({ invoice }: { invoice: string }) => {
+    return fetchFromApi('/wallet/send/decode', 'POST', { invoice });
 };
 
 export const mockListBalances = async (): Promise<{ assetId: string, balance: number }> => {

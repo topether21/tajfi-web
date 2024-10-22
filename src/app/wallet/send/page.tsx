@@ -15,10 +15,9 @@ export default function SendPage() {
     const [invoiceDetails, setInvoiceDetails] = useState<DecodedInvoice | null>(null);
 
     const amount = invoiceDetails?.sections.find((s) => s.name === 'amount')?.value;
-    const description = invoiceDetails?.sections.find((s) => s.name === 'description')?.value;
-    const expiry = invoiceDetails?.expiry;
-    const paymentHash = invoiceDetails?.sections.find((s) => s.name === 'payment_hash')?.value;
 
+    // Amount
+    // Currency
 
     const handleInvoiceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newInvoice = e.target.value;

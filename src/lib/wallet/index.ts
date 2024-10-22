@@ -3,39 +3,9 @@ import * as bitcoin from 'bitcoinjs-lib';
 import ecc from '@bitcoinerlab/secp256k1';
 import * as tools from 'uint8array-tools';
 import { PSBT_HEX, SIGNED_PSBT } from './data';
+import { auth } from './api';
 
 bitcoin.initEccLib(ecc);
-
-declare global {
-    interface Window {
-        nostr?: {
-            enable: () => Promise<void>;
-            getPublicKey: () => Promise<string>;
-            signSchnorr: (hex: string) => Promise<string>;
-        };
-    }
-}
-
-export type WalletKeys = {
-    ordinalsPublicKey: string;
-    paymentPublicKey: string;
-    ordinalsAddress: string;
-    paymentAddress: string;
-    token: string;
-};
-
-const getNostrPubKey = async () => {
-    if (window?.nostr?.enable) {
-        await window.nostr.enable();
-    } else {
-        throw new Error(
-            "Oops, it looks like you haven't set up your Nostr key yet." +
-            'Go to your Alby Account Settings and create or import a Nostr key.'
-        );
-    }
-    return window.nostr.getPublicKey();
-};
-
 
 const getAddressInfo = (pubkey: string) => {
     const pubkeyBuffer = Buffer.from(pubkey, 'hex');
@@ -134,21 +104,4 @@ const signInvoiceV1 = async (ordinalsPublicKey: string) => {
     // Get the updated PSBT
     const updatedPsbtHex = psbt.toHex();
     console.log("Updated PSBT Hex:", updatedPsbtHex);
-};
-
-
-export const connectWallet = async (provider = '') => {
-    const walletName = provider?.split('.')[0] || 'alby';
-    const ordinalsPublicKey = await getNostrPubKey();
-    // const serverAuthResponse = await auth(ordinalsPublicKey);
-    // console.log("serverAuthResponse", serverAuthResponse);
-    // await signInvoiceV1(ordinalsPublicKey);
-    return {
-        walletName,
-        ordinalsPublicKey,
-        paymentPublicKey: '',
-        ordinalsAddress: '',
-        paymentAddress: '',
-        token: '',
-    };
 };

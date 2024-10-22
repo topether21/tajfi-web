@@ -1,6 +1,6 @@
 "use client"
 import Link from 'next/link'
-import { Send, Download, Wallet } from 'lucide-react'
+import { Send, Download, History } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { useAuth } from '@/lib/auth-context';
 
@@ -19,6 +19,12 @@ export const MobileNavbar = () => {
                 <Button variant="ghost" size="icon" className="flex flex-col items-center text-foreground">
                     <Download className="h-6 w-6" />
                     <span className="text-xs mt-1">Receive</span>
+                </Button>
+            </Link>
+            <Link href="/wallet/history" passHref tabIndex={0} aria-label="History">
+                <Button variant="ghost" size="icon" className="flex flex-col items-center text-foreground">
+                    <History className="h-6 w-6" />
+                    <span className="text-xs mt-1">History</span>
                 </Button>
             </Link>
         </nav>

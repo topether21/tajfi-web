@@ -3,7 +3,16 @@
 import type { ReactNode } from 'react';
 import type React from 'react';
 import { createContext, useContext, useMemo, useState } from 'react';
-import { connectWallet, type WalletKeys } from './wallet';
+import { connectWallet, type WalletKeys } from './wallet/auth';
+import {
+    AlertDialog,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 
 interface AuthContextType {
@@ -16,10 +25,19 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     const [profile, setProfile] = useState<WalletKeys | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     const login = async () => {
-        const wallet = await connectWallet();
-        setProfile(wallet);
+        try {
+            const wallet = await connectWallet();
+            setProfile(wallet);
+            setError(null);
+        } catch (err) {
+            const errorMessage = (err as Error).message.includes("Nostr key")
+                ? "Please go to your Alby Account Settings and create or import a Nostr key."
+                : "Failed to connect wallet. Please try again.";
+            setError(errorMessage);
+        }
     };
 
     const logout = () => {
@@ -29,12 +47,27 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     // biome-ignore lint/correctness/useExhaustiveDependencies: only profile is changing
     const auth = useMemo(() => ({ profile, login, logout }), [profile]);
 
-    console.log('profile', profile);
-
     return (
-        <AuthContext.Provider value={auth}>
-            {children}
-        </AuthContext.Provider>
+        <>
+            <AuthContext.Provider value={auth}>
+                {children}
+            </AuthContext.Provider>
+            {error && (
+                <AlertDialog open={!!error} onOpenChange={() => setError(null)}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Error</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                {error}
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel onClick={() => setError(null)}>Close</AlertDialogCancel>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            )}
+        </>
     );
 };
 
