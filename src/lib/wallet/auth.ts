@@ -30,11 +30,23 @@ const getNostrPubKey = async () => {
 
 export const connectWallet = async (provider = '') => {
     const walletName = provider?.split('.')[0] || 'alby';
+
+    const storedWalletData = localStorage.getItem('walletData');
+    if (storedWalletData) {
+        return JSON.parse(storedWalletData);
+    }
+
     const ordinalsPublicKey = await getNostrPubKey();
     const serverAuthResponse = await auth(ordinalsPublicKey);
-    return {
+
+    const token = serverAuthResponse.token || '';
+    const walletData = {
         walletName,
         ordinalsPublicKey,
-        token: serverAuthResponse.token || '',
+        token,
     };
+
+    localStorage.setItem('walletData', JSON.stringify(walletData));
+
+    return walletData;
 };

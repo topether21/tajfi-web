@@ -1,5 +1,6 @@
 import { Send, Download, History } from 'lucide-react';
 import Link from 'next/link';
+import { CurrencySelector } from './currency_selector/currency-selector';
 
 const ActionButton = ({ Icon, label, href }: { Icon: React.ElementType; label: string; href: string }) => {
     return (
@@ -16,12 +17,15 @@ const ActionButton = ({ Icon, label, href }: { Icon: React.ElementType; label: s
 
 export const DesktopWalletHeader = () => {
     return (
-        <div className="hidden md:block bg-background text-white p-8">
+        <div className="hidden md:block bg-background text-white px-8">
             <div className="max-w-2xl mx-auto">
                 <div className="flex justify-around mt-8">
                     <ActionButton Icon={Send} label="Send" href="/wallet/send" />
                     <ActionButton Icon={Download} label="Receive" href="/wallet/receive" />
                     <ActionButton Icon={History} label="History" href="/wallet/history" />
+                </div>
+                <div className="flex justify-around">
+                    <CurrencySelector />
                 </div>
             </div>
         </div>

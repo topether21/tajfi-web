@@ -50,7 +50,7 @@ export default function SendPage() {
                                 format={{ style: 'currency', currency: 'USD' }}
                             />
                         </div>
-                        <div className="mb-4">
+                        <div className="mb-6">
                             <label htmlFor="receive-invoice" className="block text-sm font-medium mb-1">Invoice</label>
                             <div className="flex items-center">
                                 <Input
@@ -67,7 +67,7 @@ export default function SendPage() {
                                 </div>
                             )}
                         </div>
-                        <Button>Send</Button>
+                        <Button className="w-full">Send</Button>
                     </>
                 )}
             </div>

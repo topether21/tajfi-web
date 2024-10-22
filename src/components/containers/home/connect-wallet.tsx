@@ -25,13 +25,12 @@ export const ConnectWalletButton: React.FC<ConnectWalletButtonProps> = ({
 
     const handleConnectWallet = () => {
         setIsConnecting(true)
-        setTimeout(() => {
-            setIsConnecting(false)
-            console.log('Wallet connected!')
-            login()
-            if (onClick) onClick();
-            router.push('/wallet/send')
-        }, 2000)
+        setIsConnecting(false)
+        console.log('Wallet connected!')
+        login()
+        if (onClick) onClick();
+        router.push('/wallet/send')
+
     }
 
     const handleLogout = () => {

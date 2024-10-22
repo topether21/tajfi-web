@@ -20,9 +20,9 @@ const WalletLayout = ({ children }: { children: React.ReactNode }) => {
                 }
                 {profile && <>
                     <DesktopWalletHeader />
-                    <Card className="w-full max-w-2xl mx-auto min-w-[300px]">
+                    <div className="w-full max-w-2xl mx-auto min-w-[300px]">
                         {children}
-                    </Card>
+                    </div>
                 </>}
             </div>
             <MobileNavbar />
