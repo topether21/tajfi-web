@@ -1,7 +1,5 @@
 'use client';
 
-import NumberFlow from "@number-flow/react";
-import { useBalance } from "./use-balance";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -10,11 +8,12 @@ import { Button } from "@/components/ui/button";
 import { decode, type DecodedInvoice } from 'light-bolt11-decoder';
 
 export default function SendPage() {
-    const { balance, loading } = useBalance();
+
     const [invoice, setInvoice] = useState('');
     const [invoiceDetails, setInvoiceDetails] = useState<DecodedInvoice | null>(null);
 
     const amount = invoiceDetails?.sections.find((s) => s.name === 'amount')?.value;
+    const [loading, setLoading] = useState(false);
 
     // Amount
     // Currency
@@ -22,12 +21,15 @@ export default function SendPage() {
     const handleInvoiceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newInvoice = e.target.value;
         setInvoice(newInvoice);
+        setLoading(true);
 
         try {
             const decoded = decode(newInvoice);
             setInvoiceDetails(decoded);
         } catch (error) {
             setInvoiceDetails(null);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -41,15 +43,6 @@ export default function SendPage() {
                     <Skeleton className="h-12 w-full rounded-md" />
                 ) : (
                     <>
-                        <div className="mb-4">
-                            <p className="text-sm text-gray-400">Your balance</p>
-                            <NumberFlow
-                                value={balance}
-                                trend={false}
-                                className="text-3xl font-bold text-green-500 mb-2"
-                                format={{ style: 'currency', currency: 'USD' }}
-                            />
-                        </div>
                         <div className="mb-6">
                             <label htmlFor="receive-invoice" className="block text-sm font-medium mb-1">Invoice</label>
                             <div className="flex items-center">
