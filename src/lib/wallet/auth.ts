@@ -38,6 +38,7 @@ export const connectWallet = async (provider = '') => {
 
     const ordinalsPublicKey = await getNostrPubKey();
     const serverAuthResponse = await auth(ordinalsPublicKey);
+    localStorage.setItem('authToken', serverAuthResponse.token);
 
     const token = serverAuthResponse.token || '';
     const walletData = {
@@ -49,4 +50,9 @@ export const connectWallet = async (provider = '') => {
     localStorage.setItem('walletData', JSON.stringify(walletData));
 
     return walletData;
+};
+
+export const disconnectWallet = () => {
+    localStorage.removeItem('walletData');
+    localStorage.removeItem('authToken');
 };

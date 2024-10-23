@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import type React from 'react';
 import { createContext, useContext, useMemo, useState } from 'react';
-import { connectWallet, type WalletKeys } from './wallet/auth';
+import { connectWallet, disconnectWallet, type WalletKeys } from './wallet/auth';
 import {
     AlertDialog,
     AlertDialogCancel,
@@ -42,10 +42,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     const logout = () => {
         setProfile(null);
+        disconnectWallet();
     };
 
     // biome-ignore lint/correctness/useExhaustiveDependencies: only profile is changing
     const auth = useMemo(() => ({ profile, login, logout }), [profile]);
+
+    console.log('----> profile', profile);
 
     return (
         <>

@@ -1,25 +1,39 @@
-import * as React from "react"
-
-import { Card, CardContent } from "@/components/ui/card"
+import { CardContent } from "@/components/ui/card"
 import {
     Carousel,
+    type CarouselApi,
     CarouselContent,
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel"
 import { TetherUSDT } from "@/components/icons/tether"
+import type { AssetBalance } from "@/hooks/use-balances";
+import { useEffect, useState } from "react";
 
-export function CurrencySelector() {
+export const CurrencySelector = ({ balances, setCurrentBalanceIndex }: { balances: AssetBalance[], setCurrentBalanceIndex: (index: number) => void }) => {
+
+    const [api, setApi] = useState<CarouselApi>()
+    useEffect(() => {
+        if (!api) {
+            return
+        }
+        setCurrentBalanceIndex(api.selectedScrollSnap())
+
+        api.on("select", () => {
+            setCurrentBalanceIndex(api.selectedScrollSnap())
+        })
+    }, [api])
+
     return (
-        <Carousel className="w-full max-w-32">
+        <Carousel setApi={setApi} className="w-full max-w-32">
             <CarouselContent>
-                {Array.from({ length: 1 }).map((_, index) => (
-                    <CarouselItem key={index}>
+                {balances?.map((balance) => (
+                    <CarouselItem key={balance.assetId} >
                         <div className="p-1">
                             <div className="">
                                 <CardContent className="flex aspect-square items-center justify-center p-6">
-                                    <TetherUSDT />
+                                    {balance.name === 'tether' ? <TetherUSDT /> : <div className="text-center text-3xl">{balance.name?.toUpperCase()}</div>}
                                 </CardContent>
                             </div>
                         </div>

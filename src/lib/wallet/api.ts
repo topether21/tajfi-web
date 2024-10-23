@@ -16,7 +16,25 @@ type SendCompleteBody = {
     psbt: string;
 };
 
-const fetchFromApi = async <T>(endpoint: string, method: string, body: T, requireAuth = true) => {
+export type AssetBalances = {
+    [assetId: string]: {
+        asset_genesis: {
+            genesis_point: string;
+            name: string;
+            meta_hash: string;
+            asset_id: string;
+            asset_type: string;
+            output_index: number;
+        };
+        balance: string;
+    };
+}
+
+type ListBalancesResponse = {
+    asset_balances: AssetBalances;
+}
+
+const fetchFromApi = async <T>(endpoint: string, method: 'GET' | 'POST', body: T, requireAuth = true) => {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}${endpoint}`;
     console.log(endpoint, apiUrl);
 
@@ -36,14 +54,16 @@ const fetchFromApi = async <T>(endpoint: string, method: string, body: T, requir
     const response = await fetch(apiUrl, {
         method,
         headers,
-        body: JSON.stringify(body),
+        ...(method === 'POST' ? { body: JSON.stringify(body) } : {}),
     });
 
     if (!response.ok) {
         throw new Error('Failed to connect wallet');
     }
 
-    return response.json();
+    const data = await response.json();
+    console.log('----> data', data);
+    return data;
 };
 
 export const auth = async (ordinalsPublicKey: string, signature = 'valid_signature') => {
@@ -52,7 +72,6 @@ export const auth = async (ordinalsPublicKey: string, signature = 'valid_signatu
         signature,
     };
     const response: { token: string } = await fetchFromApi('/wallet/connect', 'POST', body, false);
-    localStorage.setItem('authToken', response.token);
     return response;
 };
 
@@ -78,7 +97,7 @@ export const sendComplete = async ({ psbt }: { psbt: string }) => {
     return fetchFromApi('/wallet/send/complete', 'POST', body);
 };
 
-export const listBalances = async () => {
+export const listBalances = async (): Promise<ListBalancesResponse> => {
     return fetchFromApi('/wallet/balances', 'GET', {});
 };
 
