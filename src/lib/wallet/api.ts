@@ -101,17 +101,22 @@ export const listBalances = async (): Promise<ListBalancesResponse> => {
     return fetchFromApi('/wallet/balances', 'GET', {});
 };
 
-export const decodeInvoice = async ({ invoice }: { invoice: string }) => {
-    return fetchFromApi('/wallet/send/decode', 'POST', { invoice });
+type InvoiceInfo = {
+    encoded: string;
+    asset_id: string;
+    asset_type: 'NORMAL' | "COLLECTIBLE";
+    amount: string;
+    group_key: string;
+    script_key: string;
+    internal_key: string;
+    tapscript_sibling: string;
+    taproot_output_key: string;
+    proof_courier_addr: string;
+    asset_version: string;
+    address_version: string;
 };
 
-export const mockListBalances = async (): Promise<{ assetId: string, balance: number }> => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            console.log('mockListBalances');
-            resolve(
-                { assetId: 'sats', balance: Math.floor(Math.random() * 1000) },
-            );
-        }, 1000);
-    });
+export const decodeInvoice = async ({ address }: { address: string }): Promise<InvoiceInfo> => {
+    return fetchFromApi('/wallet/send/decode', 'POST', { address });
 };
+

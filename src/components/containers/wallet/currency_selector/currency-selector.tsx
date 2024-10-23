@@ -11,6 +11,18 @@ import { TetherUSDT } from "@/components/icons/tether"
 import type { AssetBalance } from "@/hooks/use-balances";
 import { useEffect, useState } from "react";
 
+export const Currency = ({ name, assetId }: { name?: string, assetId?: string }) => {
+    if (assetId) {
+        switch (assetId) {
+            case '33fd821cad24cc72b4b54de31fb308cf38b9cccf8157c765c288d1985d3b573c':
+                return <TetherUSDT />;
+            default:
+                return <div className="text-center text-3xl">{assetId.toUpperCase()}</div>;
+        }
+    }
+    return name === 'tether' ? <TetherUSDT /> : <div className="text-center text-3xl">{name?.toUpperCase()}</div>
+}
+
 export const CurrencySelector = ({ balances, setCurrentBalanceIndex }: { balances: AssetBalance[], setCurrentBalanceIndex: (index: number) => void }) => {
 
     const [api, setApi] = useState<CarouselApi>()
@@ -33,7 +45,7 @@ export const CurrencySelector = ({ balances, setCurrentBalanceIndex }: { balance
                         <div className="p-1">
                             <div className="">
                                 <CardContent className="flex aspect-square items-center justify-center p-6">
-                                    {balance.name === 'tether' ? <TetherUSDT /> : <div className="text-center text-3xl">{balance.name?.toUpperCase()}</div>}
+                                    <Currency name={balance.name} />
                                 </CardContent>
                             </div>
                         </div>
