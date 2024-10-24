@@ -103,7 +103,7 @@ const fetchFromApi = async <T>(endpoint: string, method: 'GET' | 'POST', body: T
     });
 
     if (!response.ok) {
-        throw new Error('Failed to connect wallet');
+        throw new Error(response.statusText);
     }
 
     const data = await response.json();

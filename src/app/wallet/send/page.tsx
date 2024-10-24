@@ -10,20 +10,31 @@ import { Currency } from "@/components/containers/wallet/currency_selector/curre
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircle, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Suspense } from "react";
+import { useSendFunds } from "./use-send-funds";
 
 
-const TransactionSummary = ({ invoiceDetails, loading }: {
+const TransactionSummary = ({ invoiceDetails, loading, invoice }: {
     invoiceDetails: { amount: number; assetId: string; } | null;
     loading: boolean;
+    invoice: string;
 }) => {
-    
+
+    const { loading: loadingSend, error: errorSend, fundedPsbt, sendFundsStart, sendFundsComplete, sentTransaction } = useSendFunds()
     const [isConfirmed, setIsConfirmed] = useState(false);
-    console.log("TransactionSummary", invoiceDetails);
+    console.log("TransactionSummary", { invoiceDetails, fundedPsbt, sentTransaction });
 
     const handleConfirm = () => {
-        setIsConfirmed(true);
-        console.log("Transaction confirmed");
+        if (fundedPsbt) {
+            sendFundsComplete(fundedPsbt);
+            console.log("Confirmed");
+        }
     };
+
+    useEffect(() => {
+        if (invoiceDetails && invoice) {
+            sendFundsStart(invoice);
+        }
+    }, [invoiceDetails, invoice]);
 
     if (!invoiceDetails) return null;
 
@@ -45,7 +56,7 @@ const TransactionSummary = ({ invoiceDetails, loading }: {
                         <Currency assetId={invoiceDetails?.assetId} />
                     </div>
                 </div>
-                {!isConfirmed && (
+                {!isConfirmed && !errorSend && (
                     <div className="flex items-center text-yellow-600 dark:text-yellow-400">
                         <AlertCircle className="mr-2" />
                         <span className="text-xs">Please review the details before confirming.</span>
@@ -57,16 +68,22 @@ const TransactionSummary = ({ invoiceDetails, loading }: {
                         <span>Transaction confirmed.</span>
                     </div>
                 )}
+                {errorSend && (
+                    <div className="flex items-center text-red-600 dark:text-red-400">
+                        <AlertCircle className="mr-2" />
+                        <span>{errorSend}</span>
+                    </div>
+                )}
             </CardContent>
             <CardFooter>
                 <Button
                     className="w-full text-lg"
                     size="lg"
                     onClick={handleConfirm}
-                    disabled={isConfirmed}
+                    disabled={!fundedPsbt || Boolean(sentTransaction)}
                 >
-                    {isConfirmed ? "Confirmed" : "Confirm"}
-                    {!isConfirmed && <ArrowRight className="ml-2" />}
+                    {sentTransaction ? "Sent" : "Confirm"}
+                    {!sentTransaction && <ArrowRight className="ml-2" />}
                 </Button>
             </CardFooter>
         </Card>
@@ -76,7 +93,7 @@ const TransactionSummary = ({ invoiceDetails, loading }: {
 export default function SendPage() {
 
     const [invoice, setInvoice] = useState('');
-    const { loading, invoiceDetails, error, fetchInvoiceDetails } = useInvoiceDetails(invoice);
+    const { loading, invoiceDetails, error, fetchInvoiceDetails } = useInvoiceDetails();
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
@@ -107,7 +124,7 @@ export default function SendPage() {
                         <QrCode className="ml-2" />
                     </div>
                     <Suspense fallback={<Skeleton className="h-24 w-full rounded-md" />}>
-                        <TransactionSummary invoiceDetails={invoiceDetails} loading={loading} />
+                        <TransactionSummary invoiceDetails={invoiceDetails} loading={loading} invoice={invoice} />
                     </Suspense>
                     {error && <p className="text-red-500">{error}</p>}
                 </div>

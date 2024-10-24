@@ -12,7 +12,7 @@ export const useSendFunds = () => {
             const res = await sendStart({ invoice });
             return res.funded_psbt
         } catch (e) {
-            setErrorMessage('Invalid invoice');
+            setErrorMessage((e as Error).message);
             return null;
         }
     });
@@ -24,9 +24,9 @@ export const useSendFunds = () => {
             const res = await sendComplete({ psbt });
             return res;
         } catch (e) {
-            setErrorMessage('Invalid invoice');
+            setErrorMessage((e as Error).message);
             return null;
         }
     });
-    return { loading: loadingStart || loadingComplete, error: errorMessage || errorComplete?.message || errorStart?.message, fundedPsbt: fundedPsbt ?? null, signedPsbt: valueComplete ?? null, sendFundsStart, sendFundsComplete };
+    return { loading: loadingStart || loadingComplete, error: errorMessage || errorComplete?.message || errorStart?.message, fundedPsbt: fundedPsbt ?? null, sentTransaction: valueComplete ?? null, sendFundsStart, sendFundsComplete };
 }
