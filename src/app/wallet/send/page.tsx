@@ -2,7 +2,7 @@
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { QrCode } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useInvoiceDetails } from "@/hooks/use-invoice-details";
@@ -76,6 +76,11 @@ export default function SendPage() {
 
     const [invoice, setInvoice] = useState('');
     const { loading, invoiceDetails, error, fetchInvoiceDetails } = useInvoiceDetails(invoice);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        inputRef.current?.focus();
+    }, []);
 
     const handleInvoiceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newInvoice = e.target.value;
@@ -89,16 +94,18 @@ export default function SendPage() {
             <h1 className="text-2xl font-bold mb-4">Send Funds</h1>
             <div className="w-full max-w-md p-4">
                 <div className="mb-6">
-                    <label htmlFor="receive-invoice" className="block text-base font-medium mb-1">Your invoice</label>
+                    <label htmlFor="send-invoice" className="block text-base font-medium mb-1">Your invoice</label>
                     <div className="flex items-center pb-2">
                         <Input
-                            id="receive-invoice"
-                            className="flex-grow"
+                            ref={inputRef}
+                            id="send-invoice"
+                            className="flex-grow text-xl font-light bg-transparent border-none text-white p-0 h-auto no-arrows focus:outline-none ring-2 ring-gray-800"
                             value={invoice}
                             onChange={handleInvoiceChange}
                         />
                         <QrCode className="ml-2" />
                     </div>
+                    {/* <div className="h-px bg-gray-800 w-full mt-4" /> */}
                     <Suspense fallback={<Skeleton className="h-24 w-full rounded-md" />}>
                         <TransactionSummary invoiceDetails={invoiceDetails} loading={loading} />
                     </Suspense>

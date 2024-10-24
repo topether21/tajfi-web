@@ -1,7 +1,7 @@
 'use client';
 
 import { Input } from "@/components/ui/input";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { VerticalCurrencySelector } from "./currency-selector";
 import { QRCodeSVG } from 'qrcode.react';
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,11 @@ const ReceivePage = () => {
     const [state, copyToClipboard] = useCopyToClipboard();
     const qrCodeRef = useRef<HTMLDivElement>(null);
     const { toast } = useToast();
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        inputRef.current?.focus();
+    }, []);
 
     const copyQRCodeToClipboard = () => {
         const svgElement = qrCodeRef.current?.querySelector('svg');
@@ -44,9 +49,11 @@ const ReceivePage = () => {
             <h1 className="text-2xl font-bold mb-4">Receive Funds</h1>
             <div className="w-full max-w-md p-4">
                 <div className="mb-8">
+                    <label htmlFor="receive-amount" className="block text-base font-medium -mb-4">Amount</label>
                     <div className="flex justify-between items-center gap-4">
-                        {/* TODO: add decimal point? */}
                         <Input
+                            ref={inputRef}
+                            id="receive-amount"
                             type="number"
                             value={assetAmount ?? ''}
                             onChange={(e) => {
@@ -55,11 +62,11 @@ const ReceivePage = () => {
                                     setAssetAmount(value === '' ? '' : Number(value));
                                 }
                             }}
-                            className="text-4xl font-light bg-transparent border-none text-white p-0 h-auto no-arrows"
+                            className="flex-grow text-xl font-light bg-transparent border-none text-white p-0 h-auto no-arrows focus:outline-none ring-2 ring-gray-800"
                         />
                         <VerticalCurrencySelector selectedOption={selectedOption} setSelectedOption={setSelectedOption} currencies={currencies} />
                     </div>
-                    <div className="h-px bg-gray-800 w-full mt-2" />
+                    {/* <div className="h-px bg-gray-800 w-full mt-2" /> */}
                 </div>
             </div>
             {invoice && <>
