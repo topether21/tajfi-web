@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { CurrencySelector } from './currency_selector/currency-selector';
 import NumberFlow from '@number-flow/react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AssetBalance, useBalances } from '@/hooks/use-balances';
+import type { AssetBalance } from '@/hooks/use-balances';
 import { useState } from 'react';
 
 const ActionButton = ({ Icon, label, href }: { Icon: React.ElementType; label: string; href: string }) => {

@@ -12,17 +12,19 @@ import { AlertCircle, ArrowRight, CheckCircle2 } from "lucide-react";
 import { Suspense } from "react";
 
 
-const TransactionSummary = ({ amount, assetId }: {
-    amount: number;
-    assetId: string;
+const TransactionSummary = ({ invoiceDetails, loading }: {
+    invoiceDetails: { amount: number; assetId: string; } | null;
+    loading: boolean;
 }) => {
     const [isConfirmed, setIsConfirmed] = useState(false);
-    console.log("TransactionSummary", amount, assetId);
+    console.log("TransactionSummary", invoiceDetails);
 
     const handleConfirm = () => {
         setIsConfirmed(true);
         console.log("Transaction confirmed");
     };
+
+    if (!invoiceDetails) return null;
 
     return (
         <Card className="w-full max-w-md mx-auto">
@@ -33,13 +35,13 @@ const TransactionSummary = ({ amount, assetId }: {
                 <div className="flex justify-between items-center p-4 bg-secondary rounded-lg">
                     <span className="text-lg font-medium">Amount:</span>
                     <span className="text-2xl font-bold">
-                        {amount}
+                        {invoiceDetails?.amount}
                     </span>
                 </div>
                 <div className="flex justify-between items-center p-4 bg-secondary rounded-lg">
                     <span className="text-lg font-medium">Currency:</span>
                     <div className="h-8 w-8">
-                        <Currency assetId={assetId} />
+                        <Currency assetId={invoiceDetails?.assetId} />
                     </div>
                 </div>
                 {!isConfirmed && (
@@ -73,16 +75,14 @@ const TransactionSummary = ({ amount, assetId }: {
 export default function SendPage() {
 
     const [invoice, setInvoice] = useState('');
-    const { loading, value: invoiceDetails, error } = useInvoiceDetails(invoice);
+    const { loading, invoiceDetails, error, fetchInvoiceDetails } = useInvoiceDetails(invoice);
 
     const handleInvoiceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newInvoice = e.target.value;
         console.log({ newInvoice });
         setInvoice(newInvoice);
+        fetchInvoiceDetails(newInvoice);
     };
-
-
-    console.log({ invoice, invoiceDetails });
 
     return (
         <div className="flex flex-col items-center justify-start h-full text-foreground">
@@ -100,7 +100,7 @@ export default function SendPage() {
                         <QrCode className="ml-2" />
                     </div>
                     <Suspense fallback={<Skeleton className="h-24 w-full rounded-md" />}>
-                        {invoiceDetails && <TransactionSummary amount={invoiceDetails.amount} assetId={invoiceDetails.assetId} />}
+                        <TransactionSummary invoiceDetails={invoiceDetails} loading={loading} />
                     </Suspense>
                     {error && <p className="text-red-500">{error}</p>}
                 </div>

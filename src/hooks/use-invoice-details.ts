@@ -1,6 +1,6 @@
 import { decodeInvoice } from '@/lib/wallet/api';
 import { useState } from 'react';
-import { useAsyncFn, useDebounce } from 'react-use';
+import { useAsyncFn } from 'react-use';
 
 export const useInvoiceDetails = (invoice: string) => {
     const [errorMessage, setErrorMessage] = useState('');
@@ -20,8 +20,5 @@ export const useInvoiceDetails = (invoice: string) => {
             return null;
         }
     });
-    useDebounce(() => {
-        fetchInvoiceDetails(invoice);
-    }, 1000, [invoice]);
-    return { loading, error: errorMessage || error?.message, value };
+    return { loading, error: errorMessage || error?.message, invoiceDetails: value ?? null, fetchInvoiceDetails };
 }

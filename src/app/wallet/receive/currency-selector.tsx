@@ -2,17 +2,15 @@
 
 import * as React from 'react'
 import { Button } from '@/components/ui/button'
-import { ChevronDown, Home, Settings, User, Bell, Calendar, Search } from 'lucide-react'
-import { TetherUSDT } from '@/components/icons/tether'
+import { ChevronDown } from 'lucide-react'
 import { useBalances } from '@/hooks/use-balances'
 import { Currency } from '@/components/containers/wallet/currency_selector/currency-selector'
 
-export const VerticalCurrencySelector = () => {
+export const VerticalCurrencySelector = ({ selectedOption, setSelectedOption, currencies }: { selectedOption: string, setSelectedOption: (option: string) => void, currencies: string[] }) => {
     const [isOpen, setIsOpen] = React.useState(false)
-    const { currencies } = useBalances();
-    const [selectedOption, setSelectedOption] = React.useState(currencies[0])
 
-    const handleSelect = (option) => {
+
+    const handleSelect = (option: string) => {
         setSelectedOption(option)
         setIsOpen(false)
     }

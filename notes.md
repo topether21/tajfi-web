@@ -8,3 +8,8 @@ https://themeforest.net/item/cointex-crypto-wallet-mobile-pwa-html-template/4888
 
 https://icon-sets.iconify.design/simple-icons/tether/
 0a17de7503cc844f3a4fbf964af818266cd5f8369b2927971e8bafd62d897fdf
+
+
+Center Icon - QR
+https://www.svgrepo.com/svg/517424/letter-uppercase-circle-t
+https://www.fffuel.co/eeencode/

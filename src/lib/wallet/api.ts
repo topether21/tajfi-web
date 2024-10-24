@@ -75,7 +75,7 @@ export const auth = async (ordinalsPublicKey: string, signature = 'valid_signatu
     return response;
 };
 
-export const receive = async ({ assetId, amount }: { assetId: string, amount: number }) => {
+export const receive = async ({ assetId, amount }: { assetId: string, amount: number }): Promise<InvoiceInfo> => {
     const body: ReceiveBody = {
         asset_id: assetId,
         amt: amount,
