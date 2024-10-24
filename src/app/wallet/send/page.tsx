@@ -20,7 +20,7 @@ const TransactionSummary = ({ invoiceDetails, loading, invoice }: {
 }) => {
 
     const { loading: loadingSend, error: errorSend, fundedPsbt, sendFundsStart, sendFundsComplete, sentTransaction } = useSendFunds()
-    const [isConfirmed, setIsConfirmed] = useState(false);
+
     console.log("TransactionSummary", { invoiceDetails, fundedPsbt, sentTransaction });
 
     const handleConfirm = () => {
@@ -56,13 +56,13 @@ const TransactionSummary = ({ invoiceDetails, loading, invoice }: {
                         <Currency assetId={invoiceDetails?.assetId} />
                     </div>
                 </div>
-                {!isConfirmed && !errorSend && (
+                {!sentTransaction && !errorSend && (
                     <div className="flex items-center text-yellow-600 dark:text-yellow-400">
                         <AlertCircle className="mr-2" />
                         <span className="text-xs">Please review the details before confirming.</span>
                     </div>
                 )}
-                {isConfirmed && (
+                {sentTransaction && (
                     <div className="flex items-center text-green-600 dark:text-green-400">
                         <CheckCircle2 className="mr-2" />
                         <span>Transaction confirmed.</span>
