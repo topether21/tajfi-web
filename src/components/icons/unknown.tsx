@@ -8,7 +8,7 @@ export const UnknownLogo = ({ assetId, ...props }: SVGProps<SVGSVGElement> & { a
         viewBox="0 0 339.43 295.27"
         {...props}
     >
-        <title>{"NA Logo"}</title>
+        <title>{assetId}</title>
         <rect
             x="0"
             y="0"
