@@ -4,20 +4,13 @@ import * as React from 'react'
 import { Button } from '@/components/ui/button'
 import { ChevronDown, Home, Settings, User, Bell, Calendar, Search } from 'lucide-react'
 import { TetherUSDT } from '@/components/icons/tether'
-
-const options = [
-    { icon: TetherUSDT, label: 'Tether' },
-    { icon: Home, label: 'Home' },
-    { icon: Settings, label: 'Settings' },
-    { icon: User, label: 'User' },
-    { icon: Bell, label: 'Notifications' },
-    { icon: Calendar, label: 'Calendar' },
-    { icon: Search, label: 'Search' },
-]
+import { useBalances } from '@/hooks/use-balances'
+import { Currency } from '@/components/containers/wallet/currency_selector/currency-selector'
 
 export const VerticalCurrencySelector = () => {
     const [isOpen, setIsOpen] = React.useState(false)
-    const [selectedOption, setSelectedOption] = React.useState(options[0]) // Default to TetherUSDT
+    const { currencies } = useBalances();
+    const [selectedOption, setSelectedOption] = React.useState(currencies[0])
 
     const handleSelect = (option) => {
         setSelectedOption(option)
@@ -32,28 +25,27 @@ export const VerticalCurrencySelector = () => {
                 onClick={() => setIsOpen(!isOpen)}
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
-                aria-label={`Selected: ${selectedOption.label}`}
+                aria-label={`Selected: ${selectedOption}`}
             >
-                <selectedOption.icon className="h-8 w-8 mb-1" />
+                <Currency name={selectedOption} assetId={selectedOption} />
                 <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
                 <span className="sr-only">Toggle icon selector</span>
             </button>
             {isOpen && (
                 <div className="absolute top-full left-0 w-16 mt-1 bg-background border-2 rounded-none shadow-md">
-                    {options.map((option) => (
+                    {currencies.map((currency) => (
                         <Button
-                            key={option.label}
+                            key={currency}
                             variant="ghost"
-                            className={`w-full h-12 p-2 rounded-none flex items-center justify-center ${selectedOption.label === option.label
+                            className={`w-full h-12 p-2 rounded-none flex items-center justify-center ${selectedOption === currency
                                 ? 'bg-primary text-primary-foreground'
                                 : 'hover:bg-secondary'
                                 }`}
-                            onClick={() => handleSelect(option)}
-                            aria-selected={selectedOption.label === option.label}
-                            role="option"
+                            onClick={() => handleSelect(currency)}
+                            aria-selected={selectedOption === currency}
                         >
-                            <option.icon className="h-6 w-6" />
-                            <span className="sr-only">{option.label}</span>
+                            <Currency name={currency} assetId={currency} />
+                            <span className="sr-only">{currency}</span>
                         </Button>
                     ))}
                 </div>
