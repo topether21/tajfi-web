@@ -1,16 +1,22 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tajfi
+
+Tajfi is a secure, privacy-first digital wallet that leverages Taproot Assets to provide a seamless and secure experience for managing your digital assets. Integrate with Nostr for private communication and the Lightning Network for fast transactions.
+
+## Table of Contents
+
+- [Getting Started](#getting-started)
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Backend Integration](#backend-integration)
+- [Learn More](#learn-more)
+- [Deploy on Vercel](#deploy-on-vercel)
 
 ## Getting Started
 
-First, run the development server:
+To start using Tajfi, run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+bun i
 bun dev
 ```
 
@@ -18,16 +24,33 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Features
+
+- **Privacy-First**: Integrate with Nostr for secure and private communication.
+- **Fast Transactions**: Utilize the Lightning Network for quick and efficient transactions.
+- **Secure Asset Management**: Manage your digital assets securely with Tajfi.
+
+## Technologies Used
+
+- **Next.js**: A React framework for building fast and user-friendly web applications.
+- **Bun.js**: A modern JavaScript runtime for fast and efficient server-side operations.
+- **Taproot Assets**: For secure and private digital asset management.
+- **Nostr**: A protocol for private communication.
+- **Lightning Network**: For fast and scalable transactions.
+
+## Backend Integration
+
+Tajfi's backend is implemented in Go and can be found in the [tajfi-server repository](https://github.com/habibitcoin/tajfi-server).
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+To learn more about the technologies used in Tajfi, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [Next.js Documentation](https://nextjs.org/docs) - Learn about Next.js features and API.
+- [Bun.js Documentation](https://bun.sh/docs) - Explore the capabilities of Bun.js.
+- [Taproot Assets](https://example.com/taproot-assets) - Understand the security features of Taproot Assets.
+- [Nostr Protocol](https://example.com/nostr) - Discover how Nostr ensures private communication.
+- [Lightning Network](https://example.com/lightning-network) - Learn about fast transaction capabilities.
 
 ## Deploy on Vercel
 
