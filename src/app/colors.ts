@@ -1,4 +1,3 @@
-const primary = "";
+const primary = ''
 
-
-export { primary };
+export { primary }

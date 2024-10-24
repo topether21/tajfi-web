@@ -12,7 +12,6 @@
 //     paymentAddress: string;
 // };
 
-
 // const enableBTC = async () => {
 //     try {
 //         if (typeof window.webbtc !== 'undefined') {
@@ -20,7 +19,7 @@
 //         }
 //     }
 //     catch (error) {
-//         // User denied permission or cancelled 
+//         // User denied permission or cancelled
 //         console.log(error);
 //     }
 // };
@@ -38,7 +37,7 @@
 // };
 
 // // const signInvoice = async (ordinalsPublicKey: string) => {
-// //     const hexPsbt = 
+// //     const hexPsbt =
 // //     const psbt = bitcoin.Psbt.fromHex(hexPsbt);
 // //     // const signature = await window.nostr.signSchnorr();
 // //     const signature = await window.nostr.signPsbt(hexPsbt);
@@ -65,7 +64,6 @@
 
 // //     const signed = await window.nostr.signSchnorr(sigHash);
 
-
 // //     console.log("signed", signed)
 
 // //     // psbt.updateInput(0, {
@@ -75,8 +73,6 @@
 // //     // // Finalize the PSBT. Note that the transaction will not be broadcast to the Bitcoin network yet.
 // //     // psbt.finalizeAllInputs();
 // // };
-
-
 
 // const getAddressInfo = (pubkey: string) => {
 //     const pubkeyBuffer = Buffer.from(pubkey, 'hex');
@@ -101,7 +97,6 @@
 // //     const signed = await window.nostr.signSchnorr(sigHash.toString('hex'));
 // //     console.log("signed", signed)
 // // };
-
 
 // // const signInvoice = async (ordinalsPublicKey: string) => {
 // //     const hexPsbt = PSBT_HEX;
@@ -152,7 +147,6 @@
 // //     console.log("signed", signed)
 // // };
 
-
 // const signInvoice = async (ordinalsPublicKey: string) => {
 //     const hexPsbt = PSBT_HEX
 //     const psbt = bitcoin.Psbt.fromHex(hexPsbt);
@@ -162,7 +156,6 @@
 //     const signed = await window.nostr.signSchnorr(hexPsbt);
 //     console.log("signed", signed)
 // };
-
 
 // const serverAuth = async (ordinalsPublicKey: string, signature = 'valid_signature') => {
 //     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/wallet/connect`;

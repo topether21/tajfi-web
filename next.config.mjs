@@ -6,7 +6,6 @@ const nextConfig = {
 		ignoreDuringBuilds: true,
 	},
 	images: {
-		domains: ["placehold.co", "raw.githubusercontent.com"],
 		remotePatterns: [
 			{
 				protocol: "https",
