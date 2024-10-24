@@ -1,154 +1,103 @@
-'use client';
-import * as bitcoin from 'bitcoinjs-lib';
-import ecc from '@bitcoinerlab/secp256k1';
-import * as tools from 'uint8array-tools';
-import { PSBT_HEX, SIGNED_PSBT } from './data';
+'use client'
+import * as bitcoin from 'bitcoinjs-lib'
+import ecc from '@bitcoinerlab/secp256k1'
+import * as tools from 'uint8array-tools'
+import { PSBT_HEX, SIGNED_PSBT } from './data'
+import { auth } from './api'
 
-bitcoin.initEccLib(ecc);
-
-declare global {
-    interface Window {
-        nostr?: {
-            enable: () => Promise<void>;
-            getPublicKey: () => Promise<string>;
-            signSchnorr: (hex: string) => Promise<string>;
-        };
-    }
-}
-
-export type WalletKeys = {
-    ordinalsPublicKey: string;
-    paymentPublicKey: string;
-    ordinalsAddress: string;
-    paymentAddress: string;
-    token: string;
-};
-
-const getNostrPubKey = async () => {
-    if (window?.nostr?.enable) {
-        await window.nostr.enable();
-    } else {
-        throw new Error(
-            "Oops, it looks like you haven't set up your Nostr key yet." +
-            'Go to your Alby Account Settings and create or import a Nostr key.'
-        );
-    }
-    return window.nostr.getPublicKey();
-};
-
+bitcoin.initEccLib(ecc)
 
 const getAddressInfo = (pubkey: string) => {
-    const pubkeyBuffer = Buffer.from(pubkey, 'hex');
-    console.log(`Pubkey: ${pubkey.toString()}`);
-    const addrInfo = bitcoin.payments.p2tr({
-        pubkey: pubkeyBuffer,
-        network: bitcoin.networks.bitcoin,
-    });
+  const pubkeyBuffer = Buffer.from(pubkey, 'hex')
+  console.log(`Pubkey: ${pubkey.toString()}`)
+  const addrInfo = bitcoin.payments.p2tr({
+    pubkey: pubkeyBuffer,
+    network: bitcoin.networks.bitcoin,
+  })
 
-    return addrInfo;
+  return addrInfo
 }
 
 // https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/src/cjs/psbt/bip371.cjs#L105
 function serializeTaprootSignature(sig: Uint8Array, sighashType?: number) {
-    const sighashTypeByte = sighashType
-        ? Uint8Array.from([sighashType])
-        : Uint8Array.from([]);
-    return tools.concat([sig, sighashTypeByte]);
+  const sighashTypeByte = sighashType ? Uint8Array.from([sighashType]) : Uint8Array.from([])
+  return tools.concat([sig, sighashTypeByte])
 }
 
 const signInvoiceV2 = async (ordinalsPublicKey: string) => {
-    const hexPsbt = PSBT_HEX;
-    const psbt = bitcoin.Psbt.fromHex(hexPsbt);
-    console.log("original base64", psbt.toBase64());
-    const psbtSigned = bitcoin.Psbt.fromHex(SIGNED_PSBT);
-    console.log("signed base64", psbtSigned.toBase64());
-    const addressInfo = getAddressInfo(ordinalsPublicKey);
-    console.log("addressInfo", addressInfo);
+  const hexPsbt = PSBT_HEX
+  const psbt = bitcoin.Psbt.fromHex(hexPsbt)
+  console.log('original base64', psbt.toBase64())
+  const psbtSigned = bitcoin.Psbt.fromHex(SIGNED_PSBT)
+  console.log('signed base64', psbtSigned.toBase64())
+  const addressInfo = getAddressInfo(ordinalsPublicKey)
+  console.log('addressInfo', addressInfo)
 
-    for (const input of psbt.data.inputs) {
-        console.log("input", input);
-        // debugger;
-    };
+  for (const input of psbt.data.inputs) {
+    console.log('input', input)
+  }
 
-    // Uncaught (in promise) Error: Invalid arguments for Psbt.updateInput. Cannot use both taproot and non-taproot fields.
-    // @jad
-    psbt.updateInput(0, {
-        tapInternalKey: Buffer.from(ordinalsPublicKey, 'hex'), // Use the internal key for Taproot
-        witnessUtxo: {
-            script: addressInfo.output,
-            value: 56n,
-        },
-    });
+  // Uncaught (in promise) Error: Invalid arguments for Psbt.updateInput. Cannot use both taproot and non-taproot fields.
+  // @jad
+  psbt.updateInput(0, {
+    tapInternalKey: Buffer.from(ordinalsPublicKey, 'hex'), // Use the internal key for Taproot
+    witnessUtxo: {
+      script: addressInfo.output,
+      value: 56n,
+    },
+  })
 
-    const sigHash = psbt.__CACHE.__TX.hashForWitnessV1(
-        0,
-        [addressInfo.output],
-        [56n],
-        bitcoin.Transaction.SIGHASH_DEFAULT
-    );
-    console.log("sigHash", sigHash);
-    const sigHashHex = Buffer.from(sigHash).toString('hex');
-    console.log("sigHashHex", sigHashHex);
-    const signed = await window.nostr?.signSchnorr(sigHashHex);
-    console.log("signed", signed);
-    psbt.updateInput(0, {
-        tapKeySig: Buffer.from(signed, 'hex'),
-    });
-    psbt.finalizeAllInputs();
-    const updatedPsbtHex = psbt.toHex();
-    console.log("Updated PSBT Hex:", updatedPsbtHex);
-};
-
+  const sigHash = psbt.__CACHE.__TX.hashForWitnessV1(
+    0,
+    [addressInfo.output],
+    [56n],
+    bitcoin.Transaction.SIGHASH_DEFAULT,
+  )
+  console.log('sigHash', sigHash)
+  const sigHashHex = Buffer.from(sigHash).toString('hex')
+  console.log('sigHashHex', sigHashHex)
+  const signed = await window.nostr?.signSchnorr(sigHashHex)
+  console.log('signed', signed)
+  psbt.updateInput(0, {
+    tapKeySig: Buffer.from(signed, 'hex'),
+  })
+  psbt.finalizeAllInputs()
+  const updatedPsbtHex = psbt.toHex()
+  console.log('Updated PSBT Hex:', updatedPsbtHex)
+}
 
 const signInvoiceV1 = async (ordinalsPublicKey: string) => {
-    const hexPsbt = PSBT_HEX;
-    const psbt = bitcoin.Psbt.fromHex(hexPsbt);
-    console.log("base64", psbt.toBase64());
-    const addressInfo = getAddressInfo(ordinalsPublicKey);
-    console.log("addressInfo", addressInfo);
+  const hexPsbt = PSBT_HEX
+  const psbt = bitcoin.Psbt.fromHex(hexPsbt)
+  console.log('base64', psbt.toBase64())
+  const addressInfo = getAddressInfo(ordinalsPublicKey)
+  console.log('addressInfo', addressInfo)
 
-    // Sign the PSBT using Nostr
-    const signed = await window.nostr?.signSchnorr(hexPsbt);
-    if (!signed) {
-        throw new Error('Failed to sign PSBT');
-    }
-    console.log("signed", signed);
+  // Sign the PSBT using Nostr
+  const signed = await window.nostr?.signSchnorr(hexPsbt)
+  if (!signed) {
+    throw new Error('Failed to sign PSBT')
+  }
+  console.log('signed', signed)
 
-    // Convert the signature to Uint8Array
-    const signatureBuffer = Buffer.from(signed, 'hex');
-    const signatureUint8Array = new Uint8Array(signatureBuffer);
+  // Convert the signature to Uint8Array
+  const signatureBuffer = Buffer.from(signed, 'hex')
+  const signatureUint8Array = new Uint8Array(signatureBuffer)
 
-    // Convert the public key to Uint8Array
-    const pubkeyBuffer = Buffer.from(ordinalsPublicKey, 'hex');
-    const pubkeyUint8Array = new Uint8Array(pubkeyBuffer);
+  // Convert the public key to Uint8Array
+  const pubkeyBuffer = Buffer.from(ordinalsPublicKey, 'hex')
+  const pubkeyUint8Array = new Uint8Array(pubkeyBuffer)
 
-    console.log({ signatureUint8Array, pubkeyUint8Array })
+  console.log({ signatureUint8Array, pubkeyUint8Array })
 
-    psbt.updateInput(0, {
-        finalScriptSig: Buffer.from(signatureUint8Array),
-    });
+  psbt.updateInput(0, {
+    finalScriptSig: Buffer.from(signatureUint8Array),
+  })
 
-    // Finalize the input
-    psbt.finalizeAllInputs();
+  // Finalize the input
+  psbt.finalizeAllInputs()
 
-    // Get the updated PSBT
-    const updatedPsbtHex = psbt.toHex();
-    console.log("Updated PSBT Hex:", updatedPsbtHex);
-};
-
-
-export const connectWallet = async (provider = '') => {
-    const walletName = provider?.split('.')[0] || 'alby';
-    const ordinalsPublicKey = await getNostrPubKey();
-    // const serverAuthResponse = await auth(ordinalsPublicKey);
-    // console.log("serverAuthResponse", serverAuthResponse);
-    // await signInvoiceV2(ordinalsPublicKey);
-    return {
-        walletName,
-        ordinalsPublicKey,
-        paymentPublicKey: '',
-        ordinalsAddress: '',
-        paymentAddress: '',
-        token: '',
-    };
-};
+  // Get the updated PSBT
+  const updatedPsbtHex = psbt.toHex()
+  console.log('Updated PSBT Hex:', updatedPsbtHex)
+}
