@@ -47,7 +47,7 @@ const ReceivePage = () => {
     return (
         <div className="flex flex-col items-center justify-start h-full text-foreground">
             <h1 className="text-2xl font-bold mb-4">Receive Funds</h1>
-            <div className="w-full max-w-md p-4">
+            <div className="w-full max-w-md pt-4">
                 <div className="mb-8">
                     <label htmlFor="receive-amount" className="block text-base font-medium -mb-4">Amount</label>
                     <div className="flex justify-between items-center gap-4">

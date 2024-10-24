@@ -92,7 +92,7 @@ export default function SendPage() {
     return (
         <div className="flex flex-col items-center justify-start h-full text-foreground">
             <h1 className="text-2xl font-bold mb-4">Send Funds</h1>
-            <div className="w-full max-w-md p-4">
+            <div className="w-full max-w-md py-4">
                 <div className="mb-6">
                     <label htmlFor="send-invoice" className="block text-base font-medium mb-1">Your invoice</label>
                     <div className="flex items-center pb-2">
