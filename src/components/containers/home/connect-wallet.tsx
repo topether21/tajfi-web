@@ -1,11 +1,11 @@
 'use client'
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import { Wallet } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/auth-context'
+import { MotionDiv } from '../shared'
 
 interface ConnectWalletButtonProps {
   size?: 'default' | 'sm' | 'lg' | 'icon'
@@ -53,7 +53,7 @@ export const ConnectWalletButton: React.FC<ConnectWalletButtonProps> = ({
         >
           {isConnecting ? (
             <>
-              <motion.div
+              <MotionDiv
                 className="w-4 h-4 border-t-2 border-r-2 border-white rounded-full mr-2"
                 animate={{ rotate: 360 }}
                 transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY, ease: 'linear' }}
