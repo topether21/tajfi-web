@@ -37,7 +37,6 @@ const signInvoiceV2 = async (ordinalsPublicKey: string) => {
 
     for (const input of psbt.data.inputs) {
         console.log("input", input);
-        // debugger;
     };
 
     // Uncaught (in promise) Error: Invalid arguments for Psbt.updateInput. Cannot use both taproot and non-taproot fields.

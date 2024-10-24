@@ -33,8 +33,11 @@ export const useBalances = () => {
     });
 
     const loading = !error && balances.length === 0;
+    const currencies = balances.map(balance => balance.assetId);
+
     return {
         balances,
+        currencies,
         loading,
         error,
     };

@@ -11,7 +11,7 @@ export const useInvoiceDetails = (invoice: string) => {
         try {
             const res = await decodeInvoice({ address: newInvoice });
             return {
-                amount: res.amount,
+                amount: Number(res.amount),
                 assetId: res.asset_id,
                 assetType: res.asset_type,
             };
@@ -22,6 +22,6 @@ export const useInvoiceDetails = (invoice: string) => {
     });
     useDebounce(() => {
         fetchInvoiceDetails(invoice);
-    }, 2000, [invoice]);
+    }, 1000, [invoice]);
     return { loading, error: errorMessage || error?.message, value };
 }

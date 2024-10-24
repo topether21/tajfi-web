@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { CurrencySelector } from './currency_selector/currency-selector';
 import NumberFlow from '@number-flow/react';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useBalances } from '@/hooks/use-balances';
+import { AssetBalance, useBalances } from '@/hooks/use-balances';
 import { useState } from 'react';
 
 const ActionButton = ({ Icon, label, href }: { Icon: React.ElementType; label: string; href: string }) => {
@@ -19,8 +19,8 @@ const ActionButton = ({ Icon, label, href }: { Icon: React.ElementType; label: s
     );
 }
 
-export const DesktopWalletHeader = () => {
-    const { balances, loading } = useBalances();
+export const DesktopWalletHeader = ({ balances, loading }: { balances: AssetBalance[], loading: boolean }) => {
+
     const [currentBalanceIndex, setCurrentBalanceIndex] = useState(0);
 
     return (

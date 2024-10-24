@@ -5,10 +5,12 @@ import { DesktopHeader } from '@/components/containers/layout/header';
 import { MobileNavbar } from '@/components/containers/layout/mobile-navbar';
 import { DesktopWalletHeader } from '@/components/containers/wallet/wallet-header';
 import { Card } from '@/components/ui/card';
+import { useBalances } from '@/hooks/use-balances';
 import { useAuth } from '@/lib/auth-context';
 
 const WalletLayout = ({ children }: { children: React.ReactNode }) => {
     const { profile } = useAuth();
+    const { balances, loading, currencies } = useBalances();
     return (
         <>
             <DesktopHeader />
@@ -19,7 +21,7 @@ const WalletLayout = ({ children }: { children: React.ReactNode }) => {
                     </div>
                 }
                 {profile && <>
-                    <DesktopWalletHeader />
+                    <DesktopWalletHeader balances={balances} loading={loading} />
                     <Card className="w-full max-w-2xl mx-auto min-w-[300px] mt-6 pt-8">
                         {children}
                     </Card>

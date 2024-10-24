@@ -10,14 +10,17 @@ import {
 import { TetherUSDT } from "@/components/icons/tether"
 import type { AssetBalance } from "@/hooks/use-balances";
 import { useEffect, useState } from "react";
+import { UnknownLogo } from "@/components/icons/unknown";
 
 export const Currency = ({ name, assetId }: { name?: string, assetId?: string }) => {
+    console.log("default asset id", process.env.NEXT_PUBLIC_DEFAULT_ASSET_ID, assetId);
+
     if (assetId) {
         switch (assetId) {
-            case '33fd821cad24cc72b4b54de31fb308cf38b9cccf8157c765c288d1985d3b573c':
+            case process.env.NEXT_PUBLIC_DEFAULT_ASSET_ID:
                 return <TetherUSDT />;
             default:
-                return <div className="text-center text-3xl">{assetId.toUpperCase()}</div>;
+                return <UnknownLogo assetId={assetId} />
         }
     }
     return name === 'tether' ? <TetherUSDT /> : <div className="text-center text-3xl">{name?.toUpperCase()}</div>
