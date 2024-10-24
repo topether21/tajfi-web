@@ -41,11 +41,15 @@ export const DesktopWalletHeader = ({ balances, loading }: { balances: AssetBala
                         <div className="flex justify-center">
                             <div className="text-center">
                                 <p className="text-sm text-gray-400 text-center">Your balance</p>
-                                <NumberFlow
-                                    value={balances?.[currentBalanceIndex]?.balance}
-                                    trend={false}
-                                    className="text-3xl font-bold text-green-500 mb-2 items-center"
-                                />
+                                {typeof balances?.[currentBalanceIndex]?.balance === 'number' ? (
+                                    <NumberFlow
+                                        value={balances[currentBalanceIndex].balance}
+                                        trend={false}
+                                        className="text-3xl font-bold text-green-500 mb-2 items-center"
+                                    />
+                                ) : (
+                                    <p className="text-3xl font-bold text-green-500 mb-2">--</p>
+                                )}
                             </div>
                         </div>
                     </>

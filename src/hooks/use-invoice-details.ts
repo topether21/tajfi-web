@@ -2,7 +2,7 @@ import { decodeInvoice } from '@/lib/wallet/api';
 import { useState } from 'react';
 import { useAsyncFn } from 'react-use';
 
-export const useInvoiceDetails = (invoice: string) => {
+export const useInvoiceDetails = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [{ loading, error, value }, fetchInvoiceDetails] = useAsyncFn(async (newInvoice: string) => {
         console.log('fetching invoice details');

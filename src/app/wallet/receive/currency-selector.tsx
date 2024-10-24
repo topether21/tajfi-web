@@ -11,6 +11,7 @@ export const VerticalCurrencySelector = ({ selectedOption, setSelectedOption, cu
 
 
     const handleSelect = (option: string) => {
+        console.log('----> option', option);
         setSelectedOption(option)
         setIsOpen(false)
     }

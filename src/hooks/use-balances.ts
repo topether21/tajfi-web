@@ -10,6 +10,9 @@ export type AssetBalance = {
 export const useBalances = () => {
     const fetcher = () => listBalances().then(data => {
         const balances = Object.entries(data.asset_balances).reduce((acc, [assetId, balance]) => {
+            if (balance.asset_genesis.asset_type === 'COLLECTIBLE') {
+                return acc;
+            }
             const assetBalance = {
                 balance: Number(balance.balance),
                 name: balance.asset_genesis.name,

@@ -23,16 +23,61 @@ export type AssetBalances = {
             name: string;
             meta_hash: string;
             asset_id: string;
-            asset_type: string;
+            asset_type: 'NORMAL' | 'COLLECTIBLE';
             output_index: number;
         };
         balance: string;
     };
 }
 
+type InvoiceInfo = {
+    encoded: string;
+    asset_id: string;
+    asset_type: 'NORMAL' | "COLLECTIBLE";
+    amount: string;
+    group_key: string;
+    script_key: string;
+    internal_key: string;
+    tapscript_sibling: string;
+    taproot_output_key: string;
+    proof_courier_addr: string;
+    asset_version: string;
+    address_version: string;
+};
+
+
 type ListBalancesResponse = {
     asset_balances: AssetBalances;
 }
+
+type SendCompleteResponse = {
+    transfer_timestamp: string;
+    anchor_tx_hash: string;
+    anchor_tx_height_hint: number;
+    anchor_tx_chain_fees: string;
+    inputs: Array<{
+        anchor_point: string;
+        asset_id: string;
+        script_key: string;
+        amount: string;
+    }>;
+    outputs: Array<{
+        anchor: object;
+        script_key: string;
+        script_key_is_local: boolean;
+        amount: string;
+        new_proof_blob: string;
+        split_commit_root_hash: string;
+        output_type: string;
+        asset_version: string;
+        lock_time: string;
+        relative_lock_time: string;
+        proof_delivery_status: string;
+    }>;
+    anchor_tx_block_hash: {
+        incididunt_7: boolean;
+    };
+};
 
 const fetchFromApi = async <T>(endpoint: string, method: 'GET' | 'POST', body: T, requireAuth = true) => {
     const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}${endpoint}`;
@@ -83,14 +128,14 @@ export const receive = async ({ assetId, amount }: { assetId: string, amount: nu
     return fetchFromApi('/wallet/receive', 'POST', body);
 };
 
-export const sendStart = async ({ invoice }: { invoice: string }) => {
+export const sendStart = async ({ invoice }: { invoice: string }): Promise<{ funded_psbt: string, change_output_index: number, passive_asset_psbts: string[] }> => {
     const body: SendStartBody = {
         invoice,
     };
     return fetchFromApi('/wallet/send/start', 'POST', body);
 };
 
-export const sendComplete = async ({ psbt }: { psbt: string }) => {
+export const sendComplete = async ({ psbt }: { psbt: string }): Promise<SendCompleteResponse> => {
     const body: SendCompleteBody = {
         psbt,
     };
@@ -99,21 +144,6 @@ export const sendComplete = async ({ psbt }: { psbt: string }) => {
 
 export const listBalances = async (): Promise<ListBalancesResponse> => {
     return fetchFromApi('/wallet/balances', 'GET', {});
-};
-
-type InvoiceInfo = {
-    encoded: string;
-    asset_id: string;
-    asset_type: 'NORMAL' | "COLLECTIBLE";
-    amount: string;
-    group_key: string;
-    script_key: string;
-    internal_key: string;
-    tapscript_sibling: string;
-    taproot_output_key: string;
-    proof_courier_addr: string;
-    asset_version: string;
-    address_version: string;
 };
 
 export const decodeInvoice = async ({ address }: { address: string }): Promise<InvoiceInfo> => {

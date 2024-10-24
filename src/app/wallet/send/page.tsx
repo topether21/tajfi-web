@@ -16,6 +16,7 @@ const TransactionSummary = ({ invoiceDetails, loading }: {
     invoiceDetails: { amount: number; assetId: string; } | null;
     loading: boolean;
 }) => {
+    
     const [isConfirmed, setIsConfirmed] = useState(false);
     console.log("TransactionSummary", invoiceDetails);
 
@@ -105,7 +106,6 @@ export default function SendPage() {
                         />
                         <QrCode className="ml-2" />
                     </div>
-                    {/* <div className="h-px bg-gray-800 w-full mt-4" /> */}
                     <Suspense fallback={<Skeleton className="h-24 w-full rounded-md" />}>
                         <TransactionSummary invoiceDetails={invoiceDetails} loading={loading} />
                     </Suspense>

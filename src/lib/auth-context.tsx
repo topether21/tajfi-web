@@ -34,8 +34,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             setError(null);
         } catch (err) {
             const errorMessage = (err as Error).message.includes("Nostr key")
-                ? "Please go to your Alby Account Settings and create or import a Nostr key."
-                : "Failed to connect wallet. Please try again.";
+                ? "nostrKeyError"
+                : "genericError";
             setError(errorMessage);
         }
     };
@@ -61,7 +61,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                         <AlertDialogHeader>
                             <AlertDialogTitle>Error</AlertDialogTitle>
                             <AlertDialogDescription>
-                                {error}
+                                {error === "nostrKeyError" ? (
+                                    <>
+                                        Please go to your Alby Account Settings and create or import a Nostr key. You can also install the Alby extension from{" "}
+                                        <a href="https://chromewebstore.google.com/detail/alby-bitcoin-wallet-for-l/iokeahhehimjnekafflcihljlcjccdbe?hl=en" target="_blank" rel="noopener noreferrer" className="text-primary-foreground text-underline font-bold">
+                                            here
+                                        </a>.
+                                    </>
+                                ) : (
+                                    "Failed to connect wallet. Please try again."
+                                )}
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
