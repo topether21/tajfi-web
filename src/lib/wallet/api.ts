@@ -107,7 +107,6 @@ const fetchFromApi = async <T>(endpoint: string, method: 'GET' | 'POST', body: T
   }
 
   const data = await response.json()
-  console.log('----> data', data)
   return data
 }
 
