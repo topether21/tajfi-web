@@ -51,7 +51,7 @@ const TransactionSummary = ({
       console.log('Confirmed')
       setSentTransaction(true)
     } catch (e) {
-      setSigningError((e as Error).message)
+      setSigningError((e as Error).message || 'Failed to send transaction')
       setSentTransaction(false)
     }
   }

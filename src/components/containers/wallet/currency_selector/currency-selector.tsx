@@ -13,8 +13,6 @@ import { useEffect, useState } from 'react'
 import { UnknownLogo } from '@/components/icons/unknown'
 
 export const Currency = ({ name, assetId }: { name?: string; assetId?: string }) => {
-  console.log('default asset id', process.env.NEXT_PUBLIC_DEFAULT_ASSET_ID, assetId)
-
   if (assetId) {
     switch (assetId) {
       case process.env.NEXT_PUBLIC_DEFAULT_ASSET_ID:
