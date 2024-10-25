@@ -61,7 +61,7 @@ export const GridAssetItem = ({ item }: GridAssetItemProps) => {
           <Image src={item.image} alt={item.name} layout="fill" objectFit="contain" />
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between items-center bg-muted px-6 py-4">
+      <CardFooter className="flex justify-between items-center bg-muted pt-2">
         <div className="flex items-center space-x-2">
           <Bitcoin className="h-4 w-4 text-primary" />
           <span className="text-base font-semibold text-foreground">{formatSatoshis(item.satoshiPrice)} BTC</span>

@@ -1,9 +1,9 @@
-import { AssetsMarketplace } from '@/components/containers/marketplace/marketplace'
+import { WalletAssets } from '@/components/containers/wallet/wallet-assets'
 
 export default function Marketplace() {
   return (
     <div className="h-screen flex flex-col">
-      <AssetsMarketplace />
+      <WalletAssets />
     </div>
   )
 }

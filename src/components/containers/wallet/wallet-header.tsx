@@ -1,4 +1,4 @@
-import { Send, Download, History } from 'lucide-react'
+import { Send, Download, History, Wallet } from 'lucide-react'
 import Link from 'next/link'
 import { CurrencySelector } from './currency_selector/currency-selector'
 import NumberFlow from '@number-flow/react'
@@ -29,6 +29,7 @@ export const DesktopWalletHeader = ({ balances, loading }: { balances: AssetBala
           <ActionButton Icon={Send} label="Send" href="/wallet/send" />
           <ActionButton Icon={Download} label="Receive" href="/wallet/receive" />
           <ActionButton Icon={History} label="History" href="/wallet/history" />
+          <ActionButton Icon={Wallet} label="Marketplace" href="/wallet/marketplace" />
         </div>
         {loading ? (
           <Skeleton className="h-12 w-full rounded-md" />
