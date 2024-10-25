@@ -52,6 +52,7 @@ const TransactionSummary = ({
       setSentTransaction(true)
     } catch (e) {
       setSigningError((e as Error).message)
+      setSentTransaction(false)
     }
   }
 
