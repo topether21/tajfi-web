@@ -10,7 +10,7 @@ import { useAuth } from '@/lib/auth-context'
 
 const WalletLayout = ({ children }: { children: React.ReactNode }) => {
   const { profile } = useAuth()
-  const { balances, loading, currencies } = useBalances()
+  const { balances, loading } = useBalances()
   return (
     <>
       <DesktopHeader />

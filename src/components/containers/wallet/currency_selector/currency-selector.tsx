@@ -13,8 +13,6 @@ import { useEffect, useState } from 'react'
 import { UnknownLogo } from '@/components/icons/unknown'
 
 export const Currency = ({ name, assetId }: { name?: string; assetId?: string }) => {
-  console.log('default asset id', process.env.NEXT_PUBLIC_DEFAULT_ASSET_ID, assetId)
-
   if (assetId) {
     switch (assetId) {
       case process.env.NEXT_PUBLIC_DEFAULT_ASSET_ID:
@@ -23,7 +21,7 @@ export const Currency = ({ name, assetId }: { name?: string; assetId?: string })
         return <UnknownLogo assetId={assetId} />
     }
   }
-  return name === 'tether' ? <TetherUSDT /> : <div className="text-center text-3xl">{name?.toUpperCase()}</div>
+  return name === process.env.NEXT_PUBLIC_DEFAULT_ASSET_NAME ? <TetherUSDT /> : <div className="text-center text-3xl">{name?.toUpperCase()}</div>
 }
 
 export const CurrencySelector = ({

@@ -11,6 +11,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react'
 import { Suspense } from 'react'
 import { useSendFunds } from './use-send-funds'
+import { signInvoice } from '@/lib/wallet/sign'
+import { sendComplete } from '@/lib/wallet/api'
 
 const TransactionSummary = ({
   invoiceDetails,
@@ -24,18 +26,33 @@ const TransactionSummary = ({
   const {
     loading: loadingSend,
     error: errorSend,
-    fundedPsbt,
+    preSignedData,
     sendFundsStart,
-    sendFundsComplete,
-    sentTransaction,
   } = useSendFunds()
 
-  console.log('TransactionSummary', { invoiceDetails, fundedPsbt, sentTransaction })
+  console.log('TransactionSummary', { invoiceDetails, preSignedData })
+  const [signingError, setSigningError] = useState('')
+  const [sentTransaction, setSentTransaction] = useState(false)
 
-  const handleConfirm = () => {
-    if (fundedPsbt) {
-      sendFundsComplete(fundedPsbt)
+  const handleConfirm = async () => {
+    if (!preSignedData) return
+    try {
+      setSigningError('')
+
+      const signatureHex = await signInvoice(preSignedData.sighashHexToSign)
+      if (!signatureHex) {
+        setSigningError('Failed to sign invoice')
+        return
+      }
+
+      console.log('signed', signatureHex)
+      debugger
+      await sendComplete({ psbt: preSignedData.fundedPsbt, signature_hex: signatureHex })
       console.log('Confirmed')
+      setSentTransaction(true)
+    } catch (e) {
+      setSigningError((e as Error).message || 'Failed to send transaction')
+      setSentTransaction(false)
     }
   }
 
@@ -44,6 +61,8 @@ const TransactionSummary = ({
       sendFundsStart(invoice)
     }
   }, [invoiceDetails, invoice])
+
+  const error = errorSend || signingError
 
   if (!invoiceDetails) return null
 
@@ -63,7 +82,7 @@ const TransactionSummary = ({
             <Currency assetId={invoiceDetails?.assetId} />
           </div>
         </div>
-        {!sentTransaction && !errorSend && (
+        {!sentTransaction && !error && (
           <div className="flex items-center text-yellow-600 dark:text-yellow-400">
             <AlertCircle className="mr-2" />
             <span className="text-xs">Please review the details before confirming.</span>
@@ -75,10 +94,10 @@ const TransactionSummary = ({
             <span>Transaction confirmed.</span>
           </div>
         )}
-        {errorSend && (
+        {error && (
           <div className="flex items-center text-red-600 dark:text-red-400">
             <AlertCircle className="mr-2" />
-            <span>{errorSend}</span>
+            <span>{error}</span>
           </div>
         )}
       </CardContent>
@@ -87,7 +106,7 @@ const TransactionSummary = ({
           className="w-full text-lg"
           size="lg"
           onClick={handleConfirm}
-          disabled={!fundedPsbt || Boolean(sentTransaction)}
+          disabled={!preSignedData || Boolean(sentTransaction)}
         >
           {sentTransaction ? 'Sent' : 'Confirm'}
           {!sentTransaction && <ArrowRight className="ml-2" />}

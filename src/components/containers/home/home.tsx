@@ -1,14 +1,13 @@
 'use client'
 
 import { useRef } from 'react'
-import { motion } from 'framer-motion'
 import { Github } from 'lucide-react'
 import { APP_DESCRIPTION, APP_FOOTER_DESCRIPTION, APP_NAME, HOME_HERO_DESCRIPTION } from '@/lib/constants'
 import { AnimatedBackground } from './animated-background'
 import { DesktopHeader } from '../layout/header'
 import { ConnectWalletButton } from './connect-wallet'
 import { WalletAnimation } from './wallet-animation'
-
+import { MotionDiv } from '../shared'
 export const HomeContainer = () => {
   const sceneRef = useRef(null)
   return (
@@ -20,30 +19,30 @@ export const HomeContainer = () => {
       <main className="flex-grow flex flex-col justify-center items-center px-6 sm:px-8 lg:px-10 py-16 relative z-10">
         <div className="container mx-auto max-w-5xl flex flex-col lg:flex-row">
           <div className="lg:w-1/2 text-center lg:text-left mb-16 lg:mb-0">
-            <motion.h1
+            <MotionDiv
               className="text-6xl sm:text-7xl md:text-8xl font-extrabold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent"
               initial={{ opacity: 0, y: -30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
             >
               {APP_NAME}
-            </motion.h1>
-            <motion.p
+            </MotionDiv>
+            <MotionDiv
               className="max-w-2xl mx-auto lg:mx-0 text-2xl text-muted-foreground mb-8"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.3 }}
             >
               {APP_DESCRIPTION}
-            </motion.p>
-            <motion.p
+            </MotionDiv>
+            <MotionDiv
               className="max-w-2xl mx-auto lg:mx-0 text-lg text-secondary-foreground mb-12"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.5 }}
             >
               {HOME_HERO_DESCRIPTION}
-            </motion.p>
+            </MotionDiv>
 
             <ConnectWalletButton isHero />
           </div>

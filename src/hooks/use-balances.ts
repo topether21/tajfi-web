@@ -20,7 +20,7 @@ export const useBalances = () => {
           assetId,
         }
 
-        if (balance.asset_genesis.name === 'tether') {
+        if (balance.asset_genesis.name === process.env.NEXT_PUBLIC_ASSET_NAME) {
           acc.unshift(assetBalance)
         } else {
           acc.push(assetBalance)
