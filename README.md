@@ -30,7 +30,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Technologies Used
 
-- **Next.js**: A React framework for building fast and user-friendly web applications.
+- **React 19**: JavaScript library for building user interfaces.
+- **Next.js 15**: A React framework for building fast and user-friendly web applications.
 - **Bun.js**: A modern JavaScript runtime for fast and efficient server-side operations.
 - **Taproot Assets**: For secure and private digital asset management.
 - **Nostr**: A protocol for private communication.

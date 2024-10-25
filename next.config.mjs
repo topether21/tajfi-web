@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+	experimental: {
+		reactCompiler: true,
+	},
 	eslint: {
 		// Warning: This allows production builds to successfully complete even if
 		// your project has ESLint errors.
@@ -21,17 +24,6 @@ const nextConfig = {
 			},
 		],
 	},
-	// webpack: (config, { isServer }) => {
-	// 	// Add WebAssembly support
-	// 	if (!isServer) {
-	// 		config.experiments.asyncWebAssembly = true;
-	// 		config.module.rules.push({
-	// 		test: /\.wasm$/,
-	// 		type: 'webassembly/async',
-	// 	});
-	// 	}
-	// 	return config;
-	// },
 };
 
 export default nextConfig;
