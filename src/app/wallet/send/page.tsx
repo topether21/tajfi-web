@@ -12,6 +12,7 @@ import { AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react'
 import { Suspense } from 'react'
 import { useSendFunds } from './use-send-funds'
 import { signInvoice } from '@/lib/wallet/sign'
+import { sendComplete } from '@/lib/wallet/api'
 
 const TransactionSummary = ({
   invoiceDetails,
@@ -27,24 +28,30 @@ const TransactionSummary = ({
     error: errorSend,
     preSignedData,
     sendFundsStart,
-    sendFundsComplete,
-    sentTransaction,
   } = useSendFunds()
 
-  console.log('TransactionSummary', { invoiceDetails, preSignedData, sentTransaction })
+  console.log('TransactionSummary', { invoiceDetails, preSignedData })
   const [signingError, setSigningError] = useState('')
+  const [sentTransaction, setSentTransaction] = useState(false)
 
   const handleConfirm = async () => {
-    if (preSignedData) {
+    if (!preSignedData) return
+    try {
       setSigningError('')
+
       const signatureHex = await signInvoice(preSignedData.sighashHexToSign)
       if (!signatureHex) {
         setSigningError('Failed to sign invoice')
         return
       }
+
       console.log('signed', signatureHex)
-      await sendFundsComplete({ fundedPsbt: preSignedData.fundedPsbt, signatureHex })
+      debugger
+      await sendComplete({ psbt: preSignedData.fundedPsbt, signature_hex: signatureHex })
       console.log('Confirmed')
+      setSentTransaction(true)
+    } catch (e) {
+      setSigningError((e as Error).message)
     }
   }
 

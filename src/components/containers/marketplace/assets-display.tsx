@@ -24,7 +24,7 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = ({
   loadMoreItems,
   containerRef,
 }) => (
-  <div ref={containerRef} className="container mx-auto flex-grow overflow-auto">
+  <div ref={containerRef as React.LegacyRef<HTMLDivElement>} className="container mx-auto flex-grow overflow-auto">
     <AutoSizer>
       {({ width, height }) => {
         const columnCount = calculateColumnCount(width)

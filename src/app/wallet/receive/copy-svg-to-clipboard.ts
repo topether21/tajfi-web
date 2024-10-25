@@ -1,5 +1,8 @@
+'use client'
+
 export const copySVGToClipboard = async (svgElement: SVGElement | null | undefined) => {
   if (svgElement) {
+    if (typeof document === 'undefined') return
     const canvas = document.createElement('canvas')
     const context = canvas.getContext('2d')
     const svgData = new XMLSerializer().serializeToString(svgElement)
