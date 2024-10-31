@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { Button } from '@/components/ui/button'
 import { ChevronDown } from 'lucide-react'
-import { useBalances } from '@/hooks/use-balances'
 import { Currency } from '@/components/containers/wallet/currency_selector/currency-selector'
 
 export const VerticalCurrencySelector = ({
@@ -14,7 +13,6 @@ export const VerticalCurrencySelector = ({
   const [isOpen, setIsOpen] = React.useState(false)
 
   const handleSelect = (option: string) => {
-    console.log('----> option', option)
     setSelectedOption(option)
     setIsOpen(false)
   }
@@ -39,9 +37,8 @@ export const VerticalCurrencySelector = ({
             <Button
               key={currency}
               variant="ghost"
-              className={`w-full h-12 p-2 rounded-none flex items-center justify-center ${
-                selectedOption === currency ? 'bg-primary text-primary-foreground' : 'hover:bg-secondary'
-              }`}
+              className={`w-full h-12 p-2 rounded-none flex items-center justify-center ${selectedOption === currency ? 'bg-primary text-primary-foreground' : 'hover:bg-secondary'
+                }`}
               onClick={() => handleSelect(currency)}
               aria-selected={selectedOption === currency}
             >
