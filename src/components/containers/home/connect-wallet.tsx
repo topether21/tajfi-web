@@ -4,13 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Wallet, Sparkles, Rocket, Zap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 import { MotionDiv } from '../shared'
 import { useAuth } from '@/lib/auth-context'
@@ -62,7 +56,6 @@ export const ConnectWalletButton: React.FC<ConnectWalletModalProps> = ({
   onClick,
   isHero = false,
 }) => {
-
   const { handleLogout, isConnecting, profile } = useWalletAuth({ onCancel: onClick })
 
   if (profile) {
@@ -114,7 +107,6 @@ export const ConnectWalletButton: React.FC<ConnectWalletModalProps> = ({
 export const ConnectWalletModal = ({ isHero }: { isHero?: boolean }) => {
   const [isOpen, setIsOpen] = useState(false)
 
-
   const openModal = () => {
     setIsOpen(true)
   }
@@ -131,8 +123,6 @@ export const ConnectWalletModal = ({ isHero }: { isHero?: boolean }) => {
     { name: 'keyone' as WalletProvider, icon: Zap },
   ]
 
-
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -140,9 +130,7 @@ export const ConnectWalletModal = ({ isHero }: { isHero?: boolean }) => {
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-center text-2xl font-bold">
-            Choose your wallet
-          </DialogTitle>
+          <DialogTitle className="text-center text-2xl font-bold">Choose your wallet</DialogTitle>
         </DialogHeader>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 p-4">
           {wallets.map((wallet) => {

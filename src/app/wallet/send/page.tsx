@@ -23,12 +23,7 @@ const TransactionSummary = ({
   loading: boolean
   invoice: string
 }) => {
-  const {
-    loading: loadingSend,
-    error: errorSend,
-    preSignedData,
-    sendFundsStart,
-  } = useSendFunds()
+  const { loading: loadingSend, error: errorSend, preSignedData, sendFundsStart } = useSendFunds()
 
   console.log('TransactionSummary', { invoiceDetails, preSignedData })
   const [signingError, setSigningError] = useState('')
