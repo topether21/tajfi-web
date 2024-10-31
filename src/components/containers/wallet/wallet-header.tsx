@@ -6,6 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import type { AssetBalance } from '@/hooks/use-balances'
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import { MotionDiv } from '../shared'
 
 const ActionButton = ({
   Icon,
@@ -21,9 +22,8 @@ const ActionButton = ({
   isActive: boolean
 }) => {
   return (
-    <Link href={href} passHref>
-      <motion.div
-        onClick={() => setActiveAction(label)}
+    <Link href={href} passHref onClick={() => setActiveAction(label)}>
+      <MotionDiv
         className="flex flex-col items-center focus:outline-none relative z-10"
         style={{ willChange: 'transform', transform: 'translateZ(0)' }}
       >
@@ -31,7 +31,7 @@ const ActionButton = ({
           <Icon size={24} color="white" />
         </div>
         <p className={`text-sm mt-2 ${isActive ? 'text-primary' : 'text-white'}`}>{label}</p>
-      </motion.div>
+      </MotionDiv>
     </Link>
   )
 }

@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { Send, Download, History } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useAuth } from '@/lib/auth-context'
+import { useAuth } from '@/hooks/auth-context'
 
 export const MobileNavbar = () => {
   const { profile } = useAuth()

@@ -1,47 +1,34 @@
 'use client'
+import { AUTH_MESSAGE } from '../constants'
 import { auth } from './api'
-
-declare global {
-  interface Window {
-    nostr?: {
-      enable: () => Promise<void>
-      getPublicKey: () => Promise<string>
-      signSchnorr: (hex: string) => Promise<string>
-    }
-  }
-}
+import { getWalletKeys, signBip322MessageSimple, signMessage } from './providers'
+import type { WalletProvider } from './types'
 
 export type WalletKeys = {
   ordinalsPublicKey: string
   token: string
+  provider: WalletProvider
 }
 
-export type WalletProvider = 'alby' | 'uniSat' | 'xverse' | 'metaMask' | 'keyone'
+export const connectWallet = async (provider: WalletProvider) => {
 
-const getNostrPubKey = async () => {
-  if (window?.nostr?.enable) {
-    await window.nostr.enable()
-  } else {
-    throw new Error(
-      "Oops, it looks like you haven't set up your Nostr key yet." +
-        'Go to your Alby Account Settings and create or import a Nostr key.',
-    )
-  }
-  return window.nostr.getPublicKey()
-}
-
-export const connectWallet = async (provider = '') => {
-  const walletName = provider?.split('.')[0] || 'alby'
-
-  const ordinalsPublicKey = await getNostrPubKey()
-  const serverAuthResponse = await auth(ordinalsPublicKey)
+  const { ordinalsPublicKey, ordinalsAddress } = await getWalletKeys(provider)
+  debugger
+  const signature = await signBip322MessageSimple(AUTH_MESSAGE, { provider, publicKey: ordinalsPublicKey }) ?? ''
+  console.log('signature', signature)
+  const serverAuthResponse = await auth({
+    ordinalsPublicKey,
+    signature,
+    message: AUTH_MESSAGE,
+  })
   localStorage.setItem('authToken', serverAuthResponse.token)
 
   const token = serverAuthResponse.token || ''
   const walletData = {
-    walletName,
+    walletName: provider,
     ordinalsPublicKey,
     token,
+    provider,
   }
 
   return walletData

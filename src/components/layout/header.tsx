@@ -1,6 +1,6 @@
 import { Bitcoin } from 'lucide-react'
 
-import { ConnectWalletModal } from '../home/connect-wallet'
+import { ConnectWalletModal } from '@/components/containers/home/connect-wallet'
 import { APP_NAME } from '@/lib/constants'
 import Link from 'next/link'
 

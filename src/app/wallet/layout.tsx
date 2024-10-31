@@ -1,12 +1,12 @@
 'use client'
 
 import { ConnectWalletModal } from '@/components/containers/home/connect-wallet'
-import { DesktopHeader } from '@/components/containers/layout/header'
-import { MobileNavbar } from '@/components/containers/layout/mobile-navbar'
+import { DesktopHeader } from '@/components/layout/header'
+import { MobileNavbar } from '@/components/layout/mobile-navbar'
 import { DesktopWalletHeader } from '@/components/containers/wallet/wallet-header'
 import { Card } from '@/components/ui/card'
 import { useBalances } from '@/hooks/use-balances'
-import { useAuth } from '@/lib/auth-context'
+import { useAuth } from '@/hooks/auth-context'
 
 const WalletLayout = ({ children }: { children: React.ReactNode }) => {
   const { profile } = useAuth()

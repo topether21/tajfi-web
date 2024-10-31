@@ -4,10 +4,10 @@ import { useRef } from 'react'
 import { Github } from 'lucide-react'
 import { APP_DESCRIPTION, APP_FOOTER_DESCRIPTION, APP_NAME, HOME_HERO_DESCRIPTION } from '@/lib/constants'
 import { AnimatedBackground } from './animated-background'
-import { DesktopHeader } from '../layout/header'
 import { ConnectWalletModal } from './connect-wallet'
 import { WalletAnimation } from './wallet-animation'
 import { MotionDiv } from '../shared'
+import { DesktopHeader } from '@/components/layout/header'
 export const HomeContainer = () => {
   const sceneRef = useRef(null)
   return (

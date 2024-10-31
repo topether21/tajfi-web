@@ -4,7 +4,7 @@ import React, { useState, useRef } from 'react'
 import { useAssets } from './use-assets'
 import { FilterControls } from './filter-controls'
 import { AssetsDisplay } from './assets-display'
-import { DesktopHeader } from '../layout/header'
+import { DesktopHeader } from '@/components/layout/header'
 import { useFilteredAssets } from './use-filtered-assets'
 
 export const AssetsMarketplace = () => {
