@@ -1,6 +1,6 @@
 'use client'
 
-import { ConnectWalletButton } from '@/components/containers/home/connect-wallet'
+import { ConnectWalletModal } from '@/components/containers/home/connect-wallet'
 import { DesktopHeader } from '@/components/containers/layout/header'
 import { MobileNavbar } from '@/components/containers/layout/mobile-navbar'
 import { DesktopWalletHeader } from '@/components/containers/wallet/wallet-header'
@@ -17,7 +17,7 @@ const WalletLayout = ({ children }: { children: React.ReactNode }) => {
       <div className="h-screen flex flex-col bg-background">
         {!profile && (
           <div className="flex flex-1 justify-center items-center">
-            <ConnectWalletButton isHero />
+            <ConnectWalletModal isHero />
           </div>
         )}
         {profile && (

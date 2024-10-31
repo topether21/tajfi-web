@@ -42,7 +42,7 @@ export const DesktopWalletHeader = ({ balances, loading }: { balances: AssetBala
         {loading || !balances ? (
           <Skeleton className="h-12 w-full rounded-md" />
         ) : (
-          <>
+          balances.length > 0 ? <>
             <div className="flex justify-around py-4">
               <CurrencySelector balances={balances} setCurrentBalanceIndex={setCurrentBalanceIndex} />
             </div>
@@ -59,6 +59,10 @@ export const DesktopWalletHeader = ({ balances, loading }: { balances: AssetBala
                   <p className="text-3xl font-bold text-green-500 mb-2">--</p>
                 )}
               </div>
+            </div>
+          </> : <>
+            <div className="flex justify-center pt-10 pb-4">
+              <p className="text-center text-xl text-green-500">No currencies available</p>
             </div>
           </>
         )}

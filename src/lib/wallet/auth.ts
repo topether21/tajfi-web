@@ -16,13 +16,15 @@ export type WalletKeys = {
   token: string
 }
 
+export type WalletProvider = 'alby' | 'uniSat' | 'xverse' | 'metaMask' | 'keyone'
+
 const getNostrPubKey = async () => {
   if (window?.nostr?.enable) {
     await window.nostr.enable()
   } else {
     throw new Error(
       "Oops, it looks like you haven't set up your Nostr key yet." +
-        'Go to your Alby Account Settings and create or import a Nostr key.',
+      'Go to your Alby Account Settings and create or import a Nostr key.',
     )
   }
   return window.nostr.getPublicKey()

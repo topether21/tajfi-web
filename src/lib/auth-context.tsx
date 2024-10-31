@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react'
 import type React from 'react'
 import { createContext, useContext, useMemo, useState } from 'react'
-import { connectWallet, disconnectWallet, type WalletKeys } from './wallet/auth'
+import { connectWallet, disconnectWallet, WalletProvider, type WalletKeys } from './wallet/auth'
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -16,7 +16,7 @@ import {
 
 interface AuthContextType {
   profile: WalletKeys | null
-  login: () => Promise<void>
+  login: (provider: WalletProvider) => Promise<void>
   logout: () => void
 }
 

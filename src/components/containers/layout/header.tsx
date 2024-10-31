@@ -1,6 +1,6 @@
 import { Bitcoin } from 'lucide-react'
 
-import { ConnectWalletButton } from '../home/connect-wallet'
+import { ConnectWalletModal } from '../home/connect-wallet'
 import { APP_NAME } from '@/lib/constants'
 import Link from 'next/link'
 
@@ -15,7 +15,7 @@ export const DesktopHeader = () => {
           </div>
         </Link>
       </div>
-      <ConnectWalletButton />
+      <ConnectWalletModal />
     </header>
   )
 }
