@@ -1,7 +1,10 @@
 import { RpcErrorCode } from "sats-connect";
 import { AddressPurpose } from "sats-connect";
-import type { Transaction, WalletStrategy } from "./shared";
+import type { AddressInfo, Transaction, WalletStrategy } from "./shared";
 import { request } from "sats-connect";
+import { p2tr } from "@scure/btc-signer"
+import { NETWORK } from "./bitcoin";
+import { hex } from '@scure/base';
 
 export class XverseWallet implements WalletStrategy {
     async getKeys() {
@@ -60,5 +63,16 @@ export class XverseWallet implements WalletStrategy {
     }
     async signTx(transaction: Transaction): Promise<string> {
         throw new Error('Not implemented')
+    }
+    async getAddressInfo(pubkey: string): Promise<AddressInfo> {
+        const p2trAddress = p2tr(pubkey, undefined, NETWORK);
+            const result = {
+                ...p2trAddress,
+                tapInternalKey: Buffer.from(p2trAddress.tapInternalKey),
+                output: hex.encode(p2trAddress.script),
+                script: Buffer.from(p2trAddress.script),
+                pubkey: Buffer.from(pubkey, 'hex'),
+            };
+            return result;
     }
 }
