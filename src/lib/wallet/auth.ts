@@ -7,10 +7,12 @@ import type { WalletProvider } from './types'
 export const connectWallet = async (providerName: WalletProvider) => {
   const walletProvider = getProviderStrategy(providerName)
   const { ordinalsPublicKey, ordinalsAddress } = await walletProvider.getKeys()
-  // const signature = await walletProvider.signSimpleMessage(AUTH_MESSAGE, {
-  //   address: ordinalsAddress,
-  // }) ?? ''
-  const signature = 'valid_signature'
+  console.log({ ordinalsPublicKey, ordinalsAddress })
+  const signature = await walletProvider.signSimpleMessage(AUTH_MESSAGE, {
+    address: ordinalsAddress,
+    publicKey: ordinalsPublicKey,
+  }) ?? ''
+  // const signature = 'valid_signature'
   console.log('signature', signature)
   const serverAuthResponse = await auth({
     ordinalsPublicKey,

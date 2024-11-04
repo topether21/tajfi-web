@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react'
 import type React from 'react'
 import { createContext, useContext, useMemo, useState } from 'react'
-import { connectWallet, disconnectWallet, type WalletKeys, } from '../lib/wallet/auth'
+import { connectWallet, disconnectWallet } from '../lib/wallet/auth'
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -13,7 +13,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import type { WalletProvider } from '@/lib/wallet/types'
+import type { WalletKeys, WalletProvider } from '@/lib/wallet/types'
 
 interface AuthContextType {
   profile: WalletKeys | null

@@ -15,7 +15,9 @@ export const OneKeyLogo = (props: SVGProps<SVGSVGElement>) => (
             fill="#44D62C"
             d="M216 144c0 49.706-22.294 72-72 72s-72-22.294-72-72 22.294-72 72-72 72 22.294 72 72Z"
             style={{
+                // @ts-ignore
                 fill: "#44d62c",
+                // @ts-ignore
                 fill: "color(display-p3 .2667 .8392 .1725)",
                 fillOpacity: 1,
             }}

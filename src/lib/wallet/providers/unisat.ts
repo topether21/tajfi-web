@@ -1,9 +1,19 @@
 import { bitcoin, NETWORK, toXOnly } from "./bitcoin";
 import type { AddressInfo, Transaction, WalletStrategy } from "./shared";
 
+// ref: https://docs.unisat.io/dev/unisat-developer-center/bitcoin/unisat-wallet
 export class UnisatWallet implements WalletStrategy {
     async getKeys(): Promise<{ ordinalsPublicKey: string, ordinalsAddress: string }> {
-        throw new Error('Not implemented')
+        if (!window.unisat) {
+            throw new Error('Unisat is not available')
+        }
+        const accounts = await window.unisat.requestAccounts();
+        console.log('connect success', accounts);
+        const pubkey = await window.unisat.getPublicKey();
+        return {
+            ordinalsPublicKey: pubkey,
+            ordinalsAddress: accounts[0]
+        };
     }
     async signSimpleMessage(message: string, { address }: { address: string }): Promise<string> {
         if (window.unisat) {

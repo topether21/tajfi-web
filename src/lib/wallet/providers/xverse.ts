@@ -6,6 +6,7 @@ import { p2tr } from "@scure/btc-signer"
 import { NETWORK } from "./bitcoin";
 import { hex } from '@scure/base';
 
+// ref: https://docs.xverse.app/sats-connect/bitcoin-methods/signmessage
 export class XverseWallet implements WalletStrategy {
     async getKeys() {
         let ordinalsPublicKey = '';
@@ -66,13 +67,13 @@ export class XverseWallet implements WalletStrategy {
     }
     async getAddressInfo(pubkey: string): Promise<AddressInfo> {
         const p2trAddress = p2tr(pubkey, undefined, NETWORK);
-            const result = {
-                ...p2trAddress,
-                tapInternalKey: Buffer.from(p2trAddress.tapInternalKey),
-                output: hex.encode(p2trAddress.script),
-                script: Buffer.from(p2trAddress.script),
-                pubkey: Buffer.from(pubkey, 'hex'),
-            };
-            return result;
+        const result = {
+            ...p2trAddress,
+            tapInternalKey: Buffer.from(p2trAddress.tapInternalKey),
+            output: hex.encode(p2trAddress.script),
+            script: Buffer.from(p2trAddress.script),
+            pubkey: Buffer.from(pubkey, 'hex'),
+        };
+        return result;
     }
 }

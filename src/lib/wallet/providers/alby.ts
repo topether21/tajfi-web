@@ -1,5 +1,7 @@
-import { bitcoin, NETWORK, toXOnly } from "./bitcoin";
+import { hexToBytes } from "@stacks/common";
+import { bitcoin, hashBip322Message, NETWORK, serializeTaprootSignature, toXOnly } from "./bitcoin";
 import type { AddressInfo, Transaction, WalletStrategy } from "./shared";
+import { base64 } from "@scure/base";
 
 export class AlbyWallet implements WalletStrategy {
     async getKeys() {
@@ -11,13 +13,15 @@ export class AlbyWallet implements WalletStrategy {
                 'Go to your Account Settings and create or import a Nostr key.',
             )
         }
+        const ordinalsPublicKey = await window.nostr.getPublicKey()
+        const ordinalsAddress = (await this.getAddressInfo(ordinalsPublicKey))
         return {
-            ordinalsPublicKey: await window.nostr.getPublicKey(),
-            ordinalsAddress: '', // TODO: add nostr address
+            ordinalsPublicKey,
+            ordinalsAddress: ordinalsAddress.address
         }
     }
-    async signSimpleMessage(message: string, { publicKey }: { publicKey?: string }): Promise<string> {
-        const nostrScript = await this.getAddressInfo(toXOnly(publicKey));
+    async signSimpleMessage(message: string, { publicKey }: { publicKey: string }): Promise<string> {
+        const nostrScript = await this.getAddressInfo(publicKey);
         const { output: scriptPubkey, pubkey } = nostrScript;
 
         // Generate a tagged hash of message to sign
@@ -59,37 +63,26 @@ export class AlbyWallet implements WalletStrategy {
         });
         virtualToSign.addOutput({ script: toSignScriptSig, value: BigInt(0) });
 
+        // @ts-ignore
         const sigHash = virtualToSign.__CACHE.__TX.hashForWitnessV1(
             0,
-            [virtualToSign.data.inputs[0].witnessUtxo.script],
-            [virtualToSign.data.inputs[0].witnessUtxo.value],
+            [virtualToSign.data.inputs[0].witnessUtxo?.script],
+            [virtualToSign.data.inputs[0].witnessUtxo?.value],
             bitcoin.Transaction.SIGHASH_DEFAULT,
         );
 
         const sigHashHex = Buffer.from(sigHash).toString('hex');
 
-        debugger
-        const sign = await signMessageAlby(sigHashHex);
-        debugger
-
+        const sign = await this.signTx(sigHashHex);
         virtualToSign.updateInput(0, {
             tapKeySig: serializeTaprootSignature(Buffer.from(sign, "hex")),
         });
         virtualToSign.finalizeAllInputs();
 
         const toSignTx = virtualToSign.extractTransaction();
+        const buffer = toSignTx.ins[0].witness.reduce((acc, curr) => Buffer.concat([acc, Buffer.from(curr)]), Buffer.from([]))
 
-        function encodeVarString(b) {
-            return Buffer.concat([encode(b.byteLength), b]);
-        }
-
-        const len = encode(toSignTx.ins[0].witness.length);
-        const result = Buffer.concat([
-            len,
-            ...toSignTx.ins[0].witness.map((w) => encodeVarString(w)),
-        ]);
-
-        const signature = base64.encode(result)
+        const signature = base64.encode(buffer)
         return signature;
     }
     async signTx(transaction: Transaction): Promise<string> {

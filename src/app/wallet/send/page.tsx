@@ -36,7 +36,7 @@ const TransactionSummary = ({
     try {
       setSigningError('')
 
-      const walletProvider = getProviderStrategy(profile.provider)
+      const walletProvider = getProviderStrategy(profile.providerName)
       const signatureHex = await walletProvider.signTx(preSignedData.sighashHexToSign, { address: profile.ordinalsAddress })
       if (!signatureHex) {
         setSigningError('Failed to sign invoice')

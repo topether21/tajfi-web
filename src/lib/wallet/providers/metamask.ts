@@ -34,7 +34,7 @@ export class MetamaskWallet implements WalletStrategy {
             network: NETWORK,
         });
         return {
-            ordinalsPublicKey: taprootAddress?.pubkey?.toString() || '',
+            ordinalsPublicKey: Buffer.from(taprootAddress?.pubkey || '').toString('hex'),
             ordinalsAddress: taprootAddress?.address || '',
         };
     }

@@ -15,6 +15,9 @@ export { bitcoin, bip32, NETWORK };
 export const toXOnly = (pubKey: Uint8Array) =>
     pubKey.length === 32 ? pubKey : pubKey.slice(1, 33);
 
+export const toXOnlyStr = (pubKey: string) =>
+    pubKey.length === 32 ? pubKey : pubKey.slice(1, 33);
+
 /**
  * Serializes a taproot signature.
  * @param sig The signature to serialize.
@@ -36,8 +39,8 @@ const messageTagHash = Uint8Array.from([
     ...sha256(utf8ToBytes(bip322MessageTag)),
 ]);
 
-function hashBip322Message(message: string) {
-    return sha256(
+export const hashBip322Message = (message: string) =>
+    sha256(
         Uint8Array.from([
             ...messageTagHash,
             ...(typeof message === "string"
@@ -45,4 +48,3 @@ function hashBip322Message(message: string) {
                 : message),
         ]),
     );
-}

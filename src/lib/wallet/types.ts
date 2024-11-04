@@ -7,13 +7,14 @@ declare global {
         }
         unisat?: {
             signMessage: (message: string, type: string) => Promise<string>
+            requestAccounts: () => Promise<string[]>
+            getPublicKey: () => Promise<string>
         }
         ethereum?: {
             // TODO: specify the type
             request: (args: any) => Promise<any>
             selectedAddress: string
         }
-        
     }
 }
 
