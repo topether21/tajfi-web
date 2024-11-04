@@ -1,6 +1,7 @@
 type AuthBody = {
   public_key: string
   signature: string
+  message: string
 }
 
 type ReceiveBody = {
@@ -110,10 +111,11 @@ const fetchFromApi = async <T>(endpoint: string, method: 'GET' | 'POST', body: T
   return data
 }
 
-export const auth = async (ordinalsPublicKey: string, signature = 'valid_signature') => {
+export const auth = async ({ ordinalsPublicKey, signature, message }: { ordinalsPublicKey: string, signature: string, message: string }) => {
   const body: AuthBody = {
     public_key: ordinalsPublicKey,
     signature,
+    message,
   }
   const response: { token: string } = await fetchFromApi('/wallet/connect', 'POST', body, false)
   return response

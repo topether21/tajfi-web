@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react'
 import type React from 'react'
 import { createContext, useContext, useMemo, useState } from 'react'
-import { connectWallet, disconnectWallet, WalletProvider, type WalletKeys } from './wallet/auth'
+import { connectWallet, disconnectWallet } from '../lib/wallet/auth'
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -13,6 +13,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import type { WalletKeys, WalletProvider } from '@/lib/wallet/types'
 
 interface AuthContextType {
   profile: WalletKeys | null
@@ -26,14 +27,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [profile, setProfile] = useState<WalletKeys | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const login = async () => {
+  const login = async (provider: WalletProvider) => {
     try {
-      const wallet = await connectWallet()
+      const wallet = await connectWallet(provider)
       setProfile(wallet)
       setError(null)
     } catch (err) {
       const errorMessage = (err as Error).message.includes('Nostr key') ? 'nostrKeyError' : 'genericError'
       setError(errorMessage)
+      throw err
     }
   }
 
@@ -44,8 +46,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: only profile is changing
   const auth = useMemo(() => ({ profile, login, logout }), [profile])
-
-  console.log('----> profile', profile)
 
   return (
     <>

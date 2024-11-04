@@ -11,8 +11,9 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react'
 import { Suspense } from 'react'
 import { useSendFunds } from './use-send-funds'
-import { signInvoice } from '@/lib/wallet/sign'
 import { sendComplete } from '@/lib/wallet/api'
+import { getProviderStrategy, } from '@/lib/wallet/providers/index'
+import { useAuth } from '@/hooks/auth-context'
 
 const TransactionSummary = ({
   invoiceDetails,
@@ -28,13 +29,15 @@ const TransactionSummary = ({
   console.log('TransactionSummary', { invoiceDetails, preSignedData })
   const [signingError, setSigningError] = useState('')
   const [sentTransaction, setSentTransaction] = useState(false)
+  const { profile } = useAuth()
 
   const handleConfirm = async () => {
-    if (!preSignedData) return
+    if (!preSignedData || !profile) return
     try {
       setSigningError('')
 
-      const signatureHex = await signInvoice(preSignedData.sighashHexToSign)
+      const walletProvider = getProviderStrategy(profile.providerName)
+      const signatureHex = await walletProvider.signTx(preSignedData.sighashHexToSign, { address: profile.ordinalsAddress })
       if (!signatureHex) {
         setSigningError('Failed to sign invoice')
         return
@@ -47,6 +50,7 @@ const TransactionSummary = ({
     }
   }
 
+  // TODO: is it necessary? We can improve this
   useEffect(() => {
     if (invoiceDetails && invoice) {
       sendFundsStart(invoice)

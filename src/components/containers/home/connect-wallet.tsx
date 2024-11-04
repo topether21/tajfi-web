@@ -2,14 +2,18 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Wallet, Sparkles, Rocket, Zap } from 'lucide-react'
+import { Wallet, Zap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 import { MotionDiv } from '../shared'
-import { useAuth } from '@/lib/auth-context'
-import type { WalletProvider } from '@/lib/wallet/auth'
-
+import { useAuth } from '@/hooks/auth-context'
+import type { WalletProvider } from '@/lib/wallet/types'
+import { XverseLogo } from '@/components/icons/xverse'
+import { AlbyLogo } from '@/components/icons/alby'
+import { MetaMaskLogo } from '@/components/icons/metamask'
+import { OneKeyLogo } from '@/components/icons/onekey'
+import { UnisatLogo } from '@/components/icons/unisat'
 export const useWalletAuth = ({ onCancel }: { onCancel?: () => void }) => {
   const [isConnecting, setIsConnecting] = useState(false)
   const { profile, login, logout } = useAuth()
@@ -24,6 +28,7 @@ export const useWalletAuth = ({ onCancel }: { onCancel?: () => void }) => {
       router.push('/wallet/send')
     } catch (error) {
       console.error(error)
+      router.push('/')
     } finally {
       setIsConnecting(false)
       onCancel?.()
@@ -117,10 +122,11 @@ export const ConnectWalletModal = ({ isHero }: { isHero?: boolean }) => {
   const { handleConnectWallet } = useWalletAuth({ onCancel: closeModal })
 
   const wallets = [
-    { name: 'alby' as WalletProvider, icon: Wallet },
-    { name: 'xverse' as WalletProvider, icon: Sparkles },
-    { name: 'metaMask' as WalletProvider, icon: Rocket },
-    { name: 'keyone' as WalletProvider, icon: Zap },
+    { name: 'alby' as WalletProvider, icon: AlbyLogo, label: 'Alby' },
+    { name: 'xverse' as WalletProvider, icon: XverseLogo, label: 'Xverse' },
+    { name: 'metaMask' as WalletProvider, icon: MetaMaskLogo, label: 'MetaMask' },
+    { name: 'oneKey' as WalletProvider, icon: OneKeyLogo, label: 'OneKey' },
+    { name: 'unisat' as WalletProvider, icon: UnisatLogo, label: 'Unisat' },
   ]
 
   return (
@@ -143,9 +149,9 @@ export const ConnectWalletModal = ({ isHero }: { isHero?: boolean }) => {
                 onClick={() => handleConnectWallet(wallet.name)}
               >
                 <div className="h-12 w-12 rounded-full bg-secondary flex items-center justify-center">
-                  <IconComponent className="h-6 w-6" />
+                  <IconComponent style={{ height: 45, width: 45 }} />
                 </div>
-                <span className="text-sm font-medium">{wallet.name}</span>
+                <span className="text-sm font-medium">{wallet.label}</span>
               </Button>
             )
           })}
