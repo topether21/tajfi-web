@@ -11,4 +11,11 @@ declare global {
     }
 }
 
-export type WalletProvider = 'alby' | 'unisat' | 'xverse' | 'metaMask' | 'keyone'
+export type WalletKeys = {
+    ordinalsPublicKey: string
+    ordinalsAddress: string
+    token: string
+    providerName: WalletProvider
+}
+
+export type WalletProvider = 'alby' | 'unisat' | 'xverse' | 'onekey' | 'metaMask'

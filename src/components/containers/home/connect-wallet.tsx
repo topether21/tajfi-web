@@ -13,6 +13,7 @@ import { XverseLogo } from '@/components/icons/xverse'
 import { AlbyLogo } from '@/components/icons/alby'
 import { MetaMaskLogo } from '@/components/icons/metamask'
 import { OneKeyLogo } from '@/components/icons/onekey'
+import { UnisatLogo } from '@/components/icons/unisat'
 export const useWalletAuth = ({ onCancel }: { onCancel?: () => void }) => {
   const [isConnecting, setIsConnecting] = useState(false)
   const { profile, login, logout } = useAuth()
@@ -124,7 +125,8 @@ export const ConnectWalletModal = ({ isHero }: { isHero?: boolean }) => {
     { name: 'alby' as WalletProvider, icon: AlbyLogo, label: 'Alby' },
     { name: 'xverse' as WalletProvider, icon: XverseLogo, label: 'Xverse' },
     { name: 'metaMask' as WalletProvider, icon: MetaMaskLogo, label: 'MetaMask' },
-    { name: 'onekey' as WalletProvider, icon: OneKeyLogo, label: 'OneKey' },
+    { name: 'oneKey' as WalletProvider, icon: OneKeyLogo, label: 'OneKey' },
+    { name: 'unisat' as WalletProvider, icon: UnisatLogo, label: 'Unisat' },
   ]
 
   return (

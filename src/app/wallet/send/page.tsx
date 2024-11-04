@@ -12,7 +12,7 @@ import { AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-react'
 import { Suspense } from 'react'
 import { useSendFunds } from './use-send-funds'
 import { sendComplete } from '@/lib/wallet/api'
-import { signMessage } from '@/lib/wallet/providers'
+import { getProviderStrategy, } from '@/lib/wallet/providers/index'
 import { useAuth } from '@/hooks/auth-context'
 
 const TransactionSummary = ({
@@ -36,7 +36,8 @@ const TransactionSummary = ({
     try {
       setSigningError('')
 
-      const signatureHex = await signMessage(preSignedData.sighashHexToSign, { address: profile.ordinalsPublicKey, provider: profile.provider })
+      const walletProvider = getProviderStrategy(profile.provider)
+      const signatureHex = await walletProvider.signTx(preSignedData.sighashHexToSign, { address: profile.ordinalsAddress })
       if (!signatureHex) {
         setSigningError('Failed to sign invoice')
         return

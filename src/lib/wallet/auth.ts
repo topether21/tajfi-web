@@ -1,20 +1,16 @@
 'use client'
 import { AUTH_MESSAGE } from '../constants'
 import { auth } from './api'
-import { getWalletKeys, signBip322MessageSimple, signMessage } from './providers'
+import { getProviderStrategy } from './providers/index'
 import type { WalletProvider } from './types'
 
-export type WalletKeys = {
-  ordinalsPublicKey: string
-  token: string
-  provider: WalletProvider
-}
-
-export const connectWallet = async (provider: WalletProvider) => {
-
-  const { ordinalsPublicKey, ordinalsAddress } = await getWalletKeys(provider)
-  debugger
-  const signature = await signBip322MessageSimple(AUTH_MESSAGE, { provider, publicKey: ordinalsPublicKey }) ?? ''
+export const connectWallet = async (providerName: WalletProvider) => {
+  const walletProvider = getProviderStrategy(providerName)
+  const { ordinalsPublicKey, ordinalsAddress } = await walletProvider.getKeys()
+  // const signature = await walletProvider.signSimpleMessage(AUTH_MESSAGE, {
+  //   address: ordinalsAddress,
+  // }) ?? ''
+  const signature = 'valid_signature'
   console.log('signature', signature)
   const serverAuthResponse = await auth({
     ordinalsPublicKey,
@@ -25,10 +21,10 @@ export const connectWallet = async (provider: WalletProvider) => {
 
   const token = serverAuthResponse.token || ''
   const walletData = {
-    walletName: provider,
+    providerName,
     ordinalsPublicKey,
+    ordinalsAddress,
     token,
-    provider,
   }
 
   return walletData
