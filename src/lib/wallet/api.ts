@@ -16,6 +16,7 @@ type SendStartBody = {
 type SendCompleteBody = {
   psbt: string
   signature_hex: string
+  sighash: string
 }
 
 export type AssetBalances = {
@@ -144,13 +145,16 @@ export const sendStart = async ({
 export const sendComplete = async ({
   psbt,
   signature_hex,
+  sighash,
 }: {
   psbt: string
   signature_hex: string
+  sighash: string
 }): Promise<SendCompleteResponse> => {
   const body: SendCompleteBody = {
     psbt,
     signature_hex,
+    sighash,
   }
   return fetchFromApi('/wallet/send/complete', 'POST', body)
 }

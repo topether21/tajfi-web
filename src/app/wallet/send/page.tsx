@@ -42,7 +42,7 @@ const TransactionSummary = ({
         setSigningError('Failed to sign invoice')
         return
       }
-      await sendComplete({ psbt: preSignedData.fundedPsbt, signature_hex: signatureHex })
+      await sendComplete({ psbt: preSignedData.fundedPsbt, signature_hex: signatureHex, sighash: preSignedData.sighashHexToSign })
       setSentTransaction(true)
     } catch (e) {
       setSigningError((e as Error).message || 'Failed to send transaction')
