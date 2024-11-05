@@ -1,6 +1,6 @@
 import { HomeContainer } from '@/components/containers/home/home'
-import Sign from '@/demos/sign'
+import { NostrDashboard } from '@/demos/dashboard'
 export default function HomePage() {
-  // return <HomeContainer />
-  return <Sign />
+  return <HomeContainer />
+  // return <NostrDashboard />
 }

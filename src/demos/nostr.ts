@@ -3,6 +3,9 @@ import { sha256 } from '@noble/hashes/sha256';
 import { schnorr } from '@noble/curves/secp256k1';
 import WebSocket from 'ws';
 import { getBitcoinAddress } from '@/lib/wallet/providers/bitcoin';
+import { bech32 } from 'bech32';
+
+// ref: https://github.com/fernandospr/js-web-nostr-client/blob/main/index.html#L314
 
 // Generate a random private key
 const privateKey = secp.utils.randomPrivateKey();
@@ -16,6 +19,11 @@ console.log("Private key:", compactPrivateKey);
 console.log("Public key:", compactPublicKey);
 const addressInfo = await getBitcoinAddress(compactPublicKey);
 console.log("Address:", addressInfo.address);
+
+// Convert the public key to Bech32 format
+const words = bech32.toWords(Buffer.from(compactPublicKey, 'hex'));
+const npub1Key = bech32.encode('npub', words);
+console.log("Nostr npub1 key:", npub1Key);
 
 const message = "Your message in Nostr";
 

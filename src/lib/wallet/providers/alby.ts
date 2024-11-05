@@ -20,6 +20,7 @@ export class AlbyWallet implements WalletStrategy {
             ordinalsAddress: ordinalsAddress.address
         }
     }
+    // https://www.webln.guide/building-lightning-apps/webln-reference/webln.signmessage
     async signSimpleMessage(message: string, { publicKey }: { publicKey: string }): Promise<string> {
         const nostrScript = await this.getAddressInfo(publicKey);
         const { output: scriptPubkey, pubkey } = nostrScript;
