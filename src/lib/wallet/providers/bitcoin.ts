@@ -48,3 +48,12 @@ export const hashBip322Message = (message: string) =>
                 : message),
         ]),
     );
+
+export const getBitcoinAddress = async (pubkey: string) => {
+    const pubkeyBuffer = Buffer.from(pubkey, 'hex');
+    const addrInfo = bitcoin.payments.p2tr({
+        pubkey: pubkeyBuffer,
+        network: NETWORK,
+    });
+    return addrInfo;
+}

@@ -1,5 +1,5 @@
 import { hexToBytes } from "@stacks/common";
-import { bitcoin, hashBip322Message, NETWORK, serializeTaprootSignature, toXOnly } from "./bitcoin";
+import { bitcoin, getBitcoinAddress, hashBip322Message, NETWORK, serializeTaprootSignature, toXOnly } from "./bitcoin";
 import type { AddressInfo, Transaction, WalletStrategy } from "./shared";
 import { base64 } from "@scure/base";
 
@@ -93,11 +93,6 @@ export class AlbyWallet implements WalletStrategy {
         throw new Error('Signing with Nostr is not available')
     }
     async getAddressInfo(pubkey: string): Promise<AddressInfo> {
-        const pubkeyBuffer = Buffer.from(pubkey, 'hex');
-        const addrInfo = bitcoin.payments.p2tr({
-            pubkey: pubkeyBuffer,
-            network: NETWORK,
-        });
-        return addrInfo;
+        return getBitcoinAddress(pubkey);
     }
 }
