@@ -6,12 +6,15 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { useNostr } from './useNostr'
 
+import { nostrRelay } from './useNostr'
+
 export const NostrDashboard = () => {
+    const privateKey = 'N/A'
+    const nsec1Key = 'N/A'
+
     const {
-        privateKey,
         publicKey,
         npub1Key,
-        nsec1Key,
         message,
         setMessage,
         signature,
@@ -19,7 +22,6 @@ export const NostrDashboard = () => {
         generateKeys,
         signMessage,
         sendMessage,
-        nostrRelay
     } = useNostr()
 
     return (
