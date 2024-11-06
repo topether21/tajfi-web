@@ -1,7 +1,8 @@
 import { decode as cborDecode } from 'cbor'
 import { sha256 } from '@noble/hashes/sha256'
 import { bech32 } from 'bech32'
-import { secp256k1 } from '@noble/secp256k1'
+import * as secp256k1 from '@noble/curves/secp256k1'
+import * as secp from '@noble/secp256k1'
 
 export class WaSignatureProvider {
     public keys = new Map<string, string>()
@@ -43,10 +44,6 @@ export class WaSignatureProvider {
         const clientDataJSON = new Uint8Array(await crypto.subtle.digest('SHA-256', assertionResponse.clientDataJSON as ArrayBuffer))
 
         const der = this.parseDerSignature(signatureBuffer)
-        const hash = new Uint8Array(await crypto.subtle.digest('SHA-256', new Uint8Array([...authenticatorData, ...clientDataJSON])))
-
-        // Use @noble/secp256k1 to recover the public key from the signature
-        const publicKeyRecovered = secp256k1.Signature.fromCompact(new Uint8Array([...der.r, ...der.s])).recoverPublicKey(digest, der.recovery)
 
         // Construct Nostr-compatible signature
         const sigData = new Uint8Array([der.recovery + 27 + 4, ...der.r, ...der.s])
@@ -63,15 +60,15 @@ export class WaSignatureProvider {
         const sLen = buffer[5 + rLen]
         const s = buffer.slice(6 + rLen, 6 + rLen + sLen)
 
-        const recovery = this.calculateRecovery(r, s) // Implement a method to determine recovery, or set a default
+        const recovery = this.calculateRecovery(r, s) // Placeholder, adjust as needed
 
         return { r, s, recovery }
     }
 
     private calculateRecovery(r: Uint8Array, s: Uint8Array): number {
         // Logic to determine recovery param based on r, s, and public key properties
-        // Alternatively, use a fixed recovery param if deterministic signing is consistent
-        return 0 // Placeholder for actual logic
+        // Placeholder implementation
+        return 0
     }
 
     public async addKey(credId: string, pubkey: string) {
@@ -81,7 +78,7 @@ export class WaSignatureProvider {
     public async registerNewKey(accountName: string) {
         const credential = await navigator.credentials.create({
             publicKey: {
-                rp: { id: window.location.host, name: 'Nostr App' },
+                rp: { id: window.location.hostname, name: 'Nostr App' },
                 user: {
                     id: new Uint8Array(16),
                     name: accountName,
@@ -97,7 +94,13 @@ export class WaSignatureProvider {
         const credId = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)))
         const pubKey = this.extractPublicKeyFromAttestation(credential)
 
-        const npub1 = bech32.encode('npub', bech32.toWords(Buffer.from(pubKey, 'hex')))
+        // Validate and compress the public key
+        const point = secp256k1.secp256k1.ProjectivePoint.fromHex(pubKey) // Ensure key is on the curve
+        const compressedPubKey = point.toHex(true) // true for compressed format
+        const compressedPubKeyBuffer = Buffer.from(compressedPubKey, 'hex')
+
+        // Encode the compressed public key in Bech32 format (npub1) for Nostr
+        const npub1 = bech32.encode('npub', bech32.toWords(compressedPubKeyBuffer))
         this.keys.set(npub1, credId)
         return npub1
     }
@@ -108,15 +111,27 @@ export class WaSignatureProvider {
         const decoded = cborDecode(attestationObject.buffer)
 
         const authData = new Uint8Array(decoded.authData)
-        const publicKeyCose = authData.slice(-77) // Last 77 bytes for COSE key format
+        const publicKeyCose = authData.slice(-77) // Extract COSE key structure
 
-        // Parse COSE key into hex format for Nostr
+        // Decode COSE key to get x and y coordinates
         const coseStruct = cborDecode(publicKeyCose.buffer)
-        const x = coseStruct.get(-2) // X coordinate
-        const y = coseStruct.get(-3) // Y coordinate
+        const x = coseStruct.get(-2) // X coordinate in COSE format
+        const y = coseStruct.get(-3) // Y coordinate in COSE format
 
         if (!x || !y) throw new Error('Failed to extract public key coordinates')
 
-        return Buffer.concat([Buffer.from([0x04]), x, y]).toString('hex')
+        // Ensure x and y are the correct length (32 bytes each) and form a valid point
+        if (x.length !== 32 || y.length !== 32) {
+            throw new Error('Invalid key length for x or y coordinates')
+        }
+
+        // Concatenate x and y with the uncompressed key prefix (0x04) to form a valid secp256k1 point
+        const uncompressedKey = Buffer.concat([Buffer.from([0x04]), x, y])
+
+        if (uncompressedKey.length !== 65) {
+            throw new Error(`Invalid uncompressed public key length: expected 65, got ${uncompressedKey.length}`)
+        }
+
+        return uncompressedKey.toString('hex')
     }
 }

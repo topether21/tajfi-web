@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { sha256 } from '@noble/hashes/sha256'
-import { bech32 } from 'bech32'
+import { WaSignatureProvider } from './WaSignatureProvider'
 
 const nostrRelay = "wss://relay.damus.io"
 
@@ -13,75 +12,34 @@ export const useNostr = () => {
     const [signature, setSignature] = useState('')
     const [status, setStatus] = useState('')
 
+    const signatureProvider = new WaSignatureProvider()
+
     useEffect(() => {
         initializeWebAuthn()
     }, [])
 
     const initializeWebAuthn = async () => {
         try {
-            const credId = localStorage.getItem('nostr_cred_id')
-            if (!credId) {
-                await createWebAuthnCredential('nostr-user')
+            const savedPubKey = localStorage.getItem('nostr_pubkey')
+            const savedCredId = localStorage.getItem('nostr_cred_id')
+            if (savedPubKey && savedCredId) {
+                // Load existing WebAuthn key
+                signatureProvider.addKey(savedCredId, savedPubKey)
+                setPublicKey(savedPubKey)
+                setNpub1Key(savedPubKey)
+                setStatus('WebAuthn key loaded successfully')
             } else {
-                setStatus('WebAuthn key already exists.')
+                // Create a new WebAuthn credential and store it
+                const npubKey = await signatureProvider.registerNewKey('nostr-user')
+                setPublicKey(npubKey)
+                setNpub1Key(npubKey)
+                localStorage.setItem('nostr_pubkey', npubKey)
+                setStatus('WebAuthn key created successfully')
             }
         } catch (error) {
             console.error("Error initializing WebAuthn:", error)
             setStatus(`Error: ${error.message}`)
         }
-    }
-
-    const createWebAuthnCredential = async (accountName: string) => {
-        try {
-            const credential = await navigator.credentials.create({
-                publicKey: {
-                    rp: { id: window.location.host, name: 'Nostr App' },
-                    user: {
-                        id: new Uint8Array(16),
-                        name: accountName,
-                        displayName: accountName,
-                    },
-                    pubKeyCredParams: [{ type: 'public-key', alg: -7 }],
-                    timeout: 60000,
-                    challenge: new Uint8Array(32).buffer,
-                    attestation: 'direct',
-                },
-            }) as PublicKeyCredential
-
-            const credId = credential.rawId
-            const publicKey = credential.response.getPublicKey()
-
-            localStorage.setItem('nostr_cred_id', btoa(String.fromCharCode(...new Uint8Array(credId))))
-            setPublicKey(Buffer.from(publicKey).toString('hex'))
-
-            const pubWords = bech32.toWords(Buffer.from(publicKey))
-            const npub1 = bech32.encode('npub', pubWords)
-            setNpub1Key(npub1)
-            setStatus('WebAuthn key created successfully')
-        } catch (error) {
-            console.error("Error creating WebAuthn key:", error)
-            setStatus(`Failed to create WebAuthn key: ${error.message}`)
-        }
-    }
-
-    const signMessageWithWebAuthn = async (message: string) => {
-        const credId = localStorage.getItem('nostr_cred_id')
-        if (!credId) throw new Error('No WebAuthn credential found')
-
-        const messageDigest = sha256(new TextEncoder().encode(message))
-
-        const assertion = await navigator.credentials.get({
-            publicKey: {
-                timeout: 60000,
-                allowCredentials: [{
-                    id: Uint8Array.from(atob(credId), c => c.charCodeAt(0)),
-                    type: 'public-key',
-                }],
-                challenge: messageDigest,
-            },
-        }) as PublicKeyCredential
-
-        return Buffer.from(assertion.response.getSignature()).toString('hex')
     }
 
     const sendMessage = async () => {
@@ -91,24 +49,25 @@ export const useNostr = () => {
         }
 
         try {
-            const sig = await signMessageWithWebAuthn(message)
+            const created_at = Math.floor(Date.now() / 1000)
+            const event = {
+                pubkey: publicKey,
+                created_at,
+                kind: 1,
+                tags: [],
+                content: message,
+            }
+
+            const sig = await signatureProvider.signEvent(event)
             setSignature(sig)
 
-            const relays = [nostrRelay]
+            const signedEvent = { ...event, sig }
 
+            const relays = [nostrRelay]
             for (const relayURL of relays) {
                 const ws = new WebSocket(relayURL)
 
-                ws.onopen = async () => {
-                    const signedEvent = {
-                        content: message,
-                        created_at: Math.floor(Date.now() / 1000),
-                        kind: 1,
-                        tags: [],
-                        pubkey: publicKey,
-                        sig,
-                    }
-
+                ws.onopen = () => {
                     const messageString = JSON.stringify(["EVENT", signedEvent])
                     ws.send(messageString)
                     setStatus(`Message sent to ${relayURL}`)

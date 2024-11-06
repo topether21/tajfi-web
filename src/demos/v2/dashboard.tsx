@@ -1,17 +1,12 @@
 'use client'
 
+import { useNostr } from './useNostr'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { useNostr } from './useNostr'
-
-const nostrRelay = "wss://relay.damus.io"
 
 export const NostrDashboard = () => {
-    const privateKey = 'N/A'
-    const nsec1Key = 'N/A'
-
     const {
         publicKey,
         npub1Key,
@@ -19,8 +14,6 @@ export const NostrDashboard = () => {
         setMessage,
         signature,
         status,
-        generateKeys,
-        signMessage,
         sendMessage,
     } = useNostr()
 
@@ -31,18 +24,6 @@ export const NostrDashboard = () => {
                 <CardDescription className="text-sm text-muted-foreground">Create a Nostr account and send messages</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-                <div className="space-y-2">
-                    <Label htmlFor="nostrRelay">Nostr Relay</Label>
-                    <Input id="nostrRelay" value={nostrRelay} readOnly />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="privateKey">Private Key</Label>
-                    <Input id="privateKey" value={privateKey} readOnly />
-                </div>
-                <div className="space-y-2">
-                    <Label htmlFor="nsec1Key">Nostr nsec1 Key</Label>
-                    <Input id="nsec1Key" value={nsec1Key} readOnly />
-                </div>
                 <div className="space-y-2">
                     <Label htmlFor="publicKey">Public Key</Label>
                     <Input id="publicKey" value={publicKey} readOnly />
@@ -69,9 +50,7 @@ export const NostrDashboard = () => {
                 {status && <p className="text-sm text-muted-foreground my-2 text-red-300">{status}</p>}
             </CardContent>
             <CardFooter className="flex justify-between">
-                <Button onClick={generateKeys}>Generate New Keys</Button>
-                <Button onClick={signMessage}>Sign Message</Button>
-                <Button onClick={sendMessage}>Send Message</Button>
+                <Button onClick={sendMessage}>Sign & Send Message</Button>
             </CardFooter>
         </Card>
     )
