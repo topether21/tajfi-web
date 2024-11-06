@@ -19,16 +19,67 @@ export const useNostr = () => {
     const [isGenerating, setIsGenerating] = useState(false)
     const [isSigning, setIsSigning] = useState(false)
     const [isSending, setIsSending] = useState(false)
+    const [nsec, setNsec] = useState('') // New state for testing
+    const [nickname, setNickname] = useState('') // New state for nickname
+    const [isInitialized, setIsInitialized] = useState(false) // New state for initialization
 
     useEffect(() => {
-        generateKeys()
+        const initialize = async () => {
+            const keyId = localStorage.getItem("nostr_key_id")
+            if (keyId) {
+                try {
+                    const storedData = await retrieveEncryptedPrivateKey(keyId)
+                    if (!storedData || !storedData.encryptedKey) {
+                        setStatus("Encrypted private key not found. Please generate new keys.")
+                        setIsInitialized(true)
+                        return
+                    }
+
+                    const credential = await navigator.credentials.get({
+                        publicKey: {
+                            challenge: generateChallenge(),
+                            allowCredentials: [{ id: base64ToUint8Array(keyId), type: "public-key" }],
+                        }
+                    }) as PublicKeyCredential;
+
+                    if (credential) {
+                        const decryptedPrivateKey = await decryptWithPasskey(storedData.encryptedKey, credential)
+                        const compactPublicKey = derivePublicKeyFromPrivate(decryptedPrivateKey)
+                        setPublicKey(compactPublicKey)
+
+                        const pubWords = bech32.toWords(Buffer.from(compactPublicKey, 'hex'))
+                        setNpub1Key(bech32.encode('npub', pubWords))
+                        setNickname(storedData.nickname)
+                        setStatus("Existing account loaded successfully.")
+                    } else {
+                        setStatus("Failed to retrieve credentials. Please generate new keys.")
+                    }
+                } catch (error) {
+                    console.error("Error initializing account:", error)
+                    setStatus("Error loading existing account. Please generate new keys.")
+                } finally {
+                    setIsInitialized(true)
+                }
+            } else {
+                setIsInitialized(true)
+            }
+        }
+
+        initialize()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const generateChallenge = (): Uint8Array => {
         return crypto.getRandomValues(new Uint8Array(32))
     }
 
-    const generateKeys = async () => {
+    const derivePublicKeyFromPrivate = (privateKeyHex: string): string => {
+        const privKeyBuffer = Buffer.from(privateKeyHex, 'hex')
+        const pubKey = secp.getPublicKey(privKeyBuffer, true)
+        return Buffer.from(pubKey).toString('hex').substring(2)
+    }
+
+    const generateKeys = async (userNickname: string) => {
         setIsGenerating(true)
         const privKey = secp.utils.randomPrivateKey()
         const pubKey = secp.getPublicKey(privKey, true)
@@ -40,11 +91,11 @@ export const useNostr = () => {
             const credential = await navigator.credentials.create({
                 publicKey: {
                     challenge: generateChallenge(),
-                    rp: { name: "My Nostr App" },
+                    rp: { name: "Tajfi" },
                     user: {
                         id: crypto.getRandomValues(new Uint8Array(16)),
-                        name: "user@example.com",
-                        displayName: "Nostr User",
+                        name: userNickname,
+                        displayName: userNickname,
                     },
                     pubKeyCredParams: [{ alg: -7, type: "public-key" }],
                     authenticatorSelection: { authenticatorAttachment: "platform" },
@@ -54,16 +105,16 @@ export const useNostr = () => {
 
             if (credential) {
                 const encryptedPrivateKey = await encryptWithPasskey(compactPrivateKey, credential)
-                const keyId = Buffer.from(credential.rawId).toString('base64')
+                const keyId = uint8ArrayToBase64(new Uint8Array(credential.rawId))
 
-                await storeEncryptedPrivateKey(keyId, encryptedPrivateKey)
-                // Consider using a more secure storage mechanism
-                sessionStorage.setItem("nostr_key_id", keyId)
+                await storeEncryptedPrivateKey(keyId, encryptedPrivateKey, userNickname)
+                localStorage.setItem("nostr_key_id", keyId)
 
                 setPublicKey(compactPublicKey)
 
                 const pubWords = bech32.toWords(Buffer.from(compactPublicKey, 'hex'))
                 setNpub1Key(bech32.encode('npub', pubWords))
+                setNickname(userNickname)
                 setStatus("Keys generated and stored securely.")
             }
         } catch (error) {
@@ -75,91 +126,29 @@ export const useNostr = () => {
     }
 
     const retrievePrivateKey = async (): Promise<string> => {
-        const keyId = sessionStorage.getItem("nostr_key_id")
-        if (!keyId) throw new Error("Key ID not found.")
-
-        const encryptedPrivateKey = await retrieveEncryptedPrivateKey(keyId)
-        if (!encryptedPrivateKey) throw new Error("Encrypted private key not found.")
-
-        try {
-            const credential = await navigator.credentials.get({
-                publicKey: {
-                    challenge: generateChallenge(),
-                    allowCredentials: [{ id: Uint8Array.from(Buffer.from(keyId, 'base64')), type: "public-key" }],
-                }
-            }) as PublicKeyCredential;
-
-            if (!credential) throw new Error("Credential retrieval failed.")
-
-            return await decryptWithPasskey(encryptedPrivateKey, credential)
-        } catch (error) {
-            console.error("Credential retrieval error:", error)
-            throw new Error("Failed to retrieve private key.")
-        }
-    }
-
-    const getSignedEvent = async (event: { pubkey: string, created_at: number, kind: number, tags: string[], content: string }) => {
-        const privKey = await retrievePrivateKey()
-        const eventData = JSON.stringify([0, event.pubkey, event.created_at, event.kind, event.tags, event.content])
-        const id = Buffer.from(sha256(new TextEncoder().encode(eventData))).toString('hex')
-        const sig = Buffer.from(await schnorr.sign(id, privKey)).toString('hex')
-        return { ...event, id, sig }
-    }
-
-    const sendMessage = async () => {
-        if (!message) {
-            setStatus('Please enter a message')
-            return
+        const keyId = localStorage.getItem("nostr_key_id")
+        if (!keyId) {
+            throw new Error("No key ID found in localStorage.")
         }
 
-        setIsSending(true)
-        setStatus('Sending message...')
+        const storedData = await retrieveEncryptedPrivateKey(keyId)
+        if (!storedData || !storedData.encryptedKey) {
+            throw new Error("Encrypted private key not found.")
+        }
 
-        const relays = [nostrRelay]
-
-        for (const relayURL of relays) {
-            try {
-                const ws = new WebSocket(relayURL)
-
-                ws.onopen = async () => {
-                    try {
-                        const signedEvent = await getSignedEvent({
-                            content: message,
-                            created_at: Math.floor(Date.now() / 1000),
-                            kind: 1,
-                            tags: [],
-                            pubkey: publicKey,
-                        })
-
-                        const messageString = JSON.stringify(["EVENT", signedEvent])
-                        ws.send(messageString)
-                        setStatus(`Message sent to ${relayURL}`)
-                    } catch (error) {
-                        setStatus(`Failed to sign or send message to ${relayURL}`)
-                        console.error(`Error sending message to ${relayURL}:`, error)
-                    }
-                }
-
-                ws.onmessage = (event) => {
-                    console.log("Message received:", event.data)
-                    setStatus(`Received response from ${relayURL}: ${event.data}`)
-                }
-
-                ws.onerror = (error) => {
-                    console.error("WebSocket error:", error)
-                    setStatus(`Error connecting to ${relayURL}`)
-                }
-
-                ws.onclose = () => {
-                    console.log("WebSocket connection closed")
-                }
-            } catch (error) {
-                console.error(`Failed to connect to relay ${relayURL}:`, error)
-                setStatus(`Failed to connect to ${relayURL}`)
+        const credential = await navigator.credentials.get({
+            publicKey: {
+                challenge: generateChallenge(),
+                allowCredentials: [{ id: base64ToUint8Array(keyId), type: "public-key" }],
             }
+        }) as PublicKeyCredential;
+
+        if (!credential) {
+            throw new Error("Failed to retrieve credentials.")
         }
 
-        setIsSending(false)
+        const decryptedPrivateKey = await decryptWithPasskey(storedData.encryptedKey, credential)
+        return decryptedPrivateKey
     }
 
     const signMessage = async () => {
@@ -187,6 +176,97 @@ export const useNostr = () => {
         }
     }
 
+    const getSignedEvent = async (event: { pubkey: string, created_at: number, kind: number, tags: string[], content: string }) => {
+        const privKey = await retrievePrivateKey()
+        const eventData = JSON.stringify([0, event.pubkey, event.created_at, event.kind, event.tags, event.content])
+        const id = Buffer.from(sha256(new TextEncoder().encode(eventData))).toString('hex')
+        const sig = Buffer.from(await schnorr.sign(id, privKey)).toString('hex')
+        return { ...event, id, sig }
+    }
+
+    const sendMessage = async () => {
+        if (!message) {
+            setStatus('Please enter a message')
+            return
+        }
+
+        setIsSending(true)
+        setStatus('Sending message...')
+
+        try {
+            const ws = new WebSocket(nostrRelay)
+
+            ws.onopen = async () => {
+                console.log(`Connected to ${nostrRelay}`)
+                try {
+                    const signedEvent = await getSignedEvent({
+                        pubkey: publicKey,
+                        created_at: Math.floor(Date.now() / 1000),
+                        kind: 1,
+                        tags: [],
+                        content: message,
+                    })
+
+                    ws.send(JSON.stringify(["EVENT", signedEvent]))
+                    setStatus(`Message sent to ${nostrRelay}`)
+                } catch (error) {
+                    setStatus('Failed to sign or send message.')
+                    console.error("Send message error:", error)
+                }
+            }
+
+            ws.onmessage = (event) => {
+                console.log("Message received:", event.data)
+                setStatus(`Received response from ${nostrRelay}: ${event.data}`)
+            }
+
+            ws.onerror = (error) => {
+                console.error("WebSocket error:", error)
+                setStatus(`Error connecting to ${nostrRelay}`)
+            }
+
+            ws.onclose = () => {
+                console.log("WebSocket connection closed")
+            }
+        } catch (error) {
+            console.error(`Failed to connect to relay ${nostrRelay}:`, error)
+            setStatus(`Failed to connect to ${nostrRelay}`)
+        } finally {
+            setIsSending(false)
+        }
+    }
+
+    // New Test Method to Retrieve Private Key
+    const getPrivateKey = async () => {
+        try {
+            const privKey = await retrievePrivateKey()
+            setNsec(privKey)
+            setStatus("Private key retrieved successfully.")
+        } catch (error) {
+            console.error("Error retrieving private key:", error)
+            setStatus("Failed to retrieve private key.")
+        }
+    }
+
+    // Helper Functions
+    const base64ToUint8Array = (base64: string): Uint8Array => {
+        const binaryString = atob(base64)
+        const len = binaryString.length
+        const bytes = new Uint8Array(len)
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i)
+        }
+        return bytes
+    }
+
+    const uint8ArrayToBase64 = (bytes: Uint8Array): string => {
+        let binary = ''
+        for (let i = 0; i < bytes.byteLength; i++) {
+            binary += String.fromCharCode(bytes[i])
+        }
+        return btoa(binary)
+    }
+
     return {
         publicKey,
         npub1Key,
@@ -199,6 +279,11 @@ export const useNostr = () => {
         sendMessage,
         isGenerating,
         isSigning,
-        isSending
+        isSending,
+        getPrivateKey,       // Expose the test method
+        nsec,                // Expose the retrieved private key
+        nickname,            // Expose nickname
+        setNickname,         // Expose setNickname
+        isInitialized        // Expose initialization status
     }
 }

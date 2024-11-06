@@ -1,5 +1,11 @@
 // encryption.ts - Helper for WebCrypto encryption/decryption
 
+export interface EncryptedData {
+    salt: number[];
+    iv: number[];
+    ciphertext: number[];
+}
+
 export async function deriveKeyFromPasskey(
     credential: PublicKeyCredential,
     salt: Uint8Array
@@ -21,15 +27,9 @@ export async function deriveKeyFromPasskey(
         },
         keyMaterial,
         { name: 'AES-GCM', length: 256 },
-        true,
+        false,
         ['encrypt', 'decrypt']
     );
-}
-
-export interface EncryptedData {
-    salt: number[];
-    iv: number[];
-    ciphertext: number[];
 }
 
 export async function encryptWithPasskey(
@@ -41,16 +41,14 @@ export async function encryptWithPasskey(
     const encoder = new TextEncoder();
     const data = encoder.encode(privateKey);
     const iv = crypto.getRandomValues(new Uint8Array(12));
-    const encrypted = await crypto.subtle.encrypt(
-        { name: 'AES-GCM', iv: iv },
-        cryptoKey,
-        data
-    );
+    const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, cryptoKey, data);
+
     const encryptedData: EncryptedData = {
         salt: Array.from(salt),
         iv: Array.from(iv),
         ciphertext: Array.from(new Uint8Array(encrypted))
     };
+
     return JSON.stringify(encryptedData);
 }
 

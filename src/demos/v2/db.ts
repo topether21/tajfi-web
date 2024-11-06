@@ -3,9 +3,10 @@
 export interface StoredKey {
     id: string;
     encryptedKey: string; // Stored as JSON string
+    nickname?: string;    // Optional nickname
 }
 
-export async function storeEncryptedPrivateKey(id: string, encryptedKey: string): Promise<void> {
+export async function storeEncryptedPrivateKey(id: string, encryptedKey: string, nickname: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
         const request = indexedDB.open("nostrKeys", 1);
         request.onupgradeneeded = () => {
@@ -18,7 +19,7 @@ export async function storeEncryptedPrivateKey(id: string, encryptedKey: string)
             const db = request.result;
             const transaction = db.transaction("keys", "readwrite");
             const store = transaction.objectStore("keys");
-            store.put({ id, encryptedKey });
+            store.put({ id, encryptedKey, nickname });
             transaction.oncomplete = () => resolve();
             transaction.onerror = () => reject(transaction.error);
         };
@@ -26,7 +27,7 @@ export async function storeEncryptedPrivateKey(id: string, encryptedKey: string)
     });
 }
 
-export async function retrieveEncryptedPrivateKey(id: string): Promise<string | null> {
+export async function retrieveEncryptedPrivateKey(id: string): Promise<{ encryptedKey: string; nickname: string } | null> {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open("nostrKeys", 1);
         request.onsuccess = () => {
@@ -34,7 +35,14 @@ export async function retrieveEncryptedPrivateKey(id: string): Promise<string | 
             const transaction = db.transaction("keys", "readonly");
             const store = transaction.objectStore("keys");
             const getRequest = store.get(id);
-            getRequest.onsuccess = () => resolve(getRequest.result?.encryptedKey || null);
+            getRequest.onsuccess = () => {
+                const result = getRequest.result;
+                if (result?.encryptedKey) {
+                    resolve({ encryptedKey: result.encryptedKey, nickname: result.nickname || '' });
+                } else {
+                    resolve(null);
+                }
+            };
             getRequest.onerror = () => reject(getRequest.error);
         };
         request.onerror = () => reject(request.error);
