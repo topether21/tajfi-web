@@ -84,7 +84,7 @@ export class WaSignatureProvider {
                     name: accountName,
                     displayName: accountName,
                 },
-                pubKeyCredParams: [{ type: 'public-key', alg: -7 }],
+                pubKeyCredParams: [{ type: 'public-key', alg: -8 }],
                 timeout: 60000,
                 challenge: new Uint8Array(32).buffer,
                 attestation: 'direct',
