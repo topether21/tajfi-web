@@ -5,66 +5,72 @@ import * as secp from '@noble/secp256k1'
 import { sha256 } from '@noble/hashes/sha256'
 import { schnorr } from '@noble/curves/secp256k1'
 import { bech32 } from 'bech32'
-import { storeEncryptedPrivateKey, retrieveEncryptedPrivateKey } from './db'
+import {
+    storeEncryptedPrivateKey,
+    retrieveEncryptedPrivateKey,
+    getAllStoredWallets,
+    removeEncryptedPrivateKey,
+    clearAllWallets
+} from './db'
 import { encryptWithPasskey, decryptWithPasskey } from './encryption'
 
 export const nostrRelay = "wss://relay.damus.io"
 
+export interface Wallet {
+    id: string
+    walletName: string
+    publicKey: string
+    npub1Key: string
+}
+
 export const useNostr = () => {
-    const [publicKey, setPublicKey] = useState('')
-    const [npub1Key, setNpub1Key] = useState('')
+    const [wallets, setWallets] = useState<StoredWallet[]>([])
+    const [currentWalletId, setCurrentWalletId] = useState<string | null>(null)
+    const [currentWallet, setCurrentWallet] = useState<Wallet | null>(null)
     const [message, setMessage] = useState('')
     const [signature, setSignature] = useState('')
     const [status, setStatus] = useState('')
     const [isGenerating, setIsGenerating] = useState(false)
     const [isSigning, setIsSigning] = useState(false)
     const [isSending, setIsSending] = useState(false)
-    const [nsec, setNsec] = useState('') // New state for testing
-    const [nickname, setNickname] = useState('') // New state for nickname
-    const [isInitialized, setIsInitialized] = useState(false) // New state for initialization
+    const [nsec, setNsec] = useState('') // For development/testing
+    const [isInitialized, setIsInitialized] = useState(false)
 
     useEffect(() => {
         const initialize = async () => {
-            const keyId = localStorage.getItem("nostr_key_id")
-            if (keyId) {
-                try {
-                    const storedData = await retrieveEncryptedPrivateKey(keyId)
-                    if (!storedData || !storedData.encryptedKey) {
-                        setStatus("Encrypted private key not found. Please generate new keys.")
-                        setIsInitialized(true)
-                        return
-                    }
-
+            const storedWallets = await getAllStoredWallets()
+            setWallets(storedWallets)
+            const storedCurrentId = localStorage.getItem("nostr_current_wallet_id")
+            if (storedCurrentId) {
+                setCurrentWalletId(storedCurrentId)
+                const wallet = await retrieveEncryptedPrivateKey(storedCurrentId)
+                if (wallet) {
                     const credential = await navigator.credentials.get({
                         publicKey: {
                             challenge: generateChallenge(),
-                            allowCredentials: [{ id: base64ToUint8Array(keyId), type: "public-key" }],
+                            allowCredentials: [{ id: base64ToUint8Array(wallet.id), type: "public-key" }],
                         }
                     }) as PublicKeyCredential;
 
                     if (credential) {
-                        const decryptedPrivateKey = await decryptWithPasskey(storedData.encryptedKey, credential)
+                        const decryptedPrivateKey = await decryptWithPasskey(wallet.encryptedKey, credential)
                         const compactPublicKey = derivePublicKeyFromPrivate(decryptedPrivateKey)
-                        setPublicKey(compactPublicKey)
-
-                        const pubWords = bech32.toWords(Buffer.from(compactPublicKey, 'hex'))
-                        setNpub1Key(bech32.encode('npub', pubWords))
-                        setNickname(storedData.nickname)
-                        setStatus("Existing account loaded successfully.")
+                        const npub1 = encodeNpub(compactPublicKey)
+                        setCurrentWallet({
+                            id: wallet.id,
+                            walletName: wallet.walletName || '',
+                            publicKey: compactPublicKey,
+                            npub1Key: npub1
+                        })
+                        setStatus(`Wallet "${wallet.walletName}" loaded successfully.`)
                     } else {
-                        setStatus("Failed to retrieve credentials. Please generate new keys.")
+                        setStatus("Failed to retrieve credentials. Please log in again.")
+                        logout()
                     }
-                } catch (error) {
-                    console.error("Error initializing account:", error)
-                    setStatus("Error loading existing account. Please generate new keys.")
-                } finally {
-                    setIsInitialized(true)
                 }
-            } else {
-                setIsInitialized(true)
             }
+            setIsInitialized(true)
         }
-
         initialize()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
@@ -79,7 +85,12 @@ export const useNostr = () => {
         return Buffer.from(pubKey).toString('hex').substring(2)
     }
 
-    const generateKeys = async (userNickname: string) => {
+    const encodeNpub = (publicKeyHex: string): string => {
+        const pubWords = bech32.toWords(Buffer.from(publicKeyHex, 'hex'))
+        return bech32.encode('npub', pubWords)
+    }
+
+    const generateKeys = async (walletName: string) => {
         setIsGenerating(true)
         const privKey = secp.utils.randomPrivateKey()
         const pubKey = secp.getPublicKey(privKey, true)
@@ -94,8 +105,8 @@ export const useNostr = () => {
                     rp: { name: "Tajfi" },
                     user: {
                         id: crypto.getRandomValues(new Uint8Array(16)),
-                        name: userNickname,
-                        displayName: userNickname,
+                        name: walletName,
+                        displayName: walletName,
                     },
                     pubKeyCredParams: [{ alg: -7, type: "public-key" }],
                     authenticatorSelection: { authenticatorAttachment: "platform" },
@@ -106,16 +117,20 @@ export const useNostr = () => {
             if (credential) {
                 const encryptedPrivateKey = await encryptWithPasskey(compactPrivateKey, credential)
                 const keyId = uint8ArrayToBase64(new Uint8Array(credential.rawId))
+                await storeEncryptedPrivateKey(keyId, encryptedPrivateKey, walletName)
+                setWallets(await getAllStoredWallets())
+                setCurrentWalletId(keyId)
+                localStorage.setItem("nostr_current_wallet_id", keyId)
 
-                await storeEncryptedPrivateKey(keyId, encryptedPrivateKey, userNickname)
-                localStorage.setItem("nostr_key_id", keyId)
-
-                setPublicKey(compactPublicKey)
-
-                const pubWords = bech32.toWords(Buffer.from(compactPublicKey, 'hex'))
-                setNpub1Key(bech32.encode('npub', pubWords))
-                setNickname(userNickname)
-                setStatus("Keys generated and stored securely.")
+                const npub1 = encodeNpub(compactPublicKey)
+                const newWallet: Wallet = {
+                    id: keyId,
+                    walletName,
+                    publicKey: compactPublicKey,
+                    npub1Key: npub1
+                }
+                setCurrentWallet(newWallet)
+                setStatus(`Wallet "${walletName}" generated and selected.`)
             }
         } catch (error) {
             setStatus("Failed to create passkey.")
@@ -126,20 +141,18 @@ export const useNostr = () => {
     }
 
     const retrievePrivateKey = async (): Promise<string> => {
-        const keyId = localStorage.getItem("nostr_key_id")
-        if (!keyId) {
-            throw new Error("No key ID found in localStorage.")
+        if (!currentWalletId) {
+            throw new Error("No wallet selected.")
         }
-
-        const storedData = await retrieveEncryptedPrivateKey(keyId)
-        if (!storedData || !storedData.encryptedKey) {
+        const wallet = await retrieveEncryptedPrivateKey(currentWalletId)
+        if (!wallet || !wallet.encryptedKey) {
             throw new Error("Encrypted private key not found.")
         }
 
         const credential = await navigator.credentials.get({
             publicKey: {
                 challenge: generateChallenge(),
-                allowCredentials: [{ id: base64ToUint8Array(keyId), type: "public-key" }],
+                allowCredentials: [{ id: base64ToUint8Array(wallet.id), type: "public-key" }],
             }
         }) as PublicKeyCredential;
 
@@ -147,13 +160,17 @@ export const useNostr = () => {
             throw new Error("Failed to retrieve credentials.")
         }
 
-        const decryptedPrivateKey = await decryptWithPasskey(storedData.encryptedKey, credential)
+        const decryptedPrivateKey = await decryptWithPasskey(wallet.encryptedKey, credential)
         return decryptedPrivateKey
     }
 
     const signMessage = async () => {
         if (!message) {
             setStatus('Please enter a message')
+            return
+        }
+        if (!currentWallet) {
+            setStatus('No wallet selected.')
             return
         }
 
@@ -166,7 +183,7 @@ export const useNostr = () => {
             const sig = Buffer.from(await schnorr.sign(hash, privKey)).toString('hex')
             setSignature(sig)
 
-            const isValid = schnorr.verify(sig, hash, Buffer.from(publicKey, 'hex'))
+            const isValid = schnorr.verify(sig, hash, Buffer.from(currentWallet.publicKey, 'hex'))
             setStatus(`Signature valid: ${isValid}`)
         } catch (error) {
             setStatus('Failed to sign message.')
@@ -177,6 +194,9 @@ export const useNostr = () => {
     }
 
     const getSignedEvent = async (event: { pubkey: string, created_at: number, kind: number, tags: string[], content: string }) => {
+        if (!currentWallet) {
+            throw new Error("No wallet selected.")
+        }
         const privKey = await retrievePrivateKey()
         const eventData = JSON.stringify([0, event.pubkey, event.created_at, event.kind, event.tags, event.content])
         const id = Buffer.from(sha256(new TextEncoder().encode(eventData))).toString('hex')
@@ -187,6 +207,10 @@ export const useNostr = () => {
     const sendMessage = async () => {
         if (!message) {
             setStatus('Please enter a message')
+            return
+        }
+        if (!currentWallet) {
+            setStatus('No wallet selected.')
             return
         }
 
@@ -200,7 +224,7 @@ export const useNostr = () => {
                 console.log(`Connected to ${nostrRelay}`)
                 try {
                     const signedEvent = await getSignedEvent({
-                        pubkey: publicKey,
+                        pubkey: currentWallet.publicKey,
                         created_at: Math.floor(Date.now() / 1000),
                         kind: 1,
                         tags: [],
@@ -236,8 +260,11 @@ export const useNostr = () => {
         }
     }
 
-    // New Test Method to Retrieve Private Key
     const getPrivateKey = async () => {
+        if (!currentWalletId) {
+            setStatus("No wallet selected.")
+            return
+        }
         try {
             const privKey = await retrievePrivateKey()
             setNsec(privKey)
@@ -248,7 +275,68 @@ export const useNostr = () => {
         }
     }
 
-    // Helper Functions
+    // Switch to a different wallet
+    const switchWallet = async (id: string) => {
+        const wallet = await retrieveEncryptedPrivateKey(id)
+        if (wallet) {
+            const credential = await navigator.credentials.get({
+                publicKey: {
+                    challenge: generateChallenge(),
+                    allowCredentials: [{ id: base64ToUint8Array(wallet.id), type: "public-key" }],
+                }
+            }) as PublicKeyCredential;
+
+            if (credential) {
+                const decryptedPrivateKey = await decryptWithPasskey(wallet.encryptedKey, credential)
+                const compactPublicKey = derivePublicKeyFromPrivate(decryptedPrivateKey)
+                const npub1 = encodeNpub(compactPublicKey)
+                setCurrentWallet({
+                    id: wallet.id,
+                    walletName: wallet.walletName || '',
+                    publicKey: compactPublicKey,
+                    npub1Key: npub1
+                })
+                setCurrentWalletId(id)
+                localStorage.setItem("nostr_current_wallet_id", id)
+                setStatus(`Switched to "${wallet.walletName}"`)
+            } else {
+                setStatus("Failed to retrieve credentials. Please log in again.")
+                logout()
+            }
+        }
+    }
+
+    // Remove a wallet
+    const removeWallet = async (id: string) => {
+        await removeEncryptedPrivateKey(id)
+        setWallets(await getAllStoredWallets())
+        if (currentWalletId === id) {
+            setCurrentWalletId(null)
+            setCurrentWallet(null)
+            localStorage.removeItem("nostr_current_wallet_id")
+            setStatus("Current wallet removed. Please select another wallet or create a new one.")
+        } else {
+            setStatus("Wallet removed.")
+        }
+    }
+
+    // Logout current wallet
+    const logout = () => {
+        setCurrentWalletId(null)
+        setCurrentWallet(null)
+        localStorage.removeItem("nostr_current_wallet_id")
+        setStatus("Logged out successfully.")
+    }
+
+    // Clear all wallets
+    const clearWallets = async () => {
+        await clearAllWallets()
+        setWallets([])
+        setCurrentWalletId(null)
+        setCurrentWallet(null)
+        setStatus("All wallets have been cleared.")
+    }
+
     const base64ToUint8Array = (base64: string): Uint8Array => {
         const binaryString = atob(base64)
         const len = binaryString.length
@@ -268,8 +356,8 @@ export const useNostr = () => {
     }
 
     return {
-        publicKey,
-        npub1Key,
+        wallets,
+        currentWallet,
         message,
         setMessage,
         signature,
@@ -280,10 +368,12 @@ export const useNostr = () => {
         isGenerating,
         isSigning,
         isSending,
-        getPrivateKey,       // Expose the test method
-        nsec,                // Expose the retrieved private key
-        nickname,            // Expose nickname
-        setNickname,         // Expose setNickname
-        isInitialized        // Expose initialization status
+        getPrivateKey,
+        nsec,
+        isInitialized,
+        switchWallet,
+        removeWallet,
+        logout,
+        clearWallets
     }
 }
