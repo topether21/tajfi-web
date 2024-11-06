@@ -38,7 +38,7 @@ export const useNostr = () => {
             }
         } catch (error) {
             console.error("Error initializing WebAuthn:", error)
-            setStatus(`Error: ${error.message}`)
+            setStatus(`Error: ${(error as Error).message}`)
         }
     }
 
@@ -89,7 +89,7 @@ export const useNostr = () => {
             }
         } catch (error) {
             console.error("Error signing message:", error)
-            setStatus(`Error signing message: ${error.message}`)
+            setStatus(`Error signing message: ${(error as Error).message}`)
         }
     }
 

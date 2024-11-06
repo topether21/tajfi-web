@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useState } from 'react'
 import { AlertCircle, CheckCircle2, Loader2, Plus, Trash2 } from 'lucide-react'
+import { StoredWallet } from './db'
 
 const IS_DEV = true
 
@@ -119,7 +120,7 @@ export const NostrDashboard = () => {
                                 ) : (
                                     <ScrollArea className="h-[200px] w-full rounded-md border p-4">
                                         <ul className="space-y-2">
-                                            {wallets.map((wallet: Wallet) => (
+                                            {wallets.map((wallet: StoredWallet) => (
                                                 <li key={wallet.id} className="flex justify-between items-center p-2 bg-secondary rounded-md">
                                                     <span className={`font-medium ${currentWallet?.id === wallet.id ? 'text-primary' : ''}`}>
                                                         {wallet.walletName || 'Unnamed Wallet'}
@@ -179,6 +180,10 @@ export const NostrDashboard = () => {
                                         <div className="space-y-2">
                                             <Label htmlFor="npub1Key">Nostr npub1 Key</Label>
                                             <Input id="npub1Key" value={currentWallet.npub1Key} readOnly />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="p2trAddress">P2TR Address</Label>
+                                            <Input id="p2trAddress" value={currentWallet.p2trAddress} readOnly />
                                         </div>
                                     </CardContent>
                                 </Card>

@@ -10,9 +10,11 @@ import {
     retrieveEncryptedPrivateKey,
     getAllStoredWallets,
     removeEncryptedPrivateKey,
-    clearAllWallets
+    clearAllWallets,
+    type StoredWallet
 } from './db'
 import { encryptWithPasskey, decryptWithPasskey } from './encryption'
+import { getBitcoinAddress } from '@/lib/wallet/providers/bitcoin'
 
 export const nostrRelay = "wss://relay.damus.io"
 
@@ -21,6 +23,7 @@ export interface Wallet {
     walletName: string
     publicKey: string
     npub1Key: string
+    p2trAddress: string
 }
 
 export const useNostr = () => {
@@ -33,7 +36,7 @@ export const useNostr = () => {
     const [isGenerating, setIsGenerating] = useState(false)
     const [isSigning, setIsSigning] = useState(false)
     const [isSending, setIsSending] = useState(false)
-    const [nsec, setNsec] = useState('') // For development/testing
+    const [nsec, setNsec] = useState('')
     const [isInitialized, setIsInitialized] = useState(false)
 
     useEffect(() => {
@@ -56,11 +59,13 @@ export const useNostr = () => {
                         const decryptedPrivateKey = await decryptWithPasskey(wallet.encryptedKey, credential)
                         const compactPublicKey = derivePublicKeyFromPrivate(decryptedPrivateKey)
                         const npub1 = encodeNpub(compactPublicKey)
+                        const p2trAddress = (await getBitcoinAddress(compactPublicKey)).address || ''
                         setCurrentWallet({
                             id: wallet.id,
                             walletName: wallet.walletName || '',
                             publicKey: compactPublicKey,
-                            npub1Key: npub1
+                            npub1Key: npub1,
+                            p2trAddress
                         })
                         setStatus(`Wallet "${wallet.walletName}" loaded successfully.`)
                     } else {
@@ -102,7 +107,7 @@ export const useNostr = () => {
             const credential = await navigator.credentials.create({
                 publicKey: {
                     challenge: generateChallenge(),
-                    rp: { name: "Tajfi" },
+                    rp: { name: "Tajfi", id: window.location.host },
                     user: {
                         id: crypto.getRandomValues(new Uint8Array(16)),
                         name: walletName,
@@ -121,13 +126,15 @@ export const useNostr = () => {
                 setWallets(await getAllStoredWallets())
                 setCurrentWalletId(keyId)
                 localStorage.setItem("nostr_current_wallet_id", keyId)
+                const p2trAddress = (await getBitcoinAddress(compactPublicKey)).address || ''
 
                 const npub1 = encodeNpub(compactPublicKey)
                 const newWallet: Wallet = {
                     id: keyId,
                     walletName,
                     publicKey: compactPublicKey,
-                    npub1Key: npub1
+                    npub1Key: npub1,
+                    p2trAddress
                 }
                 setCurrentWallet(newWallet)
                 setStatus(`Wallet "${walletName}" generated and selected.`)
@@ -294,7 +301,8 @@ export const useNostr = () => {
                     id: wallet.id,
                     walletName: wallet.walletName || '',
                     publicKey: compactPublicKey,
-                    npub1Key: npub1
+                    npub1Key: npub1,
+                    p2trAddress: (await getBitcoinAddress(compactPublicKey)).address || ''
                 })
                 setCurrentWalletId(id)
                 localStorage.setItem("nostr_current_wallet_id", id)

@@ -3,7 +3,7 @@
 export interface StoredWallet {
     id: string;
     encryptedKey: string; // Stored as JSON string
-    walletName?: string;  // Optional wallet name
+    walletName: string;
 }
 
 const WALLETS_KEY = "nostr_wallets";
