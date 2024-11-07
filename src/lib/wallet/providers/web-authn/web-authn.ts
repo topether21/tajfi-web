@@ -138,7 +138,10 @@ export class WebAuthnWallet implements WalletStrategy, WebAuthnProvider {
         return sig
     }
     async signTx(transaction: Transaction): Promise<string> {
-        throw new Error('Not implemented')
+        const privKey = await this.retrievePrivateKey()
+        const hash = sha256(new TextEncoder().encode(transaction))
+        const sig = Buffer.from(await schnorr.sign(hash, privKey)).toString('hex')
+        return sig
     }
     async getP2trAddress(pubkey: string): Promise<AddressInfo> {
         throw new Error('Not implemented')
