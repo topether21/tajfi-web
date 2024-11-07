@@ -1,17 +1,14 @@
 import type { WalletProvider } from "../types";
 import { AlbyWallet } from "./alby";
-import { MetamaskWallet } from "./metamask";
+import { OneKeyWallet } from "./onekey";
 import type { WalletStrategy } from "./shared";
-import { UnisatWallet } from "./unisat";
-import { XverseWallet } from "./xverse";
-
+import { WebAuthnWallet } from "./web-authn";
 
 export const getProviderStrategy = (provider: WalletProvider): WalletStrategy => {
     switch (provider) {
         case 'alby': return new AlbyWallet()
-        case 'xverse': return new XverseWallet()
-        case 'unisat': return new UnisatWallet()
-        case 'metaMask': return new MetamaskWallet()
+        case 'oneKey': return new OneKeyWallet()
+        case 'webAuthn': return new WebAuthnWallet()
         default: throw new Error(`Unknown provider: ${provider}`)
     }
 }

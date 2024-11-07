@@ -33,8 +33,15 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setProfile(wallet)
       setError(null)
     } catch (err) {
-      const errorMessage = (err as Error).message.includes('Nostr key') ? 'nostrKeyError' : 'genericError'
-      setError(errorMessage)
+      const message = (err as Error).message
+      if (message.includes('Nostr key')) {
+        setError('nostrKeyError')
+      } else if (message.includes('is not defined')) {
+        setError('unsupportedWalletError')
+      } else {
+        setError('genericError')
+      }
+      console.error('Error connecting wallet', err)
       throw err
     }
   }
@@ -69,6 +76,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                       here
                     </a>
                     .
+                  </>
+                ) : error === 'unsupportedWalletError' ? (
+                  <>
+                    This wallet is not supported yet. Please try another wallet.
                   </>
                 ) : (
                   'Failed to connect wallet. Please try again.'

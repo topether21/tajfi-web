@@ -25,4 +25,4 @@ export type WalletKeys = {
     providerName: WalletProvider
 }
 
-export type WalletProvider = 'alby' | 'unisat' | 'xverse' | 'onekey' | 'metaMask'
+export type WalletProvider = 'alby' | 'oneKey' | 'webAuthn'

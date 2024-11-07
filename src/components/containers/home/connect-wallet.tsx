@@ -2,18 +2,30 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Wallet, Zap } from 'lucide-react'
+import { Wallet } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
 import { MotionDiv } from '../shared'
 import { useAuth } from '@/hooks/auth-context'
 import type { WalletProvider } from '@/lib/wallet/types'
-import { XverseLogo } from '@/components/icons/xverse'
 import { AlbyLogo } from '@/components/icons/alby'
-import { MetaMaskLogo } from '@/components/icons/metamask'
 import { OneKeyLogo } from '@/components/icons/onekey'
-import { UnisatLogo } from '@/components/icons/unisat'
+import { TajfiLogo } from '@/components/icons/tajfi'
+import { useAsync, useEffectOnce } from 'react-use'
+
+const checkWebAuthNSupport = async () => {
+  const supportsWebAuthn =
+    typeof navigator !== 'undefined' &&
+    typeof navigator.credentials !== 'undefined' &&
+    typeof navigator.credentials.create !== 'undefined' &&
+    typeof navigator.credentials.get !== 'undefined' &&
+    typeof PublicKeyCredential !== 'undefined' &&
+    typeof PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable !== 'undefined' &&
+    (await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable());
+  return supportsWebAuthn
+}
+
 export const useWalletAuth = ({ onCancel }: { onCancel?: () => void }) => {
   const [isConnecting, setIsConnecting] = useState(false)
   const { profile, login, logout } = useAuth()
@@ -110,6 +122,8 @@ export const ConnectWalletButton: React.FC<ConnectWalletModalProps> = ({
 }
 
 export const ConnectWalletModal = ({ isHero }: { isHero?: boolean }) => {
+  const { value: supportsWebAuthn } = useAsync(checkWebAuthNSupport)
+
   const [isOpen, setIsOpen] = useState(false)
 
   const openModal = () => {
@@ -123,11 +137,8 @@ export const ConnectWalletModal = ({ isHero }: { isHero?: boolean }) => {
 
   const wallets = [
     { name: 'alby' as WalletProvider, icon: AlbyLogo, label: 'Alby' },
-    { name: 'xverse' as WalletProvider, icon: XverseLogo, label: 'Xverse' },
-    { name: 'metaMask' as WalletProvider, icon: MetaMaskLogo, label: 'MetaMask' },
     { name: 'oneKey' as WalletProvider, icon: OneKeyLogo, label: 'OneKey' },
-    { name: 'unisat' as WalletProvider, icon: UnisatLogo, label: 'Unisat' },
-  ]
+  ].concat(supportsWebAuthn ? [{ name: 'webAuthn' as WalletProvider, icon: TajfiLogo, label: 'Tajfi' }] : [])
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
