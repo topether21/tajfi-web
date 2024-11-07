@@ -41,9 +41,9 @@ export const DesktopWalletHeader = ({ balances, loading }: { balances: AssetBala
   const [activeAction, setActiveAction] = useState<string | null>(null)
 
   return (
-    <div className="hidden md:block bg-background text-white px-8">
+    <div className="bg-background text-white px-8">
       <div className="max-w-2xl mx-auto">
-        <div className="flex justify-around mt-8 relative">
+        <div className="hidden md:flex justify-around mt-8 relative">
           <ActionButton
             Icon={Send}
             label="Send"
