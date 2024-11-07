@@ -14,7 +14,7 @@ import {
     type StoredWallet
 } from './db'
 import { encryptWithPasskey, decryptWithPasskey } from './encryption'
-import { getBitcoinAddress } from '@/lib/wallet/providers/bitcoin'
+import { getBitcoinAddress } from './bitcoin'
 
 export const nostrRelay = "wss://relay.damus.io"
 

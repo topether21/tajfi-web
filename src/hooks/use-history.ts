@@ -13,10 +13,10 @@ export const useHistory = () => {
     refreshInterval: 5000,
   })
 
-  const loading = !error && transfers.length === 0
+  const loading = !error && transfers?.length === 0
 
   return {
-    transfers,
+    transfers: transfers || [],
     loading,
     error,
   }
