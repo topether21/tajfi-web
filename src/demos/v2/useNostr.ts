@@ -107,7 +107,7 @@ export const useNostr = () => {
             const credential = await navigator.credentials.create({
                 publicKey: {
                     challenge: generateChallenge(),
-                    rp: { name: "Tajfi", id: window.location.host },
+                    rp: { name: "Tajfi" },
                     user: {
                         id: crypto.getRandomValues(new Uint8Array(16)),
                         name: walletName,
