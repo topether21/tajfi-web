@@ -1,8 +1,9 @@
 import useSWR from 'swr'
 import { listBalances } from '@/lib/wallet/api'
+import { saveUserBalances } from '@/lib/debug/user'
 
 export type AssetBalance = {
-  balance: number
+  amount: number
   name: string
   assetId: string
 }
@@ -11,11 +12,9 @@ export const useBalances = () => {
   const fetcher = () =>
     listBalances().then((data) => {
       const balances = Object.entries(data.asset_balances).reduce((acc, [assetId, balance]) => {
-        if (balance.asset_genesis.asset_type === 'COLLECTIBLE') {
-          return acc
-        }
+        if (balance.asset_genesis.asset_type === 'COLLECTIBLE') return acc
         const assetBalance = {
-          balance: Number(balance.balance),
+          amount: Number(balance.balance),
           name: balance.asset_genesis.name,
           assetId,
         }
@@ -29,18 +28,21 @@ export const useBalances = () => {
         return acc
       }, [] as AssetBalance[])
 
-      return balances
+      const currencies = new Map(balances.map((balance) => [balance.assetId, balance.name]))
+      const response = { userBalances: balances, currencies }
+      saveUserBalances(balances, currencies)
+      return response
     })
 
-  const { data: balances = [], error } = useSWR('wallet-balance', fetcher, {
+  const { data: balances = { userBalances: [], currencies: new Map<string, string>() }, error } = useSWR('wallet-balance', fetcher, {
     refreshInterval: 4000,
   })
 
-  const loading = !error && balances.length === 0
-  const currencies = balances.map((balance) => balance.assetId)
+  const loading = !error && balances.userBalances.length === 0
+  const currencies = balances.currencies
 
   return {
-    balances,
+    userBalances: balances.userBalances,
     currencies,
     loading,
     error,

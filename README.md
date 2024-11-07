@@ -41,6 +41,8 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 Tajfi's backend is implemented in Go and can be found in the [tajfi-server repository](https://github.com/habibitcoin/tajfi-server).
 
+https://api.tajfi.com/docs/openapi-spec.yaml
+
 ## Learn More
 
 To learn more about the technologies used in Tajfi, take a look at the following resources:

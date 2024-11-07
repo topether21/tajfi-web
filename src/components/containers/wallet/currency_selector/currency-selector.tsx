@@ -12,7 +12,7 @@ import type { AssetBalance } from '@/hooks/use-balances'
 import { useEffect, useState } from 'react'
 import { UnknownLogo } from '@/components/icons/unknown'
 
-export const Currency = ({ name, assetId }: { name?: string; assetId?: string }) => {
+export const Currency = ({ name, assetId, size }: { name?: string; assetId?: string; size?: 'sm' | 'md' }) => {
   if (assetId) {
     switch (assetId) {
       case process.env.NEXT_PUBLIC_DEFAULT_ASSET_ID:
@@ -24,7 +24,7 @@ export const Currency = ({ name, assetId }: { name?: string; assetId?: string })
   return name === process.env.NEXT_PUBLIC_DEFAULT_ASSET_NAME ? (
     <TetherUSDT />
   ) : (
-    <div className="text-center text-3xl">{name?.toUpperCase()}</div>
+    <div className={`text-center ${size === 'sm' ? 'text-sm' : 'text-3xl'}`}>{name?.toUpperCase()}</div>
   )
 }
 

@@ -3,7 +3,7 @@ import type { AddressInfo, Transaction, WalletStrategy } from "./shared";
 
 // ref: https://docs.unisat.io/dev/unisat-developer-center/bitcoin/unisat-wallet
 export class UnisatWallet implements WalletStrategy {
-    async getKeys(): Promise<{ ordinalsPublicKey: string, ordinalsAddress: string }> {
+    async getKeys(): Promise<{ tapasPublicKey: string, tapasAddress: string }> {
         if (!window.unisat) {
             throw new Error('Unisat is not available')
         }
@@ -11,8 +11,8 @@ export class UnisatWallet implements WalletStrategy {
         console.log('connect success', accounts);
         const pubkey = await window.unisat.getPublicKey();
         return {
-            ordinalsPublicKey: pubkey,
-            ordinalsAddress: accounts[0]
+            tapasPublicKey: pubkey,
+            tapasAddress: accounts[0]
         };
     }
     async signSimpleMessage(message: string, { address }: { address: string }): Promise<string> {
@@ -24,7 +24,7 @@ export class UnisatWallet implements WalletStrategy {
     async signTx(transaction: Transaction): Promise<string> {
         throw new Error('Not implemented')
     }
-    async getAddressInfo(pubkey: string): Promise<AddressInfo> {
+    async getP2trAddress(pubkey: string): Promise<AddressInfo> {
         const pubkeyBuffer = Buffer.from(pubkey, 'hex');
         const addrInfo = bitcoin.payments.p2tr({
             internalPubkey: toXOnly(pubkeyBuffer),

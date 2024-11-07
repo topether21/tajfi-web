@@ -5,7 +5,6 @@ import NumberFlow from '@number-flow/react'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { AssetBalance } from '@/hooks/use-balances'
 import { useState } from 'react'
-import { motion } from 'framer-motion'
 import { MotionDiv } from '../shared'
 
 const ActionButton = ({
@@ -83,9 +82,9 @@ export const DesktopWalletHeader = ({ balances, loading }: { balances: AssetBala
             <div className="flex justify-center">
               <div className="text-center">
                 <p className="text-sm text-gray-400 text-center">Your balance</p>
-                {typeof balances?.[currentBalanceIndex]?.balance === 'number' ? (
+                {typeof balances?.[currentBalanceIndex]?.amount === 'number' ? (
                   <NumberFlow
-                    value={balances[currentBalanceIndex].balance}
+                    value={balances[currentBalanceIndex].amount}
                     trend={false}
                     className="text-3xl font-bold text-green-500 mb-2 items-center"
                   />

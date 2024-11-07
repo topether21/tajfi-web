@@ -15,9 +15,13 @@ import { useToast } from '@/hooks/use-toast'
 
 const ReceivePage = () => {
   const { currencies } = useBalances()
-  const [selectedOption, setSelectedOption] = useState(currencies[0])
+  const defaultAsset = currencies.entries().next().value as [string, string]
+  const [selectedOption, setSelectedOption] = useState<{ assetId: string; name: string }>({
+    assetId: defaultAsset[0],
+    name: defaultAsset[1],
+  })
   const [assetAmount, setAssetAmount] = useState<number | ''>('')
-  const { loading, invoice, error } = useCreateInvoice(assetAmount, selectedOption)
+  const { loading, invoice, error } = useCreateInvoice(assetAmount, selectedOption.assetId)
   const [state, copyToClipboard] = useCopyToClipboard()
   const qrCodeRef = useRef<HTMLDivElement>(null)
   const { toast } = useToast()
@@ -69,7 +73,7 @@ const ReceivePage = () => {
             <VerticalCurrencySelector
               selectedOption={selectedOption}
               setSelectedOption={setSelectedOption}
-              currencies={currencies}
+              currencies={Array.from(currencies.entries()).map(([assetId, name]) => ({ assetId, name }))}
             />
           </div>
           {/* <div className="h-px bg-gray-800 w-full mt-2" /> */}

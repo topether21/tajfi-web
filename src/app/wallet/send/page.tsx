@@ -14,6 +14,7 @@ import { useSendFunds } from './use-send-funds'
 import { sendComplete } from '@/lib/wallet/api'
 import { getProviderStrategy, } from '@/lib/wallet/providers/index'
 import { useAuth } from '@/hooks/auth-context'
+import { useBalances } from '@/hooks/use-balances'
 
 const TransactionSummary = ({
   invoiceDetails,
@@ -25,6 +26,7 @@ const TransactionSummary = ({
   invoice: string
 }) => {
   const { loading: loadingSend, error: errorSend, preSignedData, sendFundsStart } = useSendFunds()
+  const { currencies } = useBalances()
 
   console.log('TransactionSummary', { invoiceDetails, preSignedData })
   const [signingError, setSigningError] = useState('')
@@ -37,7 +39,7 @@ const TransactionSummary = ({
       setSigningError('')
 
       const walletProvider = getProviderStrategy(profile.providerName)
-      const signatureHex = await walletProvider.signTx(preSignedData.sighashHexToSign, { address: profile.ordinalsAddress })
+      const signatureHex = await walletProvider.signTx(preSignedData.sighashHexToSign, { address: profile.tapasAddress })
       if (!signatureHex) {
         setSigningError('Failed to sign invoice')
         return
@@ -73,8 +75,8 @@ const TransactionSummary = ({
         </div>
         <div className="flex justify-between items-center p-4 bg-secondary rounded-lg">
           <span className="text-lg font-medium">Currency:</span>
-          <div className="h-8 w-8">
-            <Currency assetId={invoiceDetails?.assetId} />
+          <div>
+            <Currency name={currencies.get(invoiceDetails.assetId)} size='sm' />
           </div>
         </div>
         {!sentTransaction && !error && (

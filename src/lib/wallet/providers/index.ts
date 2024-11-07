@@ -2,7 +2,7 @@ import type { WalletProvider } from "../types";
 import { AlbyWallet } from "./alby";
 import { OneKeyWallet } from "./onekey";
 import type { WalletStrategy } from "./shared";
-import { WebAuthnWallet } from "./web-authn";
+import { WebAuthnWallet } from "./web-authn/web-authn";
 
 export const getProviderStrategy = (provider: WalletProvider): WalletStrategy => {
     switch (provider) {

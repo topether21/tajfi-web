@@ -1,7 +1,7 @@
 import type { AddressInfo, Transaction, WalletStrategy } from "./shared";
 
 export class OneKeyWallet implements WalletStrategy {
-    async getKeys(): Promise<{ ordinalsPublicKey: string, ordinalsAddress: string }> {
+    async getKeys(): Promise<{ tapasPublicKey: string, tapasAddress: string }> {
         throw new Error('Not implemented')
     }
     async signSimpleMessage(message: string, { address }: { address: string }): Promise<string> {
@@ -10,7 +10,7 @@ export class OneKeyWallet implements WalletStrategy {
     async signTx(transaction: Transaction): Promise<string> {
         throw new Error('Not implemented')
     }
-    async getAddressInfo(pubkey: string): Promise<AddressInfo> {
+    async getP2trAddress(pubkey: string): Promise<AddressInfo> {
         throw new Error('Not implemented')
     }
 }

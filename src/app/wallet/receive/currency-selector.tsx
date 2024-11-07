@@ -9,10 +9,10 @@ export const VerticalCurrencySelector = ({
   selectedOption,
   setSelectedOption,
   currencies,
-}: { selectedOption: string; setSelectedOption: (option: string) => void; currencies: string[] }) => {
+}: { selectedOption: { assetId: string; name: string }; setSelectedOption: (option: { assetId: string; name: string }) => void; currencies: { assetId: string; name: string }[] }) => {
   const [isOpen, setIsOpen] = React.useState(false)
 
-  const handleSelect = (option: string) => {
+  const handleSelect = (option: { assetId: string; name: string }) => {
     setSelectedOption(option)
     setIsOpen(false)
   }
@@ -27,7 +27,7 @@ export const VerticalCurrencySelector = ({
         aria-expanded={isOpen}
         aria-label={`Selected: ${selectedOption}`}
       >
-        <Currency name={selectedOption} assetId={selectedOption} />
+        <Currency name={selectedOption.name} size='sm' />
         <ChevronDown className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
         <span className="sr-only">Toggle icon selector</span>
       </button>
@@ -35,15 +35,15 @@ export const VerticalCurrencySelector = ({
         <div className="absolute top-full left-0 w-16 mt-1 bg-background border-2 rounded-none shadow-md">
           {currencies.map((currency) => (
             <Button
-              key={currency}
+              key={currency.assetId}
               variant="ghost"
-              className={`w-full h-12 p-2 rounded-none flex items-center justify-center ${selectedOption === currency ? 'bg-primary text-primary-foreground' : 'hover:bg-secondary'
+              className={`w-full h-12 p-2 rounded-none flex items-center justify-center ${selectedOption.assetId === currency.assetId ? 'bg-primary text-primary-foreground' : 'hover:bg-secondary'
                 }`}
               onClick={() => handleSelect(currency)}
-              aria-selected={selectedOption === currency}
+              aria-selected={selectedOption.assetId === currency.assetId}
             >
-              <Currency name={currency} assetId={currency} />
-              <span className="sr-only">{currency}</span>
+              <Currency name={currency.name} size='sm' />
+              <span className="sr-only">{currency.name}</span>
             </Button>
           ))}
         </div>

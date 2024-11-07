@@ -1,3 +1,5 @@
+import { KEY_AUTH_TOKEN } from "../constants"
+
 type AuthBody = {
   public_key: string
   signature: string
@@ -52,6 +54,16 @@ type ListBalancesResponse = {
   asset_balances: AssetBalances
 }
 
+
+export type HistoryTransaction = {
+  txid: string
+  timestamp: string
+  height: number
+  asset_id: string
+  type: 'send' | 'receive'
+  amount: number
+}
+
 type SendCompleteResponse = {
   transfer_timestamp: string
   anchor_tx_hash: string
@@ -91,7 +103,7 @@ const fetchFromApi = async <T>(endpoint: string, method: 'GET' | 'POST', body: T
   }
 
   if (requireAuth) {
-    const authToken = localStorage.getItem('authToken')
+    const authToken = localStorage.getItem(KEY_AUTH_TOKEN)
     if (!authToken) {
       throw new Error('No auth token found')
     }
@@ -112,9 +124,9 @@ const fetchFromApi = async <T>(endpoint: string, method: 'GET' | 'POST', body: T
   return data
 }
 
-export const auth = async ({ ordinalsPublicKey, signature, message }: { ordinalsPublicKey: string, signature: string, message: string }) => {
+export const auth = async ({ tapasPublicKey, signature, message }: { tapasPublicKey: string, signature: string, message: string }) => {
   const body: AuthBody = {
-    public_key: ordinalsPublicKey,
+    public_key: tapasPublicKey,
     signature,
     message,
   }
@@ -161,6 +173,10 @@ export const sendComplete = async ({
 
 export const listBalances = async (): Promise<ListBalancesResponse> => {
   return fetchFromApi('/wallet/balances', 'GET', {})
+}
+
+export const listTransfers = async (): Promise<HistoryTransaction[]> => {
+  return fetchFromApi('/wallet/transfers', 'GET', {})
 }
 
 export const decodeInvoice = async ({ address }: { address: string }): Promise<InvoiceInfo> => {

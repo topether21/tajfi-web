@@ -1,5 +1,5 @@
 import { hexToBytes } from "@stacks/common";
-import { bitcoin, getBitcoinAddress, hashBip322Message, NETWORK, serializeTaprootSignature, toXOnly } from "./bitcoin";
+import { bitcoin, getP2trAddress, hashBip322Message, NETWORK, serializeTaprootSignature, toXOnly } from "./bitcoin";
 import type { AddressInfo, Transaction, WalletStrategy } from "./shared";
 import { base64 } from "@scure/base";
 
@@ -13,16 +13,16 @@ export class AlbyWallet implements WalletStrategy {
                 'Go to your Account Settings and create or import a Nostr key.',
             )
         }
-        const ordinalsPublicKey = await window.nostr.getPublicKey()
-        const ordinalsAddress = (await this.getAddressInfo(ordinalsPublicKey))
+        const tapasPublicKey = await window.nostr.getPublicKey()
+        const tapasAddress = (await this.getP2trAddress(tapasPublicKey))
         return {
-            ordinalsPublicKey,
-            ordinalsAddress: ordinalsAddress.address
+            tapasPublicKey,
+            tapasAddress: tapasAddress.address
         }
     }
     // https://www.webln.guide/building-lightning-apps/webln-reference/webln.signmessage
     async signSimpleMessage(message: string, { publicKey }: { publicKey: string }): Promise<string> {
-        const nostrScript = await this.getAddressInfo(publicKey);
+        const nostrScript = await this.getP2trAddress(publicKey);
         const { output: scriptPubkey, pubkey } = nostrScript;
 
         // Generate a tagged hash of message to sign
@@ -93,7 +93,7 @@ export class AlbyWallet implements WalletStrategy {
         }
         throw new Error('Signing with Nostr is not available')
     }
-    async getAddressInfo(pubkey: string): Promise<AddressInfo> {
-        return getBitcoinAddress(pubkey);
+    async getP2trAddress(pubkey: string): Promise<AddressInfo> {
+        return getP2trAddress(pubkey);
     }
 }

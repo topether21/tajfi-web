@@ -10,7 +10,7 @@ import { useAuth } from '@/hooks/auth-context'
 
 const WalletLayout = ({ children }: { children: React.ReactNode }) => {
   const { profile } = useAuth()
-  const { balances, loading } = useBalances()
+  const { userBalances, loading } = useBalances()
   return (
     <>
       <DesktopHeader />
@@ -22,7 +22,7 @@ const WalletLayout = ({ children }: { children: React.ReactNode }) => {
         )}
         {profile && (
           <>
-            <DesktopWalletHeader balances={balances} loading={loading} />
+            <DesktopWalletHeader balances={userBalances} loading={loading} />
             <Card className="w-full max-w-2xl mx-auto min-w-[300px] mt-6 pt-8">{children}</Card>
           </>
         )}

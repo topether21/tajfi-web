@@ -11,7 +11,7 @@ const getTaprootMessage = (domain: string) =>
 
 
 export class MetamaskWallet implements WalletStrategy {
-    async getKeys(domain: string): Promise<{ ordinalsPublicKey: string, ordinalsAddress: string }> {
+    async getKeys(domain: string): Promise<{ tapasPublicKey: string, tapasAddress: string }> {
         const { ethereum } = window;
         if (!ethereum || !window.ethereum) {
             throw new Error('Metamask is not available')
@@ -34,8 +34,8 @@ export class MetamaskWallet implements WalletStrategy {
             network: NETWORK,
         });
         return {
-            ordinalsPublicKey: Buffer.from(taprootAddress?.pubkey || '').toString('hex'),
-            ordinalsAddress: taprootAddress?.address || '',
+            tapasPublicKey: Buffer.from(taprootAddress?.pubkey || '').toString('hex'),
+            tapasAddress: taprootAddress?.address || '',
         };
     }
     async signSimpleMessage(message: string, { address }: { address: string }): Promise<string> {
@@ -44,7 +44,7 @@ export class MetamaskWallet implements WalletStrategy {
     async signTx(transaction: Transaction): Promise<string> {
         throw new Error('Not implemented')
     }
-    async getAddressInfo(pubkey: string): Promise<AddressInfo> {
+    async getP2trAddress(pubkey: string): Promise<AddressInfo> {
         throw new Error('Not implemented')
     }
 }

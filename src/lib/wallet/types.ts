@@ -19,8 +19,8 @@ declare global {
 }
 
 export type WalletKeys = {
-    ordinalsPublicKey: string
-    ordinalsAddress: string
+    tapasPublicKey: string
+    tapasAddress: string
     token: string
     providerName: WalletProvider
 }

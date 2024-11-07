@@ -4,59 +4,17 @@ import { ArrowDownLeft, ArrowUpRight } from 'lucide-react'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Currency } from '@/components/containers/wallet/currency_selector/currency-selector'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { useBalances } from '@/hooks/use-balances'
 
-type Transaction = {
-  txid: string
-  timestamp: string
-  height: number
-  asset_id: string
-  type: 'send' | 'receive'
-  amount: number
-}
+import { useHistory } from '@/hooks/use-history'
+import type { HistoryTransaction } from '@/lib/wallet/api'
 
-const exampleTransactions: Transaction[] = [
-  {
-    txid: 'blockchaintxid1',
-    timestamp: '1684233600',
-    height: 100,
-    asset_id: '0e772328a0234306f7caf5e6fd4d6f010de6f7ed1691f3f5c9cd2c86325214db',
-    type: 'receive',
-    amount: 50,
-  },
-  {
-    txid: 'blockchaintxid2',
-    timestamp: '1684147200',
-    height: 101,
-    asset_id: '0e772328a0234306f7caf5e6fd4d6f010de6f7ed1691f3f5c9cd2c86325214db',
-    type: 'send',
-    amount: 30,
-  },
-  { txid: 'blockchaintxid3', timestamp: '1684060800', height: 102, asset_id: 'tcr', type: 'receive', amount: 100 },
-  {
-    txid: 'blockchaintxid4',
-    timestamp: '1683974400',
-    height: 103,
-    asset_id: '0e772328a0234306f7caf5e6fd4d6f010de6f7ed1691f3f5c9cd2c86325214db',
-    type: 'send',
-    amount: 75,
-  },
-  { txid: 'blockchaintxid5', timestamp: '1683888000', height: 104, asset_id: 'tcr', type: 'receive', amount: 200 },
-  {
-    txid: 'blockchaintxid6',
-    timestamp: '1683801600',
-    height: 105,
-    asset_id: '0e772328a0234306f7caf5e6fd4d6f010de6f7ed1691f3f5c9cd2c86325214db',
-    type: 'send',
-    amount: 150,
-  },
-  { txid: 'blockchaintxid7', timestamp: '1683715200', height: 106, asset_id: 'tcr', type: 'receive', amount: 300 },
-]
-
-const TransactionItem = ({ transaction }: { transaction: Transaction }) => {
+const TransactionItem = ({ transaction, currencies }: { transaction: HistoryTransaction; currencies: Map<string, string> }) => {
   const isReceive = transaction.type === 'receive'
   const date = new Date(Number.parseInt(transaction.timestamp) * 1000)
   const formattedDate = date.toLocaleDateString()
   const formattedTime = date.toLocaleTimeString()
+  const assetName = currencies.get(transaction.asset_id)
 
   return (
     <div className="flex items-center justify-between py-4 border-b last:border-b-0">
@@ -74,7 +32,7 @@ const TransactionItem = ({ transaction }: { transaction: Transaction }) => {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div className="flex items-center h-8 w-8">
-                    <Currency assetId={transaction.asset_id} />
+                    <Currency name={assetName} size="sm" />
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -97,13 +55,15 @@ const TransactionItem = ({ transaction }: { transaction: Transaction }) => {
 }
 
 const HistoryPage = () => {
+  const { transfers } = useHistory()
+  const { currencies } = useBalances()
   return (
     <div className="flex flex-col items-center justify-start h-full text-foreground">
       <h1 className="text-2xl font-bold mb-4">Wallet History</h1>
       <div className="w-full max-w-md p-4 flex-grow">
         <ScrollArea className="h-full pr-4">
-          {exampleTransactions.map((transaction) => (
-            <TransactionItem key={transaction.txid} transaction={transaction} />
+          {transfers.map((transaction) => (
+            <TransactionItem key={transaction.txid} transaction={transaction} currencies={currencies} />
           ))}
         </ScrollArea>
       </div>

@@ -9,8 +9,8 @@ import { hex } from '@scure/base';
 // ref: https://docs.xverse.app/sats-connect/bitcoin-methods/signmessage
 export class XverseWallet implements WalletStrategy {
     async getKeys() {
-        let ordinalsPublicKey = '';
-        let ordinalsAddress = '';
+        let tapasPublicKey = '';
+        let tapasAddress = '';
         try {
             const response = await request("getAddresses", {
                 purposes: [AddressPurpose.Ordinals, AddressPurpose.Payment],
@@ -18,11 +18,11 @@ export class XverseWallet implements WalletStrategy {
             });
             console.log("getAccounts ~ response:", response);
             if (response.status === "success") {
-                const ordinalsAddressItem = response.result.addresses.find(
+                const tapasAddressItem = response.result.addresses.find(
                     (address) => address.purpose === AddressPurpose.Ordinals,
                 );
-                ordinalsPublicKey = ordinalsAddressItem?.publicKey ?? '';
-                ordinalsAddress = ordinalsAddressItem?.address ?? '';
+                tapasPublicKey = tapasAddressItem?.publicKey ?? '';
+                tapasAddress = tapasAddressItem?.address ?? '';
             } else {
                 if (response.error.code === RpcErrorCode.USER_REJECTION) {
                     // TODO: handle user cancellation error
@@ -33,12 +33,12 @@ export class XverseWallet implements WalletStrategy {
         } catch (err) {
             throw new Error((err as Error).message);
         }
-        if (!ordinalsPublicKey) {
+        if (!tapasPublicKey) {
             throw new Error('No public key found')
         }
         return {
-            ordinalsPublicKey,
-            ordinalsAddress,
+            tapasPublicKey,
+            tapasAddress,
         }
     }
     async signSimpleMessage(message: string, { address }: { address: string }) {
@@ -65,7 +65,7 @@ export class XverseWallet implements WalletStrategy {
     async signTx(transaction: Transaction): Promise<string> {
         throw new Error('Not implemented')
     }
-    async getAddressInfo(pubkey: string): Promise<AddressInfo> {
+    async getP2trAddress(pubkey: string): Promise<AddressInfo> {
         const p2trAddress = p2tr(pubkey, undefined, NETWORK);
         const result = {
             ...p2trAddress,
