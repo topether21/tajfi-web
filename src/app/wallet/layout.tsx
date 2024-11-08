@@ -23,7 +23,9 @@ const WalletLayout = ({ children }: { children: React.ReactNode }) => {
         {profile && (
           <>
             <DesktopWalletHeader balances={userBalances} loading={loading} />
-            <Card className="w-full max-w-2xl mx-auto min-w-[300px] mt-6 pt-8">{children}</Card>
+            <div className="w-full max-w-2xl mx-auto min-w-[300px] mt-6 pt-8 px-6 md:px-0 pb-12">
+              {children}
+            </div>
           </>
         )}
       </div>

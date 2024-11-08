@@ -1,8 +1,5 @@
 import * as bitcoin from "bitcoinjs-lib"
 import ecc from '@bitcoinerlab/secp256k1';
-import { BIP32Factory } from 'bip32';
-
-const bip32 = BIP32Factory(ecc);
 
 bitcoin.initEccLib(ecc);
 const NETWORK = bitcoin.networks.bitcoin;
