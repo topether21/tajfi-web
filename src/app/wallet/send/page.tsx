@@ -64,7 +64,7 @@ const TransactionSummary = ({
   if (!invoiceDetails) return null
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto pb-24">
       <CardHeader>
         <CardTitle className="text-xl font-bold text-center">Transaction Summary</CardTitle>
       </CardHeader>

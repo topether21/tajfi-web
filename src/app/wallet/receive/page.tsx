@@ -49,7 +49,7 @@ const ReceivePage = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-start h-full text-foreground">
+    <div className="flex flex-col items-center justify-start h-full text-foreground pb-24">
       <h1 className="text-2xl font-bold mb-4">Receive Funds</h1>
       <div className="w-full max-w-md pt-4">
         <div className="mb-8">
