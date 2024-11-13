@@ -1,3 +1,0 @@
-const primary = ''
-
-export { primary }
