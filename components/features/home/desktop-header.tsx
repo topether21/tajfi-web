@@ -8,9 +8,12 @@ import { useHomeLogin } from './use-home-login'
 import { Box } from '@/components/ui/box'
 import { HStack } from '@/components/ui/hstack'
 import { Button } from '@/components/ui/button'
+import { useSizes } from '@/hooks/useSizes'
 
 export const DesktopHeader = () => {
+    const { isMobile } = useSizes();
     const { showModal, setShowModal, wallets, loginButtonText, login, profile, logout } = useHomeLogin()
+    if (isMobile) return null;
     return (
         <header className="bg-card bg-opacity-50 backdrop-blur-md py-4 px-6 flex justify-between items-center z-20 relative" style={{ backgroundColor: TAB_BAR_BACKGROUND_COLOR }}>
             <Box className="flex items-center space-x-4">

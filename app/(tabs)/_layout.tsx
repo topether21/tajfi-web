@@ -4,10 +4,11 @@ import { DesktopHeader } from "@/components/features/home/desktop-header";
 import { UserBalance } from "@/components/features/wallet/layout/user-balance";
 import { useSizes } from "@/hooks/useSizes";
 import { Tabs } from "expo-router";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 
 const TabsLayout = () => {
 	const { isMobile } = useSizes();
+	const { width } = useWindowDimensions();
 	return (
 		<View style={{ flex: 1, backgroundColor: GLOBAL_BACKGROUND_COLOR }}>
 			<DesktopHeader />
@@ -17,7 +18,7 @@ const TabsLayout = () => {
 						? ""
 						: "relative flex justify-center border-4 border-black rounded-2xl"
 				}
-				style={isMobile ? styles.mobileContainer : styles.desktopContainer}
+				style={isMobile ? styles.mobileContainer : [styles.desktopContainer, { width }]}
 			>
 				<UserBalance />
 				<Tabs tabBar={(props) => <BottomTabBar {...props} />}>
@@ -44,7 +45,8 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	desktopContainer: {
-		width: 1024,
+		maxWidth: 1024,
+		minWidth: 481,
 		height: 932,
 		borderWidth: 1,
 		borderColor: "#ccc",
