@@ -14,12 +14,14 @@ import {
 } from "./colors";
 import { TabBarButton } from "./tab-bar-button";
 import { useTabBarVisibility } from "./ tab-bar-visibility-context";
+import { useSizes } from "@/hooks/useSizes";
 
 export const BottomTabBar = ({
 	state,
 	descriptors,
 	navigation,
 }: BottomTabBarProps) => {
+	const { isMobile } = useSizes();
 	const opacity = useSharedValue(1);
 
 	const animatedStyle = useAnimatedStyle(() => ({
