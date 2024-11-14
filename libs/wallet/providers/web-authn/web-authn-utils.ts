@@ -5,6 +5,14 @@ export const generateChallenge = (): Uint8Array => {
 	return crypto.getRandomValues(new Uint8Array(32));
 };
 
+export const hexToUint8Array = (hex: string): Uint8Array => {
+	const bytes = new Uint8Array(hex.length / 2);
+	for (let i = 0; i < hex.length; i += 2) {
+		bytes[i / 2] = Number.parseInt(hex.substring(i, i + 2), 16);
+	}
+	return bytes;
+}
+
 export const base64ToUint8Array = (base64: string): Uint8Array => {
 	const binaryString = atob(base64);
 	const len = binaryString.length;

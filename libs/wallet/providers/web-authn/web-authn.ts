@@ -14,6 +14,7 @@ import { decryptWithPasskey, encryptWithPasskey } from "./encryption";
 import {
 	base64ToUint8Array,
 	derivePublicKeyFromPrivate,
+	hexToUint8Array,
 	encodeNpub,
 	uint8ArrayToBase64,
 } from "./web-authn-utils";
@@ -162,7 +163,7 @@ export class WebAuthnWallet implements WalletStrategy, WebAuthnProvider {
 	async signTx(transaction: Transaction): Promise<string> {
 		// TODO: it is failing in the backend
 		const privKey = await this.retrievePrivateKey();
-		const hash = sha256(new TextEncoder().encode(transaction));
+		const hash = hexToUint8Array(transaction);
 		console.log("hash", hash);
 		const signature = await schnorr.sign(hash, privKey);
 		console.log("signature", signature);
