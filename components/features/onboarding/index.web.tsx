@@ -6,7 +6,7 @@ import type { WalletProvider } from "@/libs/wallet/types";
 import { clsx } from "clsx";
 import { router } from "expo-router";
 import LottieView from "lottie-react-native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SafeAreaView, ScrollView, Text, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 import useAsync from "react-use/lib/useAsync";
@@ -17,6 +17,7 @@ import { useWalletAuth } from "../wallet/connect-wallet/use-connect-wallet";
 import { onboardingData } from "./data.web";
 import { OnboardingButtonScrollView } from "./onboarding-button-scrollview";
 import { onboardingStyles } from "./styles";
+import { HomeContainer } from "../home/home";
 
 const RenderStaticItem = ({
 	item,
@@ -82,7 +83,7 @@ const RenderStaticItem = ({
 
 export const OnboardingScreen = () => {
 	const [isCheckingSession, setIsCheckingSession] = useState(true);
-	const { login: tryLogin } = useAuth();
+	const { login: tryLogin, profile } = useAuth();
 
 	useEffectOnce(() => {
 		tryLogin()
@@ -116,14 +117,24 @@ export const OnboardingScreen = () => {
 		setShowModal(false);
 	};
 
+	useEffect(() => {
+		if (profile) {
+			router.replace("/(tabs)/send");
+		}
+	}, [profile]);
+
 	// TODO: add a loading state??
-	if (isCheckingSession)
+	if (isCheckingSession || profile)
 		return (
 			<SafeAreaView
 				style={onboardingStyles.container}
 				className={clsx("py-10", isMobile && "py-5")}
 			/>
 		);
+
+	if (!isMobile) {
+		return <HomeContainer />
+	}
 
 	return (
 		<SafeAreaView
