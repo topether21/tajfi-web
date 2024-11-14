@@ -62,7 +62,7 @@ export const BottomTabBar = ({
 
 	return (
 		<Animated.View
-			style={[styles.tabBar, animatedStyle, { display: !isMobile ? 'none' : 'flex' }]}
+			style={[styles.tabBar, animatedStyle]}
 			onLayout={onTabBarLayout}
 		>
 			<Animated.View
