@@ -1,14 +1,22 @@
 import { getP2trAddress } from "./bitcoin";
 import type { AddressInfo, Transaction, WalletStrategy } from "./shared";
 
-export class AlbyWallet implements WalletStrategy {
+
+const signMessage = async (message: string) => {
+	if (typeof window.nostr === "undefined")
+		throw new Error("Nostr is not enabled");
+	const signed = await window.nostr.signSchnorr(message);
+	return signed;
+};
+
+export class NostrProvider implements WalletStrategy {
+
 	async getKeys() {
 		if (window?.nostr?.enable) {
 			await window.nostr.enable();
 		} else {
 			throw new Error(
-				"Oops, it looks like you haven't set up your Nostr key yet." +
-					"Go to your Account Settings and create or import a Nostr key.",
+				"Oops, it looks like you haven't set up your Nostr key yet.",
 			);
 		}
 		const tapasPublicKey = await window.nostr.getPublicKey();
@@ -18,18 +26,11 @@ export class AlbyWallet implements WalletStrategy {
 			tapasAddress: tapasAddress.address,
 		};
 	}
-	// https://www.webln.guide/building-lightning-apps/webln-reference/webln.signmessage
 	async signSimpleMessage(message: string): Promise<string> {
-		if (typeof window.nostr === "undefined")
-			throw new Error("Nostr is not enabled");
-		const signed = await window.nostr.signSchnorr(message);
-		return signed;
+		return signMessage(message);
 	}
 	async signTx(transaction: Transaction): Promise<string> {
-		if (typeof window.nostr === "undefined")
-			throw new Error("Nostr is not enabled");
-		const signed = await window.nostr.signSchnorr(transaction);
-		return signed;
+		return signMessage(transaction);
 	}
 	async getP2trAddress(pubkey: string): Promise<AddressInfo> {
 		return getP2trAddress(pubkey);

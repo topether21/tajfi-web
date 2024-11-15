@@ -1,6 +1,5 @@
 import type { WalletProvider } from "../types";
-import { AlbyWallet } from "./alby";
-import { OneKeyWallet } from "./onekey";
+import { NostrProvider } from "./nostr";
 import type { WalletStrategy } from "./shared";
 import { WebAuthnWallet } from "./web-authn/web-authn";
 
@@ -9,9 +8,8 @@ export const getProviderStrategy = (
 ): WalletStrategy => {
 	switch (provider) {
 		case "alby":
-			return new AlbyWallet();
 		case "oneKey":
-			return new OneKeyWallet();
+			return new NostrProvider();
 		case "webAuthn":
 			return new WebAuthnWallet();
 		default:
@@ -36,7 +34,7 @@ const isWebAuthnEnabled = async () => {
 		typeof navigator.credentials.get !== "undefined" &&
 		typeof PublicKeyCredential !== "undefined" &&
 		typeof PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable !==
-			"undefined" &&
+		"undefined" &&
 		(await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable());
 	return supportsWebAuthn;
 };
@@ -48,9 +46,7 @@ export const getEnabledProviders = async () => {
 		isWebAuthnEnabled(),
 	]);
 	const providers: WalletProvider[] = [];
-	if (oneKeyEnabled && albyEnabled) {
-		providers.push("oneKey");
-	} else if (oneKeyEnabled) {
+	if (oneKeyEnabled) {
 		providers.push("oneKey");
 	} else if (albyEnabled) {
 		providers.push("alby");

@@ -1,6 +1,5 @@
 import { AlbyIcon } from "@/components/icons/alby";
 import { OneKeyIcon } from "@/components/icons/onekey";
-import { TajfiIcon } from "@/components/icons/tajfi";
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
 import { CloseIcon, Icon } from "@/components/ui/icon";
@@ -15,11 +14,12 @@ import {
 import { Text } from "@/components/ui/text";
 import type { WalletProvider } from "@/libs/wallet/types";
 import { TouchableOpacity } from "react-native";
+import { Image } from 'expo-image';
 
 const getIcon = (wallet: WalletProvider) => {
 	switch (wallet) {
 		case "webAuthn":
-			return TajfiIcon;
+			return;
 		case "oneKey":
 			return OneKeyIcon;
 		case "alby":
@@ -65,10 +65,18 @@ export const ConnectWalletModal = ({
 									}}
 								>
 									<Box className="rounded-full  flex items-center justify-center">
-										<Icon
-											as={IconComponent}
-											style={{ height: 45, width: 45 }}
-										/>
+										{wallet === "webAuthn" ? (
+											<Image
+												source={require("@/assets/icons/nostr.png")}
+												contentFit="cover"
+												style={{ height: 45, width: 45 }}
+											/>
+										) : (
+											<Icon
+												as={IconComponent}
+												style={{ height: 45, width: 45 }}
+											/>
+										)}
 									</Box>
 									<Text className="text-sm font-medium">{wallet}</Text>
 								</TouchableOpacity>
