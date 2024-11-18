@@ -17,6 +17,7 @@ import {
 	hexToUint8Array,
 	encodeNpub,
 	uint8ArrayToBase64,
+	stringToHex,
 } from "./web-authn-utils";
 import { generateChallenge } from "./web-authn-utils";
 
@@ -156,7 +157,8 @@ export class WebAuthnWallet implements WalletStrategy, WebAuthnProvider {
 	}
 	async signSimpleMessage(message: string): Promise<string> {
 		const privKey = await this.retrievePrivateKey();
-		const hash = sha256(new TextEncoder().encode(message));
+		const hexMessage = stringToHex(message);
+		const hash = hexToUint8Array(hexMessage);
 		const sig = Buffer.from(await schnorr.sign(hash, privKey)).toString("hex");
 		return sig;
 	}

@@ -82,21 +82,8 @@ const RenderStaticItem = ({
 };
 
 export const OnboardingScreen = () => {
-	const [isCheckingSession, setIsCheckingSession] = useState(true);
 	const { login: tryLogin, profile } = useAuth();
 
-	useEffectOnce(() => {
-		tryLogin()
-			.then(() => {
-				router.replace("/(tabs)/send");
-			})
-			.catch((err) => {
-				console.error("Error checking session", err);
-			})
-			.finally(() => {
-				setIsCheckingSession(false);
-			});
-	});
 	const { isMobile, isTablet, isSmallScreen, isLargeScreen } = useSizes();
 	const { width: SCREEN_WIDTH } = useWindowDimensions();
 	const scrollViewRef = useRef<ScrollView>(null);
@@ -124,7 +111,7 @@ export const OnboardingScreen = () => {
 	}, [profile]);
 
 	// TODO: add a loading state??
-	if (isCheckingSession || profile)
+	if (profile)
 		return (
 			<SafeAreaView
 				style={onboardingStyles.container}

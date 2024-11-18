@@ -13,6 +13,7 @@ import { ConnectWalletModal } from '../wallet/connect-wallet'
 import { Button } from '@/components/ui/button'
 import { TAB_BAR_ACTIVE_BACKGROUND_COLOR } from '@/components/containers/tab-bar/colors'
 import { useHomeLogin } from './use-home-login'
+import { Text } from '@/components/ui/text'
 
 export const HomeContainer = () => {
   const sceneRef = useRef(null)
@@ -34,7 +35,7 @@ export const HomeContainer = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
             >
-              {APP_NAME}
+              <Text size="xl">{APP_NAME}</Text>
             </MotionDiv>
             <MotionDiv
               className="max-w-2xl mx-auto lg:mx-0 text-2xl text-white mb-8"
@@ -42,7 +43,7 @@ export const HomeContainer = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.3 }}
             >
-              {APP_DESCRIPTION}
+              <Text>{APP_DESCRIPTION}</Text>
             </MotionDiv>
             <MotionDiv
               className="max-w-2xl mx-auto lg:mx-0 text-lg text-white mb-12"
@@ -50,7 +51,7 @@ export const HomeContainer = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.5 }}
             >
-              {HOME_HERO_DESCRIPTION}
+              <Text>{HOME_HERO_DESCRIPTION}</Text>
             </MotionDiv>
 
             <ConnectWalletModal
@@ -60,7 +61,9 @@ export const HomeContainer = () => {
               login={login}
             />
             <Box className="justify-center flex-1 items-center" >
-              <Button onPress={() => setShowModal(true)} style={{ backgroundColor: TAB_BAR_ACTIVE_BACKGROUND_COLOR, maxWidth: 200 }}>{loginButtonText}</Button>
+              <Button onPress={() => setShowModal(true)} style={{ backgroundColor: TAB_BAR_ACTIVE_BACKGROUND_COLOR, maxWidth: 200 }}>
+                <Text>{loginButtonText}</Text>
+              </Button>
             </Box>
           </Box>
           <Box className="lg:w-1/2 flex justify-center">

@@ -9,6 +9,7 @@ import { Box } from '@/components/ui/box'
 import { HStack } from '@/components/ui/hstack'
 import { Button } from '@/components/ui/button'
 import { useSizes } from '@/hooks/useSizes'
+import { Text } from '@/components/ui/text'
 
 export const DesktopHeader = () => {
     const { isMobile } = useSizes();
@@ -20,7 +21,7 @@ export const DesktopHeader = () => {
                 <Link href="/">
                     <HStack className="flex items-center space-x-2">
                         <Bitcoin className="w-8 h-8" color={TAB_BAR_ACTIVE_BACKGROUND_COLOR} />
-                        <span className="font-bold text-xl" style={{ color: TAB_BAR_ACTIVE_BACKGROUND_COLOR }}>{APP_NAME}</span>
+                        <Text className="font-bold text-xl" style={{ color: TAB_BAR_ACTIVE_BACKGROUND_COLOR }}>{APP_NAME}</Text>
                     </HStack>
                 </Link>
             </Box>
@@ -31,7 +32,9 @@ export const DesktopHeader = () => {
                 login={login}
             />
             <Box className="justify-center flex-1 items-end" >
-                <Button onPress={profile ? logout : () => setShowModal(true)} style={{ backgroundColor: TAB_BAR_ACTIVE_BACKGROUND_COLOR, maxWidth: 200 }}>{profile ? "Logout" : loginButtonText}</Button>
+                <Button onPress={profile ? logout : () => setShowModal(true)} style={{ backgroundColor: TAB_BAR_ACTIVE_BACKGROUND_COLOR, maxWidth: 200 }}>
+                    <Text>{profile ? "Logout" : loginButtonText}</Text>
+                </Button>
             </Box>
         </header>
     )
