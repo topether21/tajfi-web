@@ -70,16 +70,16 @@ export const BottomTabBar = ({
 	const isMobileOrTablet = isMobile || isTablet;
 
 
-	useAnimatedReaction(
-		() => {
-			return tabPositionX.value;
-		},
-		(currentValue, previousValue) => {
-			if (currentValue !== previousValue) {
-				console.log("----> currentValue", currentValue);
-			}
-		}
-	);
+	// useAnimatedReaction(
+	// 	() => {
+	// 		return tabPositionX.value;
+	// 	},
+	// 	(currentValue, previousValue) => {
+	// 		if (currentValue !== previousValue) {
+	// 			console.log("----> currentValue", currentValue);
+	// 		}
+	// 	}
+	// );
 
 	return (
 		<Animated.View
@@ -119,7 +119,7 @@ export const BottomTabBar = ({
 				const isFocused = state.index === index;
 
 				const onPress = () => {
-					tabPositionX.value = withSpring(buttonWidth * index, {
+					tabPositionX.value = withSpring(buttonWidth * index + buttonWidth / 2 - circleSize / 2 - TAB_BAR_HORIZONTAL_PADDING, {
 						duration: 1500,
 					});
 					const event = navigation.emit({
