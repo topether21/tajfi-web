@@ -3,25 +3,26 @@ import { useLinkBuilder } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import { type LayoutChangeEvent, StyleSheet } from "react-native";
 import Animated, {
+	useAnimatedReaction,
 	useAnimatedStyle,
 	useSharedValue,
 	withSpring,
 	withTiming,
 } from "react-native-reanimated";
-import {
-	TAB_BAR_ACTIVE_BACKGROUND_COLOR,
-	TAB_BAR_BACKGROUND_COLOR,
-} from "./colors";
+
 import { TabBarButton } from "./tab-bar-button";
 import { useTabBarVisibility } from "./ tab-bar-visibility-context";
+import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import { useSizes } from "@/hooks/useSizes";
+
+const TAB_BAR_HORIZONTAL_PADDING = 12;
 
 export const BottomTabBar = ({
 	state,
 	descriptors,
 	navigation,
 }: BottomTabBarProps) => {
-	const { isMobile } = useSizes();
+	const { isMobile, isTablet } = useSizes();
 	const opacity = useSharedValue(1);
 
 	const animatedStyle = useAnimatedStyle(() => ({
@@ -31,6 +32,8 @@ export const BottomTabBar = ({
 	const { buildHref } = useLinkBuilder();
 	const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 	const buttonWidth = dimensions.width / (state.routes.length || 1);
+
+	console.log("dimensions", dimensions, buttonWidth);
 
 	const onTabBarLayout = (event: LayoutChangeEvent) => {
 		setDimensions({
@@ -46,13 +49,17 @@ export const BottomTabBar = ({
 		};
 	});
 
-	useEffect(() => {
-		tabPositionX.value = withSpring(buttonWidth * state.index, {
-			duration: 1500,
-		});
-	}, [state.index, buttonWidth, tabPositionX]);
-
 	const circleSize = Math.min(dimensions.height - 15, buttonWidth - 25);
+
+	useEffect(() => {
+		console.log("----> state.index", state.index, buttonWidth);
+		tabPositionX.value = withSpring(
+			buttonWidth * state.index + buttonWidth / 2 - circleSize / 2 - TAB_BAR_HORIZONTAL_PADDING,
+			{
+				duration: 1500,
+			}
+		);
+	}, [state.index, buttonWidth, tabPositionX, circleSize]);
 
 	const { isVisible } = useTabBarVisibility();
 
@@ -60,20 +67,41 @@ export const BottomTabBar = ({
 		opacity.value = withTiming(isVisible ? 1 : 0, { duration: 300 });
 	}, [isVisible, opacity]);
 
+	const isMobileOrTablet = isMobile || isTablet;
+
+
+	useAnimatedReaction(
+		() => {
+			return tabPositionX.value;
+		},
+		(currentValue, previousValue) => {
+			if (currentValue !== previousValue) {
+				console.log("----> currentValue", currentValue);
+			}
+		}
+	);
+
 	return (
 		<Animated.View
-			style={[styles.tabBar, animatedStyle]}
+			style={[
+				styles.tabBar,
+				animatedStyle,
+				{ maxWidth: isMobileOrTablet ? "100%" : 270 },
+				{ borderRadius: isMobileOrTablet ? 0 : 35 },
+				{ bottom: isMobileOrTablet ? 0 : 20 },
+			]}
 			onLayout={onTabBarLayout}
 		>
 			<Animated.View
 				data-id="tab-bar-background"
+
 				style={[
 					animatedBackgroundStyle,
 					{
 						position: "absolute",
-						backgroundColor: TAB_BAR_ACTIVE_BACKGROUND_COLOR,
 						borderRadius: circleSize / 2,
-						marginHorizontal: 12,
+						backgroundColor: HEX_COLORS.tajfiBlue,
+						marginHorizontal: TAB_BAR_HORIZONTAL_PADDING,
 						height: circleSize,
 						width: circleSize,
 					},
@@ -135,15 +163,12 @@ const styles = StyleSheet.create({
 	tabBar: {
 		flexDirection: "row",
 		position: "absolute",
-		bottom: 20,
 		justifyContent: "space-between",
 		alignItems: "center",
-		backgroundColor: TAB_BAR_BACKGROUND_COLOR,
+		backgroundColor: HEX_COLORS.tajfiDeepBlue,
 		marginHorizontal: "auto",
-		maxWidth: 270,
 		width: "100%",
 		paddingVertical: 15,
-		borderRadius: 35,
 		boxShadow: "0 10px 10px rgba(0, 0, 0, 0.1)",
 		elevation: 1,
 		alignSelf: "center",

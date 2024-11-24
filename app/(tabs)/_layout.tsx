@@ -7,18 +7,19 @@ import { Tabs } from "expo-router";
 import { StyleSheet, useWindowDimensions, View } from "react-native";
 
 const TabsLayout = () => {
-	const { isMobile } = useSizes();
+	const { isMobile, isTablet } = useSizes();
 	const { width } = useWindowDimensions();
+	const isMobileOrTablet = isMobile || isTablet;
 	return (
 		<View style={{ flex: 1, backgroundColor: GLOBAL_BACKGROUND_COLOR }}>
 			<DesktopHeader />
 			<View
 				className={
-					isMobile
+					isMobileOrTablet
 						? ""
 						: "relative flex justify-center border-4 border-black rounded-2xl"
 				}
-				style={isMobile ? styles.mobileContainer : [styles.desktopContainer, { width }]}
+				style={isMobileOrTablet ? styles.mobileContainer : [styles.desktopContainer, { width }]}
 			>
 				<UserBalance />
 				<Tabs tabBar={(props) => <BottomTabBar {...props} />}>

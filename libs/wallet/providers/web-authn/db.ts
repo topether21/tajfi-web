@@ -1,6 +1,7 @@
 // db.ts - Helper for localStorage
+import { KEY_CURRENT_WALLET_ID, KEY_WALLETS } from "@/libs/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { KEY_CURRENT_WALLET_ID, KEY_WALLETS } from "../../constants";
+
 
 export interface StoredWallet {
 	id: string;

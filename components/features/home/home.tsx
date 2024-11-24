@@ -1,6 +1,5 @@
 import { useRef } from 'react'
 import { Github } from 'lucide-react-native'
-import { APP_DESCRIPTION, APP_FOOTER_DESCRIPTION, APP_NAME, HOME_HERO_DESCRIPTION } from './constants'
 import { AnimatedBackground } from './animated-background'
 
 import { WalletAnimation } from './wallet-animation'
@@ -14,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { TAB_BAR_ACTIVE_BACKGROUND_COLOR } from '@/components/containers/tab-bar/colors'
 import { useHomeLogin } from './use-home-login'
 import { Text } from '@/components/ui/text'
+import { APP_DESCRIPTION, APP_FOOTER_DESCRIPTION, HOME_HERO_DESCRIPTION, APP_NAME } from '@/libs/constants'
 
 export const HomeContainer = () => {
   const sceneRef = useRef(null)

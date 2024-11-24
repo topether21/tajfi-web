@@ -1,4 +1,3 @@
-import { APP_NAME } from "@/constants/constants";
 import { schnorr } from "@noble/curves/secp256k1";
 import { sha256 } from "@noble/hashes/sha256";
 import * as secp from "@noble/secp256k1";
@@ -20,6 +19,7 @@ import {
 	stringToHex,
 } from "./web-authn-utils";
 import { generateChallenge } from "./web-authn-utils";
+import { APP_NAME } from "@/libs/constants";
 
 interface Wallet {
 	id: string;

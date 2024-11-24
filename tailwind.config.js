@@ -162,6 +162,13 @@ module.exports = {
 					info: "rgb(var(--color-background-info)/<alpha-value>)",
 					light: "#FBFBFB",
 					dark: "#181719",
+					"tajfi-white":
+						"rgb(var(--color-background-tajfi-white)/<alpha-value>)",
+					"tajfi-light-blue":
+						"rgb(var(--color-background-tajfi-light-blue)/<alpha-value>)",
+					"tajfi-blue": "rgb(var(--color-background-tajfi-blue)/<alpha-value>)",
+					"tajfi-deep-blue":
+						"rgb(var(--color-background-tajfi-deep-blue)/<alpha-value>)",
 				},
 				indicator: {
 					primary: "rgb(var(--color-indicator-primary)/<alpha-value>)",

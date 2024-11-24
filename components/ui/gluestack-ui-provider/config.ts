@@ -1,20 +1,50 @@
 "use client";
 import { vars } from "nativewind";
+import hexRgb from 'hex-rgb';
+
+// Utility function to convert hex to RGB
+const hexToRgb = (hex: string): string => {
+	const rgb = hexRgb(hex);
+	return `${rgb.red} ${rgb.green} ${rgb.blue}`;
+};
+
+export const HEX_COLORS = {
+	tajfiWhite: "#fff",
+	tajfiLightBlue: "#91fbff",
+	tajfiBlue: "#00e3e7",
+	tajfiDeepBlue: "#00a0b5",
+};
+
+export const COLORS = {
+	tajfiWhite: hexToRgb(HEX_COLORS.tajfiWhite),
+	tajfiLightBlue: hexToRgb(HEX_COLORS.tajfiLightBlue),
+	tajfiBlue: hexToRgb(HEX_COLORS.tajfiBlue),
+	tajfiDeepBlue: hexToRgb(HEX_COLORS.tajfiDeepBlue),
+};
 
 export const config = {
+	// deep_blue
+	// Palette size: 14
+	// Color: #00a0b5
+	// Difference: 60
+	// Config type: flattened
+	// https://json-color-palette-generator.vercel.app/api/get-color-palette?name=deep_blue&color=00a0b5&size=14&diff=60&configType=flattened
 	light: vars({
-		"--color-primary-0": "111 136 221",
-		"--color-primary-50": "153 153 153",
-		"--color-primary-100": "128 128 128",
-		"--color-primary-200": "115 115 115",
-		"--color-primary-300": "102 102 102",
-		"--color-primary-400": "82 82 82",
-		"--color-primary-500": "51 51 51",
-		"--color-primary-600": "41 41 41",
-		"--color-primary-700": "31 31 31",
-		"--color-primary-800": "13 13 13",
-		"--color-primary-900": "10 10 10",
-		"--color-primary-950": "8 8 8",
+		"--color-primary-0": hexToRgb("#ffffff"),
+		"--color-primary-50": hexToRgb("#5eecff"),
+		"--color-primary-100": hexToRgb("#42e9ff"),
+		"--color-primary-200": hexToRgb("#25e6ff"),
+		"--color-primary-300": hexToRgb("#09e2ff"),
+		"--color-primary-400": hexToRgb("#00d0eb"),
+		"--color-primary-500": hexToRgb("#00b7cf"),
+		"--color-primary-600": hexToRgb("#00a0b5"),
+		"--color-primary-700": hexToRgb("#038c9e"),
+		"--color-primary-800": hexToRgb("#067b8b"),
+		"--color-primary-900": hexToRgb("#086b78"),
+		"--color-primary-950": hexToRgb("#0a5b66"),
+		"--color-primary-1000": hexToRgb("#0a4c54"),
+		"--color-primary-1050": hexToRgb("#0a3d44"),
+		"--color-primary-1100": hexToRgb("#092f34"),
 
 		/* Secondary  */
 		"--color-secondary-0": "254 255 255",
@@ -129,18 +159,26 @@ export const config = {
 		"--color-outline-950": "26 23 23",
 
 		/* Background */
-		"--color-background-0": "0 0 0", // Custom: black
-		"--color-background-50": "246 246 246",
-		"--color-background-100": "242 241 241",
-		"--color-background-200": "220 219 219",
-		"--color-background-300": "213 212 212",
-		"--color-background-400": "162 163 163",
-		"--color-background-500": "142 142 142",
-		"--color-background-600": "116 116 116",
-		"--color-background-700": "83 82 82",
-		"--color-background-800": "65 64 64",
-		"--color-background-900": "39 38 37",
-		"--color-background-950": "24 23 24",
+		"--color-background-0": hexToRgb("#ffffff"),
+		"--color-background-50": hexToRgb("#5eecff"),
+		"--color-background-100": hexToRgb("#42e9ff"),
+		"--color-background-200": hexToRgb("#25e6ff"),
+		"--color-background-300": hexToRgb("#09e2ff"),
+		"--color-background-400": hexToRgb("#00d0eb"),
+		"--color-background-500": hexToRgb("#00b7cf"),
+		"--color-background-600": hexToRgb("#00a0b5"),
+		"--color-background-700": hexToRgb("#038c9e"),
+		"--color-background-800": hexToRgb("#067b8b"),
+		"--color-background-900": hexToRgb("#086b78"),
+		"--color-background-950": hexToRgb("#0a5b66"),
+		"--color-background-1000": hexToRgb("#0a4c54"),
+		"--color-background-1050": hexToRgb("#0a3d44"),
+		"--color-background-1100": hexToRgb("#092f34"),
+
+		"--color-background-tajfi-white": COLORS.tajfiWhite,
+		"--color-background-tajfi-light-blue": COLORS.tajfiLightBlue,
+		"--color-background-tajfi-blue": COLORS.tajfiBlue,
+		"--color-background-tajfi-deep-blue": COLORS.tajfiDeepBlue,
 
 		/* Background Special */
 		"--color-background-error": "254 241 241",
@@ -155,18 +193,21 @@ export const config = {
 		"--color-indicator-error": "185 28 28",
 	}),
 	dark: vars({
-		"--color-primary-0": "130 130 130",
-		"--color-primary-50": "148 148 148",
-		"--color-primary-100": "158 158 158",
-		"--color-primary-200": "179 179 179",
-		"--color-primary-300": "199 199 199",
-		"--color-primary-400": "230 230 230",
-		"--color-primary-500": "240 240 240",
-		"--color-primary-600": "250 250 250",
-		"--color-primary-700": "252 252 252",
-		"--color-primary-800": "253 253 253",
-		"--color-primary-900": "253 252 252",
-		"--color-primary-950": "253 252 252",
+		"--color-primary-0": hexToRgb("#fff"),
+		"--color-primary-50": hexToRgb("#5eecff"),
+		"--color-primary-100": hexToRgb("#42e9ff"),
+		"--color-primary-200": hexToRgb("#25e6ff"),
+		"--color-primary-300": hexToRgb("#09e2ff"),
+		"--color-primary-400": hexToRgb("#00d0eb"),
+		"--color-primary-500": hexToRgb("#00b7cf"),
+		"--color-primary-600": hexToRgb("#00a0b5"),
+		"--color-primary-700": hexToRgb("#038c9e"),
+		"--color-primary-800": hexToRgb("#067b8b"),
+		"--color-primary-900": hexToRgb("#086b78"),
+		"--color-primary-950": hexToRgb("#0a5b66"),
+		"--color-primary-1000": hexToRgb("#0a4c54"),
+		"--color-primary-1050": hexToRgb("#0a3d44"),
+		"--color-primary-1100": hexToRgb("#092f34"),
 
 		/* Secondary  */
 		"--color-secondary-0": "11 12 12",
@@ -293,6 +334,11 @@ export const config = {
 		"--color-background-800": "242 241 241",
 		"--color-background-900": "246 246 246",
 		"--color-background-950": "254 254 254",
+
+		"--color-background-tajfi-white": COLORS.tajfiWhite,
+		"--color-background-tajfi-light-blue": COLORS.tajfiLightBlue,
+		"--color-background-tajfi-blue": COLORS.tajfiBlue,
+		"--color-background-tajfi-deep-blue": COLORS.tajfiDeepBlue,
 
 		/* Background Special */
 		"--color-background-error": "66 43 43",

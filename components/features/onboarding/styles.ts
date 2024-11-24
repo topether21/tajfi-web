@@ -1,16 +1,13 @@
-import { BACKGROUND_COLOR } from "@/constants/colors";
 import { StyleSheet } from "react-native";
 
 export const onboardingStyles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: BACKGROUND_COLOR,
 	},
 	itemContainer: {
 		flex: 1,
 		justifyContent: "space-around",
 		alignItems: "center",
-		backgroundColor: BACKGROUND_COLOR,
 	},
 	itemTitle: {
 		textAlign: "center",

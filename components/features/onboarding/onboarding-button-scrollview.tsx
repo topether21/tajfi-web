@@ -1,7 +1,3 @@
-import {
-	TAB_BAR_ACTIVE_BACKGROUND_COLOR,
-	TAB_BAR_BACKGROUND_COLOR,
-} from "@/components/containers/tab-bar/colors";
 import type { WalletProvider } from "@/libs/wallet/types";
 import type React from "react";
 import {
@@ -99,7 +95,6 @@ export const OnboardingButtonScrollView = ({
 const styles = StyleSheet.create({
 	container: {
 		cursor: "pointer",
-		backgroundColor: TAB_BAR_ACTIVE_BACKGROUND_COLOR,
 		padding: 10,
 		borderRadius: 100,
 		justifyContent: "center",

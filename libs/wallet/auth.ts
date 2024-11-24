@@ -1,6 +1,5 @@
 import { jwtDecode } from "jwt-decode";
 import { auth } from "./api";
-import { AUTH_MESSAGE } from "./constants";
 import {
 	getAuthToken,
 	getWalletData,
@@ -12,6 +11,7 @@ import {
 import { getProviderStrategy } from "./providers/index";
 import type { WebAuthnProvider } from "./providers/web-authn/web-authn";
 import type { WalletProvider } from "./types";
+import { AUTH_MESSAGE } from "@/libs/constants";
 
 export const connectWallet = async (providerName: WalletProvider) => {
 	const walletProvider = getProviderStrategy(providerName);
