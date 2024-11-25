@@ -22,10 +22,7 @@ export const AnimatedBackground = () => {
       {animatedDots.map((dot) => (
         <MotionDiv
           key={dot.id}
-          className="absolute w-2 h-2 bg-primary rounded-full opacity-50"
-          style={{
-            backgroundColor: TAB_BAR_ACTIVE_BACKGROUND_COLOR,
-          }}
+          className="absolute w-2 h-2 bg-background-tajfi-white rounded-full opacity-50"
           animate={{
             x: [dot.x, Math.random() * window.innerWidth],
             y: [dot.y, Math.random() * window.innerHeight],

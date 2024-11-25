@@ -9,10 +9,10 @@ const hexToRgb = (hex: string): string => {
 };
 
 export const HEX_COLORS = {
-	tajfiWhite: "#fff",
-	tajfiLightBlue: "#91fbff",
-	tajfiBlue: "#00e3e7",
-	tajfiDeepBlue: "#00a0b5",
+	tajfiWhite: "#fff", // 255 255 255
+	tajfiLightBlue: "#91fbff", // 145 251 255
+	tajfiBlue: "#00e3e7", // 0 227 231
+	tajfiDeepBlue: "#00a0b5", // 0 160 181
 };
 
 export const COLORS = {
@@ -36,7 +36,7 @@ export const config = {
 		"--color-primary-200": COLORS.tajfiDeepBlue,
 		"--color-primary-300": hexToRgb("#09e2ff"),
 		"--color-primary-400": hexToRgb("#00d0eb"),
-		"--color-primary-500": hexToRgb("#00b7cf"),
+		"--color-primary-500": COLORS.tajfiDeepBlue,
 		"--color-primary-600": hexToRgb("#00a0b5"),
 		"--color-primary-700": hexToRgb("#038c9e"),
 		"--color-primary-800": hexToRgb("#067b8b"),
@@ -131,7 +131,7 @@ export const config = {
 		"--color-info-950": "3 38 56",
 
 		/* Typography */
-		"--color-typography-0": "34 197 94", // Custom: green
+		"--color-typography-0": COLORS.tajfiWhite,
 		"--color-typography-50": "245 245 245",
 		"--color-typography-100": "229 229 229",
 		"--color-typography-200": "219 219 220",

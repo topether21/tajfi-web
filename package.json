@@ -93,6 +93,7 @@
 		"expo-font": "~13.0.1",
 		"expo-haptics": "~14.0.0",
 		"expo-image": "~2.0.2",
+		"expo-linear-gradient": "~14.0.1",
 		"expo-linking": "~7.0.3",
 		"expo-router": "~4.0.9",
 		"expo-sharing": "~13.0.0",

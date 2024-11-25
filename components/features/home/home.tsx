@@ -9,11 +9,12 @@ import clsx from 'clsx'
 import { Box } from '@/components/ui/box'
 
 import { ConnectWalletModal } from '../wallet/connect-wallet'
-import { Button } from '@/components/ui/button'
+import { Button, ButtonText } from '@/components/ui/button'
 import { TAB_BAR_ACTIVE_BACKGROUND_COLOR } from '@/components/containers/tab-bar/colors'
 import { useHomeLogin } from './use-home-login'
 import { Text } from '@/components/ui/text'
 import { APP_DESCRIPTION, APP_FOOTER_DESCRIPTION, HOME_HERO_DESCRIPTION, APP_NAME } from '@/libs/constants'
+import { TajfiLogo } from '@/components/containers/tajfi-logos/tajfi-logo'
 
 export const HomeContainer = () => {
   const sceneRef = useRef(null)
@@ -21,8 +22,7 @@ export const HomeContainer = () => {
 
   return (
 
-    <Box className={clsx("relative min-h-screen flex bg-gradient-to-b from-background to-secondary bg-background-0 overflow-hidden text-white")}>
-      <AnimatedBackground />
+    <Box className={clsx("relative min-h-screen flex overflow-hidden text-white")}>
       <Box ref={sceneRef} className="absolute inset-0 z-0" />
       <DesktopHeader />
 
@@ -30,7 +30,7 @@ export const HomeContainer = () => {
         <Box className="container mx-auto max-w-5xl flex lg:flex-row">
           <Box className="lg:w-1/2 text-center lg:text-left mb-16 lg:mb-0">
             <MotionDiv
-              className="text-6xl sm:text-7xl md:text-8xl font-extrabold mb-8 bg-clip-text text-white bg-gradient-to-r from-primary to-accent"
+              className="text-6xl sm:text-7xl md:text-8xl font-extrabold mb-8 bg-clip-text"
               initial={{ opacity: 0, y: -30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
@@ -62,12 +62,12 @@ export const HomeContainer = () => {
             />
             <Box className="justify-center flex-1 items-center" >
               <Button onPress={() => setShowModal(true)} style={{ backgroundColor: TAB_BAR_ACTIVE_BACKGROUND_COLOR, maxWidth: 200 }}>
-                <Text>{loginButtonText}</Text>
+                <ButtonText>{loginButtonText}</ButtonText>
               </Button>
             </Box>
           </Box>
           <Box className="lg:w-1/2 flex justify-center">
-            <WalletAnimation />
+            <TajfiLogo />
           </Box>
         </Box>
       </Box>
