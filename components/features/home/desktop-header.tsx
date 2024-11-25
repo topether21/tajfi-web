@@ -1,4 +1,4 @@
-import { Bitcoin } from 'lucide-react'
+import { Bitcoin } from 'lucide-react-native'
 
 import { Link } from 'expo-router'
 import { ConnectWalletModal } from '../wallet/connect-wallet'
@@ -15,7 +15,7 @@ export const DesktopHeader = () => {
     const { showModal, setShowModal, wallets, loginButtonText, login, profile, logout } = useHomeLogin()
     if (isMobile) return null;
     return (
-        <header className="bg-card bg-opacity-50 backdrop-blur-md py-4 px-6 flex justify-between items-center z-20 relative">
+        <Box className="bg-card bg-opacity-50 backdrop-blur-md py-4 px-6 flex flex-row justify-between items-center z-20 relative">
             <Box className="flex items-center space-x-4">
                 <Link href="/">
                     <HStack className="flex items-center space-x-2">
@@ -35,6 +35,6 @@ export const DesktopHeader = () => {
                     <Text>{profile ? "Logout" : loginButtonText}</Text>
                 </Button>
             </Box>
-        </header>
+        </Box>
     )
 }

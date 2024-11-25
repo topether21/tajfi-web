@@ -21,13 +21,13 @@ export const HomeContainer = () => {
 
   return (
 
-    <Box className={clsx("relative min-h-screen flex flex-col bg-gradient-to-b from-background to-secondary bg-background-0 overflow-hidden text-white")}>
+    <Box className={clsx("relative min-h-screen flex bg-gradient-to-b from-background to-secondary bg-background-0 overflow-hidden text-white")}>
       <AnimatedBackground />
       <Box ref={sceneRef} className="absolute inset-0 z-0" />
       <DesktopHeader />
 
-      <main className="flex-grow flex flex-col justify-center items-center px-6 sm:px-8 lg:px-10 py-16 relative z-10">
-        <Box className="container mx-auto max-w-5xl flex flex-col lg:flex-row">
+      <Box className="flex-grow flex justify-center items-center px-6 sm:px-8 lg:px-10 py-16 relative z-10">
+        <Box className="container mx-auto max-w-5xl flex lg:flex-row">
           <Box className="lg:w-1/2 text-center lg:text-left mb-16 lg:mb-0">
             <MotionDiv
               className="text-6xl sm:text-7xl md:text-8xl font-extrabold mb-8 bg-clip-text text-white bg-gradient-to-r from-primary to-accent"
@@ -70,9 +70,9 @@ export const HomeContainer = () => {
             <WalletAnimation />
           </Box>
         </Box>
-      </main>
+      </Box>
 
-      <footer className="bg-card bg-opacity-60 backdrop-blur-lg text-white py-10 px-6 relative z-10">
+      <Box className="bg-card bg-opacity-60 backdrop-blur-lg text-white py-10 px-6 relative z-10">
         <Box className="container mx-auto max-w-5xl">
           <Box className="flex flex-col md:flex-row justify-between items-center">
             <Box className="mb-6 md:mb-0">
@@ -92,7 +92,7 @@ export const HomeContainer = () => {
             © 2024 Asset Market. All rights reserved.
           </Box> */}
         </Box>
-      </footer>
+      </Box>
     </Box>
   )
 }

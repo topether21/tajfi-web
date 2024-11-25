@@ -33,7 +33,7 @@ export const config = {
 		"--color-primary-0": hexToRgb("#ffffff"),
 		"--color-primary-50": hexToRgb("#5eecff"),
 		"--color-primary-100": hexToRgb("#42e9ff"),
-		"--color-primary-200": hexToRgb("#25e6ff"),
+		"--color-primary-200": COLORS.tajfiDeepBlue,
 		"--color-primary-300": hexToRgb("#09e2ff"),
 		"--color-primary-400": hexToRgb("#00d0eb"),
 		"--color-primary-500": hexToRgb("#00b7cf"),

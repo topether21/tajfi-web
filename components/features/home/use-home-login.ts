@@ -12,12 +12,14 @@ export const useHomeLogin = () => {
     const state = useAsync(getEnabledProviders);
     const wallets: WalletProvider[] = state.value || [];
     const shouldShowModal = state.value && state.value?.length > 1;
-    const loginButtonText = shouldShowModal ? "Connect Wallet" : "Login";
+    const loginButtonText = shouldShowModal ? "Login" : "Login"; // TODO: use "Connect Wallet"?
 
     const login = async (walletProvider: WalletProvider) => {
         await handleConnectWallet(walletProvider);
         setShowModal(false);
     };
+
+    const isLoading = state.loading;
 
     return {
         showModal,
@@ -26,6 +28,7 @@ export const useHomeLogin = () => {
         loginButtonText,
         login,
         profile,
-        logout
+        logout,
+        isLoading
     }
 }

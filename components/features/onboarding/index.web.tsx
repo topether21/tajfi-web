@@ -1,23 +1,18 @@
 import { Center } from "@/components/ui/center";
 import { useWindowDimensions } from "@/hooks/use-window-dimensions";
 import { useSizes } from "@/hooks/useSizes";
-import { getEnabledProviders } from "@/libs/wallet/providers";
-import type { WalletProvider } from "@/libs/wallet/types";
 import { clsx } from "clsx";
 import { router } from "expo-router";
 import LottieView from "lottie-react-native";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { SafeAreaView, ScrollView, Text, View } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
-import useAsync from "react-use/lib/useAsync";
-import useEffectOnce from "react-use/lib/useEffectOnce";
 import { ConnectWalletModal } from "../wallet/connect-wallet";
-import { useAuth } from "../wallet/connect-wallet/auth-context";
-import { useWalletAuth } from "../wallet/connect-wallet/use-connect-wallet";
 import { onboardingData } from "./data.web";
 import { OnboardingButtonScrollView } from "./onboarding-button-scrollview";
 import { onboardingStyles } from "./styles";
 import { HomeContainer } from "../home/home";
+import { useHomeLogin } from "../home/use-home-login";
 
 const RenderStaticItem = ({
 	item,
@@ -82,27 +77,12 @@ const RenderStaticItem = ({
 };
 
 export const OnboardingScreen = () => {
-	const { login: tryLogin, profile } = useAuth();
-
+	const { wallets, loginButtonText, profile, showModal, setShowModal, login, isLoading } = useHomeLogin();
 	const { isMobile, isTablet, isSmallScreen, isLargeScreen } = useSizes();
 	const { width: SCREEN_WIDTH } = useWindowDimensions();
 	const scrollViewRef = useRef<ScrollView>(null);
 	// It is used to animate the button scrollview, but it is disabled for now
 	const isAtEnd = useSharedValue(true);
-	const [showModal, setShowModal] = useState(false);
-	const { handleConnectWallet } = useWalletAuth({});
-
-	const state = useAsync(getEnabledProviders);
-	const wallets: WalletProvider[] = state.value || [];
-	const shouldShowModal = state.value && state.value?.length > 1;
-	const loginButtonText = shouldShowModal ? "Connect Wallet" : "Login";
-	const isLoading = state.loading;
-	const defaultWalletProvider = wallets?.[0];
-
-	const login = async (walletProvider: WalletProvider) => {
-		await handleConnectWallet(walletProvider);
-		setShowModal(false);
-	};
 
 	useEffect(() => {
 		if (profile) {
@@ -165,8 +145,8 @@ export const OnboardingScreen = () => {
 					isLoading={isLoading}
 					loginButtonText={loginButtonText}
 					login={login}
-					shouldShowModal={shouldShowModal ?? false}
-					defaultWalletProvider={defaultWalletProvider}
+					shouldShowModal={showModal}
+					defaultWalletProvider={wallets?.[0]}
 				/>
 			</Center>
 		</SafeAreaView>

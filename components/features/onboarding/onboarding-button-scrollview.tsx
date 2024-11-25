@@ -1,3 +1,4 @@
+import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import type { WalletProvider } from "@/libs/wallet/types";
 import type React from "react";
 import {
@@ -100,6 +101,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 		overflow: "hidden",
+		backgroundColor: HEX_COLORS.tajfiDeepBlue,
 	},
 	arrow: {
 		position: "absolute",

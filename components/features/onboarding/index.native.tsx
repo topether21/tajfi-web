@@ -1,178 +1,154 @@
-import { Text } from "@/components/ui/text";
+import { Center } from "@/components/ui/center";
 import { useWindowDimensions } from "@/hooks/use-window-dimensions";
+import { useSizes } from "@/hooks/useSizes";
+import { clsx } from "clsx";
+import { router } from "expo-router";
 import LottieView from "lottie-react-native";
-import React from "react";
-import { type FlatList, View, type ViewToken } from "react-native";
-import Animated, {
-	useSharedValue,
-	useAnimatedScrollHandler,
-	useAnimatedRef,
-	useAnimatedStyle,
-	interpolate,
-	Extrapolation,
-	type SharedValue,
-} from "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { onboardingData } from "./data.native";
-import { OnboardingButton } from "./onboarding-button";
-import { OnboardingPagination } from "./onboarding-pagination";
+import React, { useEffect, useRef } from "react";
+import { SafeAreaView, ScrollView, Text, View } from "react-native";
+import { useSharedValue } from "react-native-reanimated";
+import { ConnectWalletModal } from "../wallet/connect-wallet";
+import { onboardingData } from "./data.web";
+import { OnboardingButtonScrollView } from "./onboarding-button-scrollview";
 import { onboardingStyles } from "./styles";
-import type { OnboardingItem } from "./types";
+import { HomeContainer } from "../home/home";
+import { useHomeLogin } from "../home/use-home-login";
 
-const RenderAnimatedItem = ({
+const RenderStaticItem = ({
 	item,
-	index,
 	screenWidth,
-	x,
+	isMobile,
+	isTablet,
+	isSmallScreen,
+	isLargeScreen,
 }: {
 	item: (typeof onboardingData)[0];
-	index: number;
 	screenWidth: number;
-	x: SharedValue<number>;
+	isMobile: boolean;
+	isTablet: boolean;
+	isSmallScreen: boolean;
+	isLargeScreen: boolean;
 }) => {
-	const imageAnimationStyle = useAnimatedStyle(() => {
-		const opacityAnimation = interpolate(
-			x.value,
-			[
-				(index - 1) * screenWidth,
-				index * screenWidth,
-				(index + 1) * screenWidth,
-			],
-			[0, 1, 0],
-			Extrapolation.CLAMP,
-		);
-		const translateYAnimation = interpolate(
-			x.value,
-			[
-				(index - 1) * screenWidth,
-				index * screenWidth,
-				(index + 1) * screenWidth,
-			],
-			[100, 0, 100],
-			Extrapolation.CLAMP,
-		);
-		return {
-			opacity: opacityAnimation,
-			width: screenWidth * 0.8,
-			height: screenWidth * 0.8,
-			transform: [{ translateY: translateYAnimation }],
-		};
-	});
-
-	const textAnimationStyle = useAnimatedStyle(() => {
-		const opacityAnimation = interpolate(
-			x.value,
-			[
-				(index - 1) * screenWidth,
-				index * screenWidth,
-				(index + 1) * screenWidth,
-			],
-			[0, 1, 0],
-			Extrapolation.CLAMP,
-		);
-		const translateYAnimation = interpolate(
-			x.value,
-			[
-				(index - 1) * screenWidth,
-				index * screenWidth,
-				(index + 1) * screenWidth,
-			],
-			[100, 0, 100],
-			Extrapolation.CLAMP,
-		);
-
-		return {
-			opacity: opacityAnimation,
-			transform: [{ translateY: translateYAnimation }],
-		};
-	});
-
+	const width = isMobile
+		? screenWidth * 0.6
+		: isTablet
+			? screenWidth * 0.7
+			: isSmallScreen
+				? screenWidth * 0.4
+				: isLargeScreen
+					? screenWidth * 0.3
+					: screenWidth;
+	const height = width;
 	return (
-		<View style={[onboardingStyles.itemContainer, { width: screenWidth }]}>
-			<Animated.View style={imageAnimationStyle}>
+		<View style={[onboardingStyles.itemContainer, { width, height }]}>
+			{item.asset && (
 				<LottieView
+					loop
+					autoPlay
 					style={{
 						backgroundColor: "transparent",
-						width: screenWidth * 0.8,
-						height: screenWidth * 0.8,
+						width,
+						height,
 					}}
 					source={item.asset}
 				/>
-			</Animated.View>
-			<Animated.View style={textAnimationStyle}>
-				<View>
-					<Text size="xl" bold className="text-center">
-						{item.title}
+			)}
+			<View>
+				<Text
+					className="text-center text-white"
+					style={{
+						fontSize: 82,
+					}}
+				>
+					{item.title}
+				</Text>
+				<Text className="text-center text-xl py-4 text-white">
+					{item.text1}
+				</Text>
+
+				{!isMobile && (
+					<Text className="text-center text-xl py-4 text-white">
+						{item.text2}
 					</Text>
-					<Text size="lg" className="text-center">
-						{item.text}
-					</Text>
-				</View>
-			</Animated.View>
+				)}
+			</View>
 		</View>
 	);
 };
 
 export const OnboardingScreen = () => {
+	const { wallets, loginButtonText, profile, showModal, setShowModal, login, isLoading } = useHomeLogin();
+	const { isMobile, isTablet, isSmallScreen, isLargeScreen } = useSizes();
 	const { width: SCREEN_WIDTH } = useWindowDimensions();
-	const flatListRef = useAnimatedRef<FlatList<OnboardingItem>>();
-	const x = useSharedValue(0);
-	const flatListIndex = useSharedValue(0);
+	const scrollViewRef = useRef<ScrollView>(null);
+	// It is used to animate the button scrollview, but it is disabled for now
+	const isAtEnd = useSharedValue(true);
 
-	const onViewableItemsChanged = ({
-		viewableItems,
-	}: { viewableItems: ViewToken[] }) => {
-		if (viewableItems[0].index !== null) {
-			flatListIndex.value = viewableItems[0].index;
+	useEffect(() => {
+		if (profile) {
+			router.replace("/(tabs)/send");
 		}
-	};
+	}, [profile]);
 
-	const onScroll = useAnimatedScrollHandler({
-		onScroll: (event) => {
-			x.value = event.contentOffset.x;
-		},
-	});
+	// TODO: add a loading state??
+	if (profile)
+		return (
+			<SafeAreaView
+				style={onboardingStyles.container}
+				className={clsx("py-10", isMobile && "py-5")}
+			/>
+		);
+
+	if (!isMobile) {
+		return <HomeContainer />
+	}
 
 	return (
-		<SafeAreaView style={[onboardingStyles.container]}>
-			<Animated.FlatList
-				ref={flatListRef}
-				onScroll={onScroll}
-				data={onboardingData}
-				renderItem={({ item, index }) => {
-					return (
-						<RenderAnimatedItem
-							item={item}
-							index={index}
-							screenWidth={SCREEN_WIDTH}
-							x={x}
-						/>
-					);
-				}}
-				keyExtractor={(item) => item.id.toString()}
-				scrollEventThrottle={16}
-				horizontal={true}
-				bounces={false}
-				pagingEnabled={true}
-				showsHorizontalScrollIndicator={false}
-				viewabilityConfig={{
-					minimumViewTime: 300,
-					viewAreaCoveragePercentThreshold: 10,
-				}}
-				onViewableItemsChanged={onViewableItemsChanged}
+		<SafeAreaView
+			style={onboardingStyles.container}
+			className={clsx("py-10", isMobile && "py-5")}
+		>
+			<ConnectWalletModal
+				showModal={showModal}
+				onClose={() => setShowModal(false)}
+				wallets={wallets}
+				login={login}
 			/>
-			<View style={onboardingStyles.bottomContainer}>
-				<OnboardingPagination
-					data={onboardingData}
-					x={x}
-					screenWidth={SCREEN_WIDTH}
+			<ScrollView
+				ref={scrollViewRef}
+				scrollEventThrottle={16}
+				className="flex-1 items-center justify-center"
+			>
+				{onboardingData.map((item) => (
+					<RenderStaticItem
+						key={item.id}
+						item={item}
+						screenWidth={SCREEN_WIDTH}
+						isMobile={isMobile}
+						isTablet={isTablet}
+						isSmallScreen={isSmallScreen}
+						isLargeScreen={isLargeScreen}
+					/>
+				))}
+			</ScrollView>
+			<Center
+				className={clsx(
+					"mt-10",
+					isMobile && "mt-5",
+					isTablet || isSmallScreen || (isLargeScreen && "mb-20"),
+				)}
+			>
+				<OnboardingButtonScrollView
+					scrollViewRef={scrollViewRef}
+					isAtEnd={isAtEnd}
+					showModal={() => setShowModal(true)}
+					isLoading={isLoading}
+					loginButtonText={loginButtonText}
+					login={login}
+					shouldShowModal={showModal}
+					defaultWalletProvider={wallets?.[0]}
 				/>
-				<OnboardingButton
-					flatListRef={flatListRef}
-					flatListIndex={flatListIndex}
-					dataLength={onboardingData.length}
-				/>
-			</View>
+			</Center>
 		</SafeAreaView>
 	);
 };

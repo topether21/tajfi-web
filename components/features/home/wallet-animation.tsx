@@ -1,5 +1,4 @@
 import LottieView from "lottie-react-native";
-import walletAnimation from './wallet-animation.json'
 
 export const WalletAnimation = () => {
   return <LottieView
@@ -10,6 +9,6 @@ export const WalletAnimation = () => {
       width: "100%",
       height: "100%",
     }}
-    source={walletAnimation}
+    source={require("./wallet-animation.json")}
   />
 }

@@ -1,4 +1,3 @@
-import { TAB_BAR_ACTIVE_BACKGROUND_COLOR } from "@/components/containers/tab-bar/colors";
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
@@ -30,8 +29,8 @@ export const SimpleCurrencySelector = ({
 						</Heading>
 						<Icon
 							as={ChevronDownIcon}
-							size="sm"
-							color={TAB_BAR_ACTIVE_BACKGROUND_COLOR}
+							size="xl"
+							className="stroke-background-tajfi-deep-blue"
 						/>
 					</Box>
 				</TouchableOpacity>

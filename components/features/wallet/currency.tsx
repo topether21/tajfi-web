@@ -5,12 +5,12 @@ import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { ChevronDownIcon, Icon } from "@/components/ui/icon";
 
-import { TAB_BAR_ACTIVE_BACKGROUND_COLOR } from "@/components/containers/tab-bar/colors";
 import { VStack } from "@/components/ui/vstack";
 import { useStore } from "@nanostores/react";
 import { TouchableOpacity, View } from "react-native";
 import { $assetId } from "./hooks/asset-id-store";
 import { useBalances } from "./hooks/use-balances";
+import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 
 export const CurrencySelector = ({ onPress }: { onPress?: () => void }) => {
 	const { currencies } = useBalances();
@@ -32,8 +32,8 @@ export const CurrencySelector = ({ onPress }: { onPress?: () => void }) => {
 								</Heading>
 								<Icon
 									as={ChevronDownIcon}
-									size="sm"
-									color={TAB_BAR_ACTIVE_BACKGROUND_COLOR}
+									size="xl"
+									className="stroke-background-tajfi-deep-blue"
 								/>
 							</Box>
 						</Box>
