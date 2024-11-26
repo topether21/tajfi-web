@@ -1,4 +1,3 @@
-import { GLOBAL_BACKGROUND_COLOR } from "@/components/containers/tab-bar/colors";
 import { BottomTabBar } from "@/components/containers/tab-bar/tab-bar";
 import { DesktopHeader } from "@/components/features/home/desktop-header";
 import { UserBalance } from "@/components/features/wallet/layout/user-balance";
@@ -13,15 +12,15 @@ const TabsLayout = () => {
 	const { width } = useWindowDimensions();
 	const isMobileOrTablet = isMobile || isTablet;
 	return (
-		<Box className="flex-1">
+		<Box className="flex-1 bg-background-tajfi-white">
 			<DesktopHeader />
 			<View
-				className={
+				className={isMobileOrTablet ? "" : "relative flex justify-center"}
+				style={
 					isMobileOrTablet
-						? ""
-						: "relative flex justify-center"
+						? styles.mobileContainer
+						: [styles.desktopContainer, { width }]
 				}
-				style={isMobileOrTablet ? styles.mobileContainer : [styles.desktopContainer, { width }]}
 			>
 				<UserBalance />
 				<Tabs tabBar={(props) => <BottomTabBar {...props} />}>

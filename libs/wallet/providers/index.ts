@@ -1,5 +1,6 @@
 import type { WalletProvider } from "../types";
-import { NostrProvider } from "./nostr";
+import { AlbyProvider } from "./alby";
+import { createProvider, NostrProvider } from "./nostr";
 import type { WalletStrategy } from "./shared";
 import { WebAuthnWallet } from "./web-authn/web-authn";
 
@@ -8,8 +9,11 @@ export const getProviderStrategy = (
 ): WalletStrategy => {
 	switch (provider) {
 		case "alby":
+			return createProvider({ windowKey: "alby", providerName: "Alby" });
+		case "nostr":
+			return createProvider({ windowKey: "nostr", providerName: "Nostr" });
 		case "oneKey":
-			return new NostrProvider();
+			return createProvider({ windowKey: "$onekey", providerName: "OneKey" });
 		case "webAuthn":
 			return new WebAuthnWallet();
 		default:
@@ -18,6 +22,10 @@ export const getProviderStrategy = (
 };
 
 const isAlbyEnabled = async () => {
+	return typeof window.alby !== "undefined";
+};
+
+const isNostrEnabled = async () => {
 	return typeof window?.nostr?.enable !== "undefined";
 };
 
@@ -40,17 +48,17 @@ const isWebAuthnEnabled = async () => {
 };
 
 export const getEnabledProviders = async () => {
-	const [albyEnabled, oneKeyEnabled, webAuthnEnabled] = await Promise.all([
-		isAlbyEnabled(),
-		isOneKeyEnabled(),
-		isWebAuthnEnabled(),
-	]);
+	const [albyEnabled, nostrEnabled, oneKeyEnabled, webAuthnEnabled] =
+		await Promise.all([
+			isAlbyEnabled(),
+			isNostrEnabled(),
+			isOneKeyEnabled(),
+			isWebAuthnEnabled(),
+		]);
 	const providers: WalletProvider[] = [];
-	if (oneKeyEnabled) {
-		providers.push("oneKey");
-	} else if (albyEnabled) {
-		providers.push("alby");
-	}
+	if (oneKeyEnabled) providers.push("oneKey");
+	if (albyEnabled) providers.push("alby");
+	if (nostrEnabled && !albyEnabled && !oneKeyEnabled) providers.push("nostr");
 	if (webAuthnEnabled) providers.push("webAuthn");
 	return providers;
 };

@@ -6,29 +6,33 @@ import { getEnabledProviders } from "@/libs/wallet/providers";
 import type { WalletProvider } from "@/libs/wallet/types";
 
 export const useHomeLogin = () => {
-    const [showModal, setShowModal] = useState(false);
-    const { handleConnectWallet, profile, handleLogout: logout } = useWalletAuth({});
+	const [showModal, setShowModal] = useState(false);
+	const {
+		handleConnectWallet,
+		profile,
+		handleLogout: logout,
+	} = useWalletAuth({});
 
-    const state = useAsync(getEnabledProviders);
-    const wallets: WalletProvider[] = state.value || [];
-    const shouldShowModal = state.value && state.value?.length > 1;
-    const loginButtonText = shouldShowModal ? "Login" : "Login"; // TODO: use "Connect Wallet"?
+	const state = useAsync(getEnabledProviders);
+	const wallets: WalletProvider[] = state.value || [];
+	const shouldShowModal = state.value && state.value?.length > 1;
+	const loginButtonText = shouldShowModal ? "Connect Wallet" : "Login";
 
-    const login = async (walletProvider: WalletProvider) => {
-        await handleConnectWallet(walletProvider);
-        setShowModal(false);
-    };
+	const login = async (walletProvider: WalletProvider) => {
+		await handleConnectWallet(walletProvider);
+		setShowModal(false);
+	};
 
-    const isLoading = state.loading;
+	const isLoading = state.loading;
 
-    return {
-        showModal,
-        setShowModal,
-        wallets,
-        loginButtonText,
-        login,
-        profile,
-        logout,
-        isLoading
-    }
-}
+	return {
+		showModal,
+		setShowModal,
+		wallets,
+		loginButtonText,
+		login,
+		profile,
+		logout,
+		isLoading,
+	};
+};

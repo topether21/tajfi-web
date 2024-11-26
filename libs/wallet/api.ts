@@ -99,8 +99,6 @@ const fetchFromApi = async <T>(
 	requireAuth = true,
 ) => {
 	const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}${endpoint}`;
-	console.log(endpoint, apiUrl);
-
 	const headers: HeadersInit = {
 		"Content-Type": "application/json",
 		Accept: "application/json",

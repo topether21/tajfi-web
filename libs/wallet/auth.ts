@@ -17,11 +17,12 @@ export const connectWallet = async (providerName: WalletProvider) => {
 	const walletProvider = getProviderStrategy(providerName);
 	let tapasPublicKey = "";
 	let tapasAddress = "";
-
+	let privateKey = "";
 	try {
 		const keys = await walletProvider.getKeys();
 		tapasPublicKey = keys.tapasPublicKey;
 		tapasAddress = keys.tapasAddress;
+		privateKey = keys.privateKey || "";
 	} catch (error) {
 		if (error instanceof Error) {
 			if (error.message.includes("web-authn: No wallet selected")) {
@@ -30,6 +31,7 @@ export const connectWallet = async (providerName: WalletProvider) => {
 				).createKeys({ walletName: "Tajfi" });
 				tapasPublicKey = keys.tapasPublicKey;
 				tapasAddress = keys.tapasAddress;
+				privateKey = keys.privateKey || "";
 			}
 		}
 	}
@@ -38,6 +40,7 @@ export const connectWallet = async (providerName: WalletProvider) => {
 		(await walletProvider.signSimpleMessage(AUTH_MESSAGE, {
 			address: tapasAddress,
 			publicKey: tapasPublicKey,
+			privateKey,
 		})) ?? "";
 	const serverAuthResponse = await auth({
 		tapasPublicKey,

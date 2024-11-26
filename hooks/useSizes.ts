@@ -18,5 +18,12 @@ export const useSizes = () => {
 		},
 	]);
 
-	return { isMobile, isTablet, isSmallScreen, isLargeScreen };
+	return {
+		isMobile,
+		isTablet,
+		isSmallScreen,
+		isLargeScreen,
+		isSmall: isMobile || isTablet,
+		isLarge: isSmallScreen || isLargeScreen,
+	};
 };

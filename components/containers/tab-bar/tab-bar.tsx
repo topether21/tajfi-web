@@ -33,8 +33,6 @@ export const BottomTabBar = ({
 	const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 	const buttonWidth = dimensions.width / (state.routes.length || 1);
 
-	console.log("dimensions", dimensions, buttonWidth);
-
 	const onTabBarLayout = (event: LayoutChangeEvent) => {
 		setDimensions({
 			width: event.nativeEvent.layout.width,
@@ -52,12 +50,14 @@ export const BottomTabBar = ({
 	const circleSize = Math.min(dimensions.height - 15, buttonWidth - 25);
 
 	useEffect(() => {
-		console.log("----> state.index", state.index, buttonWidth);
 		tabPositionX.value = withSpring(
-			buttonWidth * state.index + buttonWidth / 2 - circleSize / 2 - TAB_BAR_HORIZONTAL_PADDING,
+			buttonWidth * state.index +
+				buttonWidth / 2 -
+				circleSize / 2 -
+				TAB_BAR_HORIZONTAL_PADDING,
 			{
 				duration: 1500,
-			}
+			},
 		);
 	}, [state.index, buttonWidth, tabPositionX, circleSize]);
 
@@ -68,7 +68,6 @@ export const BottomTabBar = ({
 	}, [isVisible, opacity]);
 
 	const isMobileOrTablet = isMobile || isTablet;
-
 
 	// useAnimatedReaction(
 	// 	() => {
@@ -94,7 +93,6 @@ export const BottomTabBar = ({
 		>
 			<Animated.View
 				data-id="tab-bar-background"
-
 				style={[
 					animatedBackgroundStyle,
 					{
@@ -119,9 +117,15 @@ export const BottomTabBar = ({
 				const isFocused = state.index === index;
 
 				const onPress = () => {
-					tabPositionX.value = withSpring(buttonWidth * index + buttonWidth / 2 - circleSize / 2 - TAB_BAR_HORIZONTAL_PADDING, {
-						duration: 1500,
-					});
+					tabPositionX.value = withSpring(
+						buttonWidth * index +
+							buttonWidth / 2 -
+							circleSize / 2 -
+							TAB_BAR_HORIZONTAL_PADDING,
+						{
+							duration: 1500,
+						},
+					);
 					const event = navigation.emit({
 						type: "tabPress",
 						target: route.key,

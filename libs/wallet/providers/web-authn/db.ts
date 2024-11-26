@@ -2,7 +2,6 @@
 import { KEY_CURRENT_WALLET_ID, KEY_WALLETS } from "@/libs/constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
 export interface StoredWallet {
 	id: string;
 	encryptedKey: string; // Stored as JSON string

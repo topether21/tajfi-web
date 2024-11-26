@@ -16,6 +16,7 @@ import {
 	TAB_BAR_ICON_COLOR,
 	TAB_BAR_LABEL_COLOR,
 } from "./colors";
+import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 
 type FeatherIconProps = {
 	color?: string;
@@ -84,14 +85,13 @@ export const TabBarButton = ({
 		>
 			<Animated.View style={animatedIconStyle}>
 				{icons[routeName as keyof typeof icons]({
-					color: isFocused ? TAB_BAR_ACTIVE_ICON_COLOR : TAB_BAR_ICON_COLOR,
+					color: isFocused ? HEX_COLORS.tajfiWhite : HEX_COLORS.tajfiWhite,
 				})}
 			</Animated.View>
-
 			<Animated.Text
 				style={[
 					{
-						color: isFocused ? TAB_BAR_ACTIVE_LABEL_COLOR : TAB_BAR_LABEL_COLOR,
+						color: isFocused ? HEX_COLORS.tajfiDeepBlue : HEX_COLORS.tajfiWhite,
 					},
 					animatedTextStyle,
 				]}

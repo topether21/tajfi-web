@@ -1,13 +1,13 @@
 import { Image, type ImageContentFit } from "expo-image";
 
-export const TajfiLogo = ({
-	width = 232 * 0.6,
-	height = 393 * 0.6,
+export const TajfiNameLogoDeepBlue = ({
+	width = 133,
+	height = 111,
 	contentFit = "contain",
 }: { width?: number; height?: number; contentFit?: ImageContentFit }) => {
 	return (
 		<Image
-			source={require("./assets/tajfi-logo.svg")}
+			source={require("./assets/tajfi-name-logo-deep-blue.svg")}
 			alt="Tajfi Logo"
 			style={{ width, height }}
 			contentFit={contentFit}

@@ -1,4 +1,3 @@
-import { TAB_BAR_ACTIVE_BACKGROUND_COLOR } from "@/components/containers/tab-bar/colors";
 import { CurrencySelector } from "@/components/features/wallet/currency";
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";

@@ -36,7 +36,7 @@ const TransactionItem = ({
 					)}
 				</Box>
 				<Box>
-					<p className="text-base font-semibold">
+					{/* <Text className="text-base font-semibold">
 						<Tooltip
 							placement="top"
 							trigger={(triggerProps) => (
@@ -49,10 +49,13 @@ const TransactionItem = ({
 								<TooltipText>{transaction.asset_id}</TooltipText>
 							</TooltipContent>
 						</Tooltip>
-					</p>
-					<p className="text-sm text-gray-500">
+					</Text> */}
+					<TouchableOpacity>
+						<Text bold>{assetName}</Text>
+					</TouchableOpacity>
+					<Text className="text-sm text-gray-500">
 						{formattedDate} {formattedTime}
-					</p>
+					</Text>
 				</Box>
 			</HStack>
 			<Box

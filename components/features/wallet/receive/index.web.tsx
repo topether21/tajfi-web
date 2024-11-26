@@ -1,4 +1,3 @@
-import { TAB_BAR_ACTIVE_BACKGROUND_COLOR } from "@/components/containers/tab-bar/colors";
 import { LoadingIcon } from "@/components/icons/loading-icon";
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
@@ -12,7 +11,7 @@ import { useStore } from "@nanostores/react";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
 import * as Sharing from "expo-sharing";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import type { View } from "react-native";
 import QRCode from "react-qr-code";
@@ -20,13 +19,12 @@ import useAsync from "react-use/lib/useAsync";
 import {
 	$receiveAssetId,
 	resetReceiveAssetId,
-	setReceiveAssetId,
 } from "../hooks/asset-id-store";
-import { useBalances } from "../hooks/use-balances";
 import { useCreateInvoice } from "../hooks/use-create-invoice";
 import { useUserReceiveCurrency } from "../layout/use-user-receive-currency";
 import { UserCurrencies } from "../layout/user-currencies";
 import { SimpleCurrencySelector } from "../simple-currency-selector";
+import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 
 export const ReceiveScreen = () => {
 	const { isOpen, handleClose, handleOpen } = useUserReceiveCurrency();
@@ -110,7 +108,7 @@ export const ReceiveScreen = () => {
 										<Ionicons
 											name="copy"
 											size={24}
-											color={TAB_BAR_ACTIVE_BACKGROUND_COLOR}
+											color={HEX_COLORS.tajfiDeepBlue}
 										/>
 									</HStack>
 								</TouchableOpacity>
@@ -121,7 +119,7 @@ export const ReceiveScreen = () => {
 											<Entypo
 												name="share"
 												size={24}
-												color={TAB_BAR_ACTIVE_BACKGROUND_COLOR}
+												color={HEX_COLORS.tajfiDeepBlue}
 											/>
 										</HStack>
 									</TouchableOpacity>
