@@ -10,7 +10,7 @@ import { useStore } from "@nanostores/react";
 import { TouchableOpacity, View } from "react-native";
 import { $assetId } from "./hooks/asset-id-store";
 import { useBalances } from "./hooks/use-balances";
-import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
+import { CurrencyLogoIcon } from "@/components/icons/currency-logo";
 
 export const CurrencySelector = ({ onPress }: { onPress?: () => void }) => {
 	const { currencies } = useBalances();
@@ -23,7 +23,11 @@ export const CurrencySelector = ({ onPress }: { onPress?: () => void }) => {
 				<VStack space="2xl">
 					<HStack space="md">
 						<Avatar className="bg-background-0">
-							<Icon as={TetherUSDT} size="xl" className="stroke-white" />
+							<CurrencyLogoIcon
+								assetId={assetId}
+								height={30}
+								width={30}
+							/>
 						</Avatar>
 						<Box className="align-center justify-center">
 							<Box className="flex-row items-center justify-center space-x-2">

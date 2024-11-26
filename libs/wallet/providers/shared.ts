@@ -2,9 +2,7 @@ export type Transaction = any; // TODO: add type for transaction
 export type AddressInfo = any; // TODO: add type for address info
 
 export interface WalletStrategy {
-	getKeys(
-		domain?: string,
-	): Promise<{
+	getKeys(domain?: string): Promise<{
 		tapasPublicKey: string;
 		tapasAddress: string;
 		privateKey?: string;

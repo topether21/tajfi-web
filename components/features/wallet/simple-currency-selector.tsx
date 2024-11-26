@@ -14,7 +14,6 @@ export const SimpleCurrencySelector = ({
 	const { currencies } = useBalances();
 	const receiveAssetId = useStore($receiveAssetId);
 	const currency = currencies.get(receiveAssetId);
-	console.log("currency", currency);
 	if (!currency) return null;
 	return (
 		<VStack space="2xl">

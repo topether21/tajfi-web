@@ -34,6 +34,7 @@ export const connectWallet = async (providerName: WalletProvider) => {
 				privateKey = keys.privateKey || "";
 			}
 		}
+		throw error;
 	}
 
 	const signature =

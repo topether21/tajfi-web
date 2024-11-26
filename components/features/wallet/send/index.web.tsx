@@ -125,7 +125,7 @@ export const SendScreen = () => {
 					<InputField
 						placeholder="Enter invoice..."
 						onChangeText={handleInvoiceChange}
-						className="text-typography-0"
+						className="text-background-tajfi-deep-blue"
 						value={invoice}
 					/>
 					<InputSlot>

@@ -19,12 +19,21 @@ import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import { VStack } from "@/components/ui/vstack";
 
 export const DesktopHomeView = () => {
-	const { showModal, setShowModal, wallets, loginButtonText, login, profile, logout } =
-		useHomeLogin();
+	const {
+		showModal,
+		setShowModal,
+		wallets,
+		loginButtonText,
+		login,
+		profile,
+		logout,
+	} = useHomeLogin();
 
 	return (
 		<Box
-			className={clsx("relative min-h-screen flex-1 flex-row overflow-hidden w-full")}
+			className={clsx(
+				"relative min-h-screen flex-1 flex-row overflow-hidden w-full",
+			)}
 		>
 			<VStack className="flex-1 w-full">
 				<Box className="flex-grow flex justify-center px-6 sm:px-8 lg:px-10 py-16 relative z-10 w-full">
@@ -46,7 +55,9 @@ export const DesktopHomeView = () => {
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 1, delay: 0.3 }}
 							>
-								<Heading size="xl" className="text-background-tajfi-white">{APP_DESCRIPTION}</Heading>
+								<Heading size="xl" className="text-background-tajfi-white">
+									{APP_DESCRIPTION}
+								</Heading>
 							</MotionDiv>
 							<MotionDiv
 								className="max-w-2xl mx-auto lg:mx-0 text-lg mb-12"
@@ -54,7 +65,11 @@ export const DesktopHomeView = () => {
 								animate={{ opacity: 1, y: 0 }}
 								transition={{ duration: 1, delay: 0.5 }}
 							>
-								<Heading size="xl" className="text-background-tajfi-white" bold={false}>
+								<Heading
+									size="xl"
+									className="text-background-tajfi-white"
+									bold={false}
+								>
 									{HOME_HERO_DESCRIPTION}
 								</Heading>
 							</MotionDiv>
@@ -81,8 +96,12 @@ export const DesktopHomeView = () => {
 					<Box className="w-full mx-auto">
 						<Box className="flex flex-col md:flex-row justify-between items-center">
 							<Box className="mb-6 md:mb-0">
-								<Heading size="xl" className="text-background-tajfi-white">{APP_NAME}</Heading>
-								<Text size="sm" className="text-background-tajfi-white">{APP_FOOTER_DESCRIPTION}</Text>
+								<Heading size="xl" className="text-background-tajfi-white">
+									{APP_NAME}
+								</Heading>
+								<Text size="sm" className="text-background-tajfi-white">
+									{APP_FOOTER_DESCRIPTION}
+								</Text>
 							</Box>
 							<Box className="flex space-x-5">
 								<a

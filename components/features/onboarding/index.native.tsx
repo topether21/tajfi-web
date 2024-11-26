@@ -3,7 +3,6 @@ import { router } from "expo-router";
 import { useEffect } from "react";
 import { SafeAreaView } from "react-native";
 import { ConnectWalletModal } from "../wallet/connect-wallet";
-import { DesktopHomeView } from "../home/desktop-home-view";
 import { useHomeLogin } from "../home/use-home-login";
 
 import { Box } from "@/components/ui/box";
@@ -101,7 +100,7 @@ export const OnboardingScreen = () => {
 					loginButtonText={loginButtonText}
 				/>
 			) : (
-				<DesktopHomeView />
+				<Box className="w-full h-full flex-1 flex-row bg-fuchsia-800"></Box>
 			)}
 		</TajfiGradient>
 	);

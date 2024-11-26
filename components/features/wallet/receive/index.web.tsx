@@ -16,10 +16,7 @@ import { TouchableOpacity } from "react-native";
 import type { View } from "react-native";
 import QRCode from "react-qr-code";
 import useAsync from "react-use/lib/useAsync";
-import {
-	$receiveAssetId,
-	resetReceiveAssetId,
-} from "../hooks/asset-id-store";
+import { $receiveAssetId, resetReceiveAssetId } from "../hooks/asset-id-store";
 import { useCreateInvoice } from "../hooks/use-create-invoice";
 import { useUserReceiveCurrency } from "../layout/use-user-receive-currency";
 import { UserCurrencies } from "../layout/user-currencies";
@@ -71,7 +68,7 @@ export const ReceiveScreen = () => {
 							value={assetAmount ?? ""}
 							type="text"
 							placeholder="Enter amount..."
-							className="text-typography-0"
+							className="text-background-tajfi-deep-blue"
 							onChangeText={(value) => {
 								if (value === "" || !Number.isNaN(Number(value))) {
 									setAssetAmount(value === "" ? "" : value);
@@ -104,7 +101,9 @@ export const ReceiveScreen = () => {
 							<VStack space="md" className="pt-4">
 								<TouchableOpacity onPress={copyInvoice}>
 									<HStack space="md">
-										<Text className="text-typography-0">Copy Invoice</Text>
+										<Text className="text-background-tajfi-deep-blue">
+											Copy Invoice
+										</Text>
 										<Ionicons
 											name="copy"
 											size={24}
@@ -115,7 +114,9 @@ export const ReceiveScreen = () => {
 								{sharingAvailable && (
 									<TouchableOpacity onPress={shareInvoice}>
 										<HStack space="md">
-											<Text className="text-typography-0">Share QR Code</Text>
+											<Text className="text-background-tajfi-deep-blue">
+												Share QR Code
+											</Text>
 											<Entypo
 												name="share"
 												size={24}

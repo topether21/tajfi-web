@@ -132,17 +132,17 @@ export const config = {
 
 		/* Typography */
 		"--color-typography-0": COLORS.tajfiWhite,
-		"--color-typography-50": "245 245 245",
-		"--color-typography-100": "229 229 229",
-		"--color-typography-200": "219 219 220",
-		"--color-typography-300": "212 212 212",
-		"--color-typography-400": "163 163 163",
-		"--color-typography-500": "140 140 140",
-		"--color-typography-600": "115 115 115",
-		"--color-typography-700": "82 82 82",
-		"--color-typography-800": "64 64 64",
-		"--color-typography-900": "38 38 39",
-		"--color-typography-950": "23 23 23",
+		"--color-typography-50": hexToRgb("#5eecff"),
+		"--color-typography-100": hexToRgb("#42e9ff"),
+		"--color-typography-200": COLORS.tajfiDeepBlue,
+		"--color-typography-300": hexToRgb("#09e2ff"),
+		"--color-typography-400": hexToRgb("#00d0eb"),
+		"--color-typography-500": COLORS.tajfiDeepBlue,
+		"--color-typography-600": hexToRgb("#00a0b5"),
+		"--color-typography-700": hexToRgb("#038c9e"),
+		"--color-typography-800": hexToRgb("#067b8b"),
+		"--color-typography-900": hexToRgb("#086b78"),
+		"--color-typography-950": hexToRgb("#0a5b66"),
 
 		/* Outline */
 		"--color-outline-0": "253 254 254",
@@ -188,7 +188,7 @@ export const config = {
 		"--color-background-info": "235 248 254",
 
 		/* Focus Ring Indicator  */
-		"--color-indicator-primary": "55 55 55",
+		"--color-indicator-primary": COLORS.tajfiLightBlue,
 		"--color-indicator-info": "83 153 236",
 		"--color-indicator-error": "185 28 28",
 	}),

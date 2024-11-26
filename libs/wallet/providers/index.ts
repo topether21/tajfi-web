@@ -42,7 +42,7 @@ const isWebAuthnEnabled = async () => {
 		typeof navigator.credentials.get !== "undefined" &&
 		typeof PublicKeyCredential !== "undefined" &&
 		typeof PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable !==
-		"undefined" &&
+			"undefined" &&
 		(await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable());
 	return supportsWebAuthn;
 };
