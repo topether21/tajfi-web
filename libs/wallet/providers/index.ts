@@ -1,6 +1,5 @@
 import type { WalletProvider } from "../types";
-import { AlbyProvider } from "./alby";
-import { createProvider, NostrProvider } from "./nostr";
+import { createProvider } from "./nostr";
 import type { WalletStrategy } from "./shared";
 import { WebAuthnWallet } from "./web-authn/web-authn";
 
@@ -42,7 +41,7 @@ const isWebAuthnEnabled = async () => {
 		typeof navigator.credentials.get !== "undefined" &&
 		typeof PublicKeyCredential !== "undefined" &&
 		typeof PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable !==
-			"undefined" &&
+		"undefined" &&
 		(await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable());
 	return supportsWebAuthn;
 };

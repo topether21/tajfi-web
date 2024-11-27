@@ -23,7 +23,7 @@ export const SimpleCurrencySelector = ({
 					onPress={handleOpen}
 				>
 					<Box className="flex-row items-center justify-center space-x-2">
-						<Heading size="sm" className="text-white">
+						<Heading size="sm" className="text-background-tajfi-deep-blue">
 							{currency}
 						</Heading>
 						<Icon

@@ -29,6 +29,10 @@ export const createProvider = ({
 
 	const signMessage = async (message: string): Promise<string> => {
 		const provider = getProvider();
+		console.log("signMessage", {
+			message, windowKey,
+			providerName
+		});
 		const signed = await provider.nostr.signSchnorr(message);
 		return signed || "";
 	};
@@ -36,7 +40,6 @@ export const createProvider = ({
 	return {
 		async getKeys() {
 			const provider = getProvider();
-			await provider.nostr.enable();
 			const tapasPublicKey = (await provider.nostr.getPublicKey()) || "";
 			const tapasAddress =
 				(await getP2trAddress(tapasPublicKey))?.address || "";
