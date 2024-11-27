@@ -1,5 +1,6 @@
 import { getP2trAddress } from "./bitcoin";
 import type { AddressInfo, Transaction, WalletStrategy } from "./shared";
+import { stringToHex } from "./web-authn/web-authn-utils";
 
 export interface NostrProvider {
 	nostr: {
@@ -29,10 +30,6 @@ export const createProvider = ({
 
 	const signMessage = async (message: string): Promise<string> => {
 		const provider = getProvider();
-		console.log("signMessage", {
-			message, windowKey,
-			providerName
-		});
 		const signed = await provider.nostr.signSchnorr(message);
 		return signed || "";
 	};
@@ -49,6 +46,7 @@ export const createProvider = ({
 			};
 		},
 		async signSimpleMessage(message: string): Promise<string> {
+			if (windowKey === "$onekey") return signMessage(stringToHex(message));
 			return signMessage(message);
 		},
 		async signTx(transaction: Transaction): Promise<string> {
