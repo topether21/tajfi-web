@@ -24,17 +24,14 @@ export const connectWallet = async (providerName: WalletProvider) => {
 		tapasAddress = keys.tapasAddress;
 		privateKey = keys.privateKey || "";
 	} catch (error) {
-		if (error instanceof Error) {
-			if (error.message.includes("web-authn: No wallet selected")) {
-				const keys = await (
-					walletProvider as unknown as WebAuthnProvider
-				).createKeys({ walletName: "Tajfi" });
-				tapasPublicKey = keys.tapasPublicKey;
-				tapasAddress = keys.tapasAddress;
-				privateKey = keys.privateKey || "";
-			}
-		}
-		throw error;
+		const errorMessage = error instanceof Error ? error.message : "";
+		if (!errorMessage.includes("web-authn: No wallet selected")) throw error;
+		const keys = await (
+			walletProvider as unknown as WebAuthnProvider
+		).createKeys({ walletName: "Tajfi" });
+		tapasPublicKey = keys.tapasPublicKey;
+		tapasAddress = keys.tapasAddress;
+		privateKey = keys.privateKey || "";
 	}
 
 	const signature =
