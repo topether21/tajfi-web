@@ -10,12 +10,6 @@ import Animated, {
 	useAnimatedStyle,
 	interpolate,
 } from "react-native-reanimated";
-import {
-	TAB_BAR_ACTIVE_ICON_COLOR,
-	TAB_BAR_ACTIVE_LABEL_COLOR,
-	TAB_BAR_ICON_COLOR,
-	TAB_BAR_LABEL_COLOR,
-} from "./colors";
 import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 
 type FeatherIconProps = {
@@ -73,6 +67,9 @@ export const TabBarButton = ({
 			: withSpring(1, { duration: 350 });
 	}, [isFocused, scale]);
 
+
+	const activeRouteColor = isFocused ? HEX_COLORS.tajfiDeepBlue : HEX_COLORS.tajfiWhite;
+
 	return (
 		<PlatformPressable
 			accessibilityState={isFocused ? { selected: true } : {}}
@@ -85,13 +82,13 @@ export const TabBarButton = ({
 		>
 			<Animated.View style={animatedIconStyle}>
 				{icons[routeName as keyof typeof icons]({
-					color: isFocused ? HEX_COLORS.tajfiWhite : HEX_COLORS.tajfiWhite,
+					color: HEX_COLORS.tajfiWhite,
 				})}
 			</Animated.View>
 			<Animated.Text
 				style={[
 					{
-						color: isFocused ? HEX_COLORS.tajfiDeepBlue : HEX_COLORS.tajfiWhite,
+						color: activeRouteColor,
 					},
 					animatedTextStyle,
 				]}

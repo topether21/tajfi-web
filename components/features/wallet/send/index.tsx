@@ -67,12 +67,6 @@ export const SendScreen = () => {
 	}, [invoiceDetails, invoice, sendFundsStart]);
 
 	const onSend = () => {
-		console.log("-->onSend", {
-			sighashHexToSign: preSignedData?.sighashHexToSign,
-			providerName: profile?.providerName,
-			tapasAddress: profile?.tapasAddress,
-			fundedPsbt: preSignedData?.fundedPsbt,
-		});
 		if (!preSignedData || !profile) return;
 		sendFundsComplete({
 			sighashHexToSign: preSignedData.sighashHexToSign,

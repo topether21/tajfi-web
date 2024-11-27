@@ -15,7 +15,12 @@ export const TajfiGradient = ({
 			start={[0.5, 0]}
 			end={[0.5, 1]}
 		>
-			<Animated.View entering={FadeIn} exiting={FadeOut}>
+			<Animated.View
+				entering={FadeIn}
+				exiting={FadeOut}
+				accessibilityLabel="tajfi-gradient"
+				accessibilityRole="none"
+			>
 				{children}
 			</Animated.View>
 		</LinearGradient>

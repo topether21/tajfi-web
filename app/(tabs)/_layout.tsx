@@ -8,16 +8,15 @@ import { useWindowDimensions } from "@/hooks/use-window-dimensions";
 import { Box } from "@/components/ui/box";
 
 const TabsLayout = () => {
-	const { isMobile, isTablet } = useSizes();
+	const { isSmall } = useSizes();
 	const { width } = useWindowDimensions();
-	const isMobileOrTablet = isMobile || isTablet;
 	return (
 		<Box className="flex-1 bg-background-tajfi-white">
 			<DesktopHeader />
 			<View
-				className={isMobileOrTablet ? "" : "relative flex justify-center"}
+				className={isSmall ? "" : "relative flex justify-center"}
 				style={
-					isMobileOrTablet
+					isSmall
 						? styles.mobileContainer
 						: [styles.desktopContainer, { width }]
 				}
@@ -54,7 +53,6 @@ const styles = StyleSheet.create({
 		alignSelf: "center",
 		marginTop: "auto",
 		marginBottom: "auto",
-		// boxShadow: "10px 10px 5px 12px rgb(209, 218, 218)",
 	},
 });
 

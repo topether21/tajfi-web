@@ -26,7 +26,7 @@ export const DesktopHomeView = () => {
 		loginButtonText,
 		login,
 		profile,
-		logout,
+		isLoading,
 	} = useHomeLogin();
 
 	return (
@@ -84,6 +84,7 @@ export const DesktopHomeView = () => {
 								profile={profile}
 								loginButtonText={loginButtonText}
 								setShowModal={setShowModal}
+								isLoading={isLoading}
 							/>
 						</Box>
 						<Box className="lg:w-1/2 flex justify-center items-center">
@@ -107,6 +108,8 @@ export const DesktopHomeView = () => {
 								<a
 									href="https://github.com/habibitcoin/tajfi-server"
 									className="text-muted-foreground hover:text-primary transition-colors"
+									rel="noopener noreferrer"
+									target="_blank"
 								>
 									<Github className="w-7 h-7" color={HEX_COLORS.tajfiWhite} />
 								</a>

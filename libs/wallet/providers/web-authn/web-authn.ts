@@ -154,14 +154,10 @@ export class WebAuthnWallet implements WalletStrategy, WebAuthnProvider {
 		return sig;
 	}
 	async signTx(transaction: Transaction): Promise<string> {
-		// TODO: it is failing in the backend
 		const privKey = await this.retrievePrivateKey();
 		const hash = hexToUint8Array(transaction);
-		console.log("hash", hash);
 		const signature = await schnorr.sign(hash, privKey);
-		console.log("signature", signature);
 		const hexSignature = Buffer.from(signature).toString("hex");
-		console.log("hexSignature", hexSignature);
 		return hexSignature;
 	}
 	async getP2trAddress(pubkey: string): Promise<AddressInfo> {

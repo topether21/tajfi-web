@@ -7,11 +7,13 @@ export const TajfiLoginButton = ({
 	logout,
 	loginButtonText,
 	setShowModal,
+	isLoading,
 }: {
 	profile: WalletKeys | null;
 	logout?: () => void;
 	loginButtonText: string;
 	setShowModal: (show: boolean) => void;
+	isLoading: boolean;
 }) => {
 	return (
 		<Box className="justify-center flex-1 items-end">
@@ -20,9 +22,15 @@ export const TajfiLoginButton = ({
 				variant="solid"
 				action="primary"
 				className="rounded-full"
-				onPress={profile ? logout : () => setShowModal(true)}
+				onPress={
+					profile
+						? (logout || (() => { }))
+						: () => setShowModal(true)
+				}
+				accessibilityLabel={profile ? "Logout" : loginButtonText}
+				disabled={isLoading}
 			>
-				<ButtonText>{profile ? "Logout" : loginButtonText}</ButtonText>
+				<ButtonText>{isLoading ? "Please wait..." : (profile ? "Logout" : loginButtonText)}</ButtonText>
 			</Button>
 		</Box>
 	);

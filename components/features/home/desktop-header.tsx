@@ -17,6 +17,7 @@ export const DesktopHeader = () => {
 		login,
 		profile,
 		logout,
+		isLoading,
 	} = useHomeLogin();
 	if (isMobile) return null;
 	return (
@@ -38,6 +39,7 @@ export const DesktopHeader = () => {
 				logout={logout}
 				loginButtonText={loginButtonText}
 				setShowModal={setShowModal}
+				isLoading={isLoading}
 			/>
 		</Box>
 	);

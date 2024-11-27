@@ -16,7 +16,6 @@ import { TajfiGradient } from "@/components/containers/tajfi-gradient";
 import { TajfiLoginButton } from "@/components/containers/tajfi-login-button";
 import { APP_FOOTER_DESCRIPTION } from "@/libs/constants";
 import { Github } from "lucide-react-native";
-import { APP_NAME } from "@/libs/constants";
 import { Text } from "@/components/ui/text";
 import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import { VStack } from "@/components/ui/vstack";
@@ -32,8 +31,8 @@ export const Footer = () => (
 			<a
 				href="https://github.com/habibitcoin/tajfi-server"
 				className="text-muted-foreground hover:text-primary transition-colors"
-				target="_blank"
 				rel="noopener noreferrer"
+				target="_blank"
 			>
 				<Github className="w-7 h-7" color={HEX_COLORS.tajfiWhite} />
 			</a>
@@ -49,6 +48,7 @@ const MobileHomeView = ({
 	loginButtonText,
 	profile,
 	logout,
+	isLoading,
 }: {
 	wallets: WalletProvider[];
 	showModal: boolean;
@@ -57,6 +57,7 @@ const MobileHomeView = ({
 	loginButtonText: string;
 	profile: WalletKeys | null;
 	logout: () => void;
+	isLoading: boolean;
 }) => (
 	<SafeAreaView className="w-full h-full items-center flex flex-col p-10">
 		<Box className="w-full h-full items-center flex flex-col">
@@ -74,6 +75,7 @@ const MobileHomeView = ({
 				logout={logout}
 				loginButtonText={loginButtonText}
 				setShowModal={setShowModal}
+				isLoading={isLoading}
 			/>
 		</Box>
 		<ConnectWalletModal
@@ -93,6 +95,7 @@ const DesktopHomeHero = ({
 	showModal,
 	wallets,
 	login,
+	isLoading,
 }: {
 	showModal: boolean;
 	wallets: WalletProvider[];
@@ -101,6 +104,7 @@ const DesktopHomeHero = ({
 	loginButtonText: string;
 	profile: WalletKeys | null;
 	logout: () => void;
+	isLoading: boolean;
 }) => (
 	<VStack className="w-full min-h-screen flex flex-col justify-between container mx-auto">
 		{/* Hero Section */}
@@ -116,6 +120,7 @@ const DesktopHomeHero = ({
 						logout={logout}
 						loginButtonText={loginButtonText}
 						setShowModal={setShowModal}
+						isLoading={isLoading}
 					/>
 				</Box>
 			</Box>
@@ -174,6 +179,7 @@ export const OnboardingScreen = () => {
 					loginButtonText={loginButtonText}
 					profile={profile}
 					logout={logout}
+					isLoading={isLoading}
 				/>
 			) : (
 				<SafeAreaView className="w-full h-full items-center flex-1 p-10">
@@ -186,6 +192,7 @@ export const OnboardingScreen = () => {
 							loginButtonText={loginButtonText}
 							profile={profile}
 							logout={logout}
+							isLoading={isLoading}
 						/>
 					</Box>
 				</SafeAreaView>

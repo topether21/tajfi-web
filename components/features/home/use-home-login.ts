@@ -19,8 +19,13 @@ export const useHomeLogin = () => {
 	const loginButtonText = shouldShowModal ? "Connect Wallet" : "Login";
 
 	const login = async (walletProvider: WalletProvider) => {
-		await handleConnectWallet(walletProvider);
-		setShowModal(false);
+		try {
+			await handleConnectWallet(walletProvider);
+			setShowModal(false);
+		} catch (error) {
+			// TODO: show error toast
+			console.error(error);
+		}
 	};
 
 	const isLoading = state.loading;
