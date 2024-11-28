@@ -53,4 +53,4 @@ export type WalletKeys = {
 	providerName: WalletProvider;
 };
 
-export type WalletProvider = "alby" | "nostr" | "oneKey" | "webAuthn" | "none";
+export type WalletProvider = "Alby" | "Nostr" | "OneKey" | "webAuthn" | "none";

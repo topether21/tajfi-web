@@ -19,6 +19,7 @@ import { Github } from "lucide-react-native";
 import { Text } from "@/components/ui/text";
 import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import { VStack } from "@/components/ui/vstack";
+import { Redirect } from 'expo-router';
 
 export const Footer = () => (
 	<HStack className="w-full justify-between items-center p-6 bg-background-tajfi-dark">
@@ -159,11 +160,24 @@ export const HomeScreen = () => {
 	} = useHomeLogin();
 	const { isSmall } = useSizes();
 
-	useEffect(() => {
-		if (profile) {
-			router.replace("/(tabs)/send");
-		}
-	}, [profile]);
+	// useEffect(() => {
+	// 	try {
+	// 		if (profile) {
+	// 			// router.push("/(tabs)/send");
+	// 			window.location.href = "/send";
+	// 			console.log("Pushed to send", profile);
+	// 		}
+	// 		alert(JSON.stringify({ profile, isLoading }, null, 2));
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 		alert(JSON.stringify({ error }, null, 2));
+	// 	}
+
+	// }, [profile]);
+
+	if (profile && !isLoading) {
+		return <Redirect href="/(tabs)/send" />;
+	}
 
 	if (isLoading || profile) {
 		return <TajfiGradient />;

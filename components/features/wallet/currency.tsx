@@ -1,4 +1,3 @@
-import { TetherUSDT } from "@/components/icons/tether";
 import { Avatar } from "@/components/ui/avatar";
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
@@ -31,7 +30,7 @@ export const CurrencySelector = ({ onPress }: { onPress?: () => void }) => {
 						</Avatar>
 						<Box className="align-center justify-center">
 							<Box className="flex-row items-center justify-center space-x-2">
-								<Heading size="sm" className="text-white">
+								<Heading size="sm" className="text-background-tajfi-deep-blue">
 									{currency}
 								</Heading>
 								<Icon

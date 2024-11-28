@@ -29,7 +29,7 @@ export const ConnectWalletModal = ({
 	login: (provider: WalletProvider) => Promise<void>;
 }) => {
 	const walletIcon = (wallet: WalletProvider) => {
-		if (wallet === "nostr") {
+		if (wallet === "Nostr") {
 			return (
 				<Image
 					source={require("@/assets/icons/nostr.png")}
@@ -41,10 +41,10 @@ export const ConnectWalletModal = ({
 		if (wallet === "webAuthn") {
 			return <TajfiNameLogoDeepBlue width={45} height={45} />;
 		}
-		if (wallet === "oneKey") {
+		if (wallet === "OneKey") {
 			return <Icon as={OneKeyIcon} style={{ height: 45, width: 45 }} />;
 		}
-		if (wallet === "alby") {
+		if (wallet === "Alby") {
 			return <Icon as={AlbyIcon} style={{ height: 45, width: 45 }} />;
 		}
 	};

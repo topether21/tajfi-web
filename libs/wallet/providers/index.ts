@@ -7,11 +7,11 @@ export const getProviderStrategy = (
 	provider: WalletProvider,
 ): WalletStrategy => {
 	switch (provider) {
-		case "alby":
+		case "Alby":
 			return createProvider({ windowKey: "alby", providerName: "Alby" });
-		case "nostr":
+		case "Nostr":
 			return createProvider({ windowKey: "nostr", providerName: "Nostr" });
-		case "oneKey":
+		case "OneKey":
 			return createProvider({ windowKey: "$onekey", providerName: "OneKey" });
 		case "webAuthn":
 			return new WebAuthnWallet();
@@ -55,9 +55,9 @@ export const getEnabledProviders = async () => {
 			isWebAuthnEnabled(),
 		]);
 	const providers: WalletProvider[] = [];
-	if (oneKeyEnabled) providers.push("oneKey");
-	if (albyEnabled) providers.push("alby");
-	if (nostrEnabled && !albyEnabled && !oneKeyEnabled) providers.push("nostr");
+	if (oneKeyEnabled) providers.push("OneKey");
+	if (albyEnabled) providers.push("Alby");
+	if (nostrEnabled && !albyEnabled && !oneKeyEnabled) providers.push("Nostr");
 	if (webAuthnEnabled) providers.push("webAuthn");
 	return providers;
 };
