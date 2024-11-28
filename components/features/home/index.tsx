@@ -1,17 +1,13 @@
 import { useSizes } from "@/hooks/useSizes";
-import { router } from "expo-router";
-import { useEffect } from "react";
-import { Platform, SafeAreaView } from "react-native";
+import { SafeAreaView } from "react-native";
 import { ConnectWalletModal } from "../wallet/connect-wallet";
 import { useHomeLogin } from "./use-home-login";
-const isWebview = require("is-ua-webview");
-
 import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
 import { Heading } from "@/components/ui/heading";
 import { TajfiNameLogo } from "@/components/containers/tajfi-logos/tajfi-name-logo";
 import { TajfiLogo } from "@/components/containers/tajfi-logos/tajfi-logo";
-import { useRendersCount } from "react-use/lib/useRendersCount";
+
 import type { WalletKeys, WalletProvider } from "@/libs/wallet/types";
 import { TajfiGradient } from "@/components/containers/tajfi-gradient";
 import { TajfiLoginButton } from "@/components/containers/tajfi-login-button";
@@ -21,6 +17,8 @@ import { Text } from "@/components/ui/text";
 import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import { VStack } from "@/components/ui/vstack";
 import { Redirect } from 'expo-router';
+import { isWebView } from "@/libs/utils";
+import clsx from "clsx";
 
 export const Footer = () => (
 	<HStack className="w-full justify-between items-center p-6 bg-background-tajfi-dark">
@@ -42,6 +40,17 @@ export const Footer = () => (
 	</HStack>
 );
 
+type HomeViewProps = {
+	wallets: WalletProvider[];
+	showModal: boolean;
+	setShowModal: (show: boolean) => void;
+	login: (wallet: WalletProvider) => Promise<void>;
+	loginButtonText: string;
+	profile: WalletKeys | null;
+	logout: () => void;
+	isLoading: boolean;
+};
+
 const MobileHomeView = ({
 	wallets,
 	showModal,
@@ -51,17 +60,8 @@ const MobileHomeView = ({
 	profile,
 	logout,
 	isLoading,
-}: {
-	wallets: WalletProvider[];
-	showModal: boolean;
-	setShowModal: (show: boolean) => void;
-	login: (wallet: WalletProvider) => Promise<void>;
-	loginButtonText: string;
-	profile: WalletKeys | null;
-	logout: () => void;
-	isLoading: boolean;
-}) => (
-	<SafeAreaView className="w-full h-full items-center flex flex-col p-10">
+}: HomeViewProps) => (
+	<SafeAreaView className={clsx("w-full h-full items-center flex flex-col", isWebView() ? "p-4" : "p-10")}>
 		<Box className="w-full h-full items-center flex flex-col">
 			<HStack className="items-center justify-start w-full mb-9">
 				<TajfiNameLogo />
@@ -72,15 +72,17 @@ const MobileHomeView = ({
 			<Box className="pb-11">
 				<TajfiLogo />
 			</Box>
-			<TajfiLoginButton
-				profile={profile}
-				logout={logout}
-				loginButtonText={loginButtonText}
-				setShowModal={setShowModal}
-				isLoading={isLoading}
-				wallets={wallets}
-				login={login}
-			/>
+			<Box className={clsx(isWebView() && "pb-11")}>
+				<TajfiLoginButton
+					profile={profile}
+					logout={logout}
+					loginButtonText={loginButtonText}
+					setShowModal={setShowModal}
+					isLoading={isLoading}
+					wallets={wallets}
+					login={login}
+				/>
+			</Box>
 		</Box>
 		<ConnectWalletModal
 			showModal={showModal}
@@ -100,16 +102,7 @@ const DesktopHomeHero = ({
 	wallets,
 	login,
 	isLoading,
-}: {
-	showModal: boolean;
-	wallets: WalletProvider[];
-	setShowModal: (show: boolean) => void;
-	login: (wallet: WalletProvider) => Promise<void>;
-	loginButtonText: string;
-	profile: WalletKeys | null;
-	logout: () => void;
-	isLoading: boolean;
-}) => (
+}: HomeViewProps) => (
 	<VStack className="w-full min-h-screen flex flex-col justify-between container mx-auto">
 		{/* Hero Section */}
 		<HStack className="w-full flex-1 items-center py-12">
@@ -162,16 +155,14 @@ export const HomeScreen = () => {
 	const { isSmall } = useSizes();
 
 	if (profile && !isLoading) {
-		if (Platform.OS === "web") {
-			// Check if running in webview to handle redirect appropriately
-			// since webview doesn't support router.push()
-			const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-			if (isWebview(userAgent)) {
-				window.location.href = "/send";
-			}
+		// Hack for OneKey webview
+		if (isWebView()) {
+			window.location.href = "/send";
+			return null;
 		}
 		return <Redirect href="/(tabs)/send" />;
 	}
+
 	if (isLoading || profile) {
 		return <TajfiGradient />;
 	}

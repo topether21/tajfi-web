@@ -14,6 +14,7 @@ import { useTabBarVisibility } from "./tab-bar-visibility-context";
 import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import { useSizes } from "@/hooks/useSizes";
 import useEffectOnce from "react-use/lib/useEffectOnce";
+import { isWebView } from "@/libs/utils";
 
 const TAB_BAR_HORIZONTAL_PADDING = 12;
 
@@ -69,8 +70,6 @@ export const BottomTabBar = ({
 	useEffect(() => {
 		updateTabPositionX();
 	}, [state.index, dimensions]);
-
-	console.log("dimensions", dimensions);
 
 	return (
 		<Animated.View
