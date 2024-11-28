@@ -1,9 +1,10 @@
 import { useSizes } from "@/hooks/useSizes";
 import { router } from "expo-router";
 import { useEffect } from "react";
-import { SafeAreaView } from "react-native";
+import { Platform, SafeAreaView } from "react-native";
 import { ConnectWalletModal } from "../wallet/connect-wallet";
 import { useHomeLogin } from "./use-home-login";
+const isWebview = require("is-ua-webview");
 
 import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
@@ -160,25 +161,17 @@ export const HomeScreen = () => {
 	} = useHomeLogin();
 	const { isSmall } = useSizes();
 
-	// useEffect(() => {
-	// 	try {
-	// 		if (profile) {
-	// 			// router.push("/(tabs)/send");
-	// 			window.location.href = "/send";
-	// 			console.log("Pushed to send", profile);
-	// 		}
-	// 		alert(JSON.stringify({ profile, isLoading }, null, 2));
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 		alert(JSON.stringify({ error }, null, 2));
-	// 	}
-
-	// }, [profile]);
-
 	if (profile && !isLoading) {
+		if (Platform.OS === "web") {
+			// Check if running in webview to handle redirect appropriately
+			// since webview doesn't support router.push()
+			const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+			if (isWebview(userAgent)) {
+				window.location.href = "/send";
+			}
+		}
 		return <Redirect href="/(tabs)/send" />;
 	}
-
 	if (isLoading || profile) {
 		return <TajfiGradient />;
 	}

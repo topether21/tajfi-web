@@ -2,6 +2,8 @@ import type { WalletProvider } from "@/libs/wallet/types";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useAuth } from "./auth-context";
+import { Platform } from "react-native";
+const isWebview = require("is-ua-webview");
 
 export const useWalletAuth = ({ onCancel }: { onCancel?: () => void }) => {
 	const [isConnecting, setIsConnecting] = useState(false);
@@ -27,6 +29,16 @@ export const useWalletAuth = ({ onCancel }: { onCancel?: () => void }) => {
 	const handleLogout = () => {
 		logout();
 		console.log("Logged out!");
+
+		if (Platform.OS === "web") {
+			// Check if running in webview to handle redirect appropriately
+			// since webview doesn't support router.push()
+			const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+			if (isWebview(userAgent)) {
+				window.location.href = "/";
+			}
+		}
+
 		router.push("/");
 	};
 
