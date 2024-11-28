@@ -85,6 +85,8 @@ export const DesktopHomeView = () => {
 								loginButtonText={loginButtonText}
 								setShowModal={setShowModal}
 								isLoading={isLoading}
+								wallets={wallets}
+								login={login}
 							/>
 						</Box>
 						<Box className="lg:w-1/2 flex justify-center items-center">

@@ -1,5 +1,5 @@
-import { OnboardingScreen } from "@/components/features/onboarding";
+import { HomeScreen } from "@/components/features/home";
 
 export default function App() {
-	return <OnboardingScreen />;
+	return <HomeScreen />;
 }

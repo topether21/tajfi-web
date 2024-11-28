@@ -40,6 +40,8 @@ export const DesktopHeader = () => {
 				loginButtonText={loginButtonText}
 				setShowModal={setShowModal}
 				isLoading={isLoading}
+				wallets={wallets}
+				login={login}
 			/>
 		</Box>
 	);

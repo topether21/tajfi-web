@@ -3,7 +3,7 @@ import { router } from "expo-router";
 import { useEffect } from "react";
 import { SafeAreaView } from "react-native";
 import { ConnectWalletModal } from "../wallet/connect-wallet";
-import { useHomeLogin } from "../home/use-home-login";
+import { useHomeLogin } from "./use-home-login";
 
 import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
@@ -76,6 +76,8 @@ const MobileHomeView = ({
 				loginButtonText={loginButtonText}
 				setShowModal={setShowModal}
 				isLoading={isLoading}
+				wallets={wallets}
+				login={login}
 			/>
 		</Box>
 		<ConnectWalletModal
@@ -121,6 +123,8 @@ const DesktopHomeHero = ({
 						loginButtonText={loginButtonText}
 						setShowModal={setShowModal}
 						isLoading={isLoading}
+						wallets={wallets}
+						login={login}
 					/>
 				</Box>
 			</Box>
@@ -142,10 +146,7 @@ const DesktopHomeHero = ({
 	</VStack>
 );
 
-export const OnboardingScreen = () => {
-	const rendersCount = useRendersCount();
-	console.log("rendersCount", rendersCount);
-
+export const HomeScreen = () => {
 	const {
 		wallets,
 		loginButtonText,

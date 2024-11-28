@@ -13,6 +13,7 @@ import { TabBarButton } from "./tab-bar-button";
 import { useTabBarVisibility } from "./tab-bar-visibility-context";
 import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import { useSizes } from "@/hooks/useSizes";
+import useEffectOnce from "react-use/lib/useEffectOnce";
 
 const TAB_BAR_HORIZONTAL_PADDING = 12;
 
@@ -33,6 +34,7 @@ export const BottomTabBar = ({
 	const buttonWidth = dimensions.width / (state.routes.length || 1);
 
 	const onTabBarLayout = (event: LayoutChangeEvent) => {
+		console.log("onTabBarLayout", event.nativeEvent.layout);
 		setDimensions({
 			width: event.nativeEvent.layout.width,
 			height: event.nativeEvent.layout.height,
@@ -40,7 +42,18 @@ export const BottomTabBar = ({
 	};
 
 	const calculateTabPositionX = (index: number) => {
+		console.log("calculateTabPositionX", { index, buttonWidth, circleSize, TAB_BAR_HORIZONTAL_PADDING });
 		return buttonWidth * index + buttonWidth / 2 - circleSize / 2 - TAB_BAR_HORIZONTAL_PADDING;
+	};
+
+	const updateTabPositionX = () => {
+		console.log("updateTabPositionX", state.index);
+		tabPositionX.value = withSpring(
+			calculateTabPositionX(state.index),
+			{
+				duration: 1500,
+			},
+		);
 	};
 
 	const tabPositionX = useSharedValue(0);
@@ -54,19 +67,10 @@ export const BottomTabBar = ({
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: only depends on state.index
 	useEffect(() => {
-		tabPositionX.value = withSpring(
-			calculateTabPositionX(state.index),
-			{
-				duration: 1500,
-			},
-		);
-	}, [state.index]);
+		updateTabPositionX();
+	}, [state.index, dimensions]);
 
-	const { isVisible } = useTabBarVisibility();
-
-	useEffect(() => {
-		opacity.value = withTiming(isVisible ? 1 : 0, { duration: 300 });
-	}, [isVisible, opacity]);
+	console.log("dimensions", dimensions);
 
 	return (
 		<Animated.View
@@ -105,12 +109,7 @@ export const BottomTabBar = ({
 				const isFocused = state.index === index;
 
 				const onPress = () => {
-					tabPositionX.value = withSpring(
-						calculateTabPositionX(state.index),
-						{
-							duration: 1500,
-						},
-					);
+					updateTabPositionX();
 					const event = navigation.emit({
 						type: "tabPress",
 						target: route.key,
