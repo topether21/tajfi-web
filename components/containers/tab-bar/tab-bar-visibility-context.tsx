@@ -1,6 +1,7 @@
 import type React from "react";
 import { createContext, useContext, useState } from "react";
 
+// TODO: IS THIS USED?
 interface TabBarVisibilityContextProps {
 	isVisible: boolean;
 	setIsVisible: (visible: boolean) => void;

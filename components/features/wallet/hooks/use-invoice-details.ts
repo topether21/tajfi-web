@@ -6,7 +6,6 @@ export const useInvoiceDetails = () => {
 	const [errorMessage, setErrorMessage] = useState("");
 	const [{ loading, error, value }, fetchInvoiceDetails] = useAsyncFn(
 		async (newInvoice: string) => {
-			console.log("fetching invoice details");
 			setErrorMessage("");
 			if (!newInvoice.trim()) return null;
 			try {

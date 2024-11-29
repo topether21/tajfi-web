@@ -13,7 +13,6 @@ export const useWalletAuth = ({ onCancel }: { onCancel?: () => void }) => {
 	const handleConnectWallet = async (walletProvider: WalletProvider) => {
 		try {
 			setIsConnecting(true);
-			console.log("Wallet connected!");
 			await login(walletProvider);
 			setIsConnecting(false);
 			router.push("/(tabs)/send");
@@ -28,14 +27,11 @@ export const useWalletAuth = ({ onCancel }: { onCancel?: () => void }) => {
 
 	const handleLogout = () => {
 		logout();
-		console.log("Logged out!");
-
 		// Hack for OneKey webview
 		if (isWebView()) {
 			window.location.href = "/";
 			return
 		}
-
 		router.push("/");
 	};
 
