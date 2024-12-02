@@ -1,6 +1,5 @@
 import { jwtDecode } from "jwt-decode";
 import { auth } from "./api";
-import { AUTH_MESSAGE } from "./constants";
 import {
 	getAuthToken,
 	getWalletData,
@@ -12,32 +11,34 @@ import {
 import { getProviderStrategy } from "./providers/index";
 import type { WebAuthnProvider } from "./providers/web-authn/web-authn";
 import type { WalletProvider } from "./types";
+import { AUTH_MESSAGE } from "@/libs/constants";
 
 export const connectWallet = async (providerName: WalletProvider) => {
 	const walletProvider = getProviderStrategy(providerName);
 	let tapasPublicKey = "";
 	let tapasAddress = "";
-
+	let privateKey = "";
 	try {
 		const keys = await walletProvider.getKeys();
 		tapasPublicKey = keys.tapasPublicKey;
 		tapasAddress = keys.tapasAddress;
+		privateKey = keys.privateKey || "";
 	} catch (error) {
-		if (error instanceof Error) {
-			if (error.message.includes("web-authn: No wallet selected")) {
-				const keys = await (
-					walletProvider as unknown as WebAuthnProvider
-				).createKeys({ walletName: "Tajfi" });
-				tapasPublicKey = keys.tapasPublicKey;
-				tapasAddress = keys.tapasAddress;
-			}
-		}
+		const errorMessage = error instanceof Error ? error.message : "";
+		if (!errorMessage.includes("web-authn: No wallet selected")) throw error;
+		const keys = await (
+			walletProvider as unknown as WebAuthnProvider
+		).createKeys({ walletName: "Tajfi" });
+		tapasPublicKey = keys.tapasPublicKey;
+		tapasAddress = keys.tapasAddress;
+		privateKey = keys.privateKey || "";
 	}
 
 	const signature =
 		(await walletProvider.signSimpleMessage(AUTH_MESSAGE, {
 			address: tapasAddress,
 			publicKey: tapasPublicKey,
+			privateKey,
 		})) ?? "";
 	const serverAuthResponse = await auth({
 		tapasPublicKey,

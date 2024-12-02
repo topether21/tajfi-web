@@ -1,16 +1,15 @@
-import { TetherUSDT } from "@/components/icons/tether";
 import { Avatar } from "@/components/ui/avatar";
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { ChevronDownIcon, Icon } from "@/components/ui/icon";
 
-import { TAB_BAR_ACTIVE_BACKGROUND_COLOR } from "@/components/containers/tab-bar/colors";
 import { VStack } from "@/components/ui/vstack";
 import { useStore } from "@nanostores/react";
 import { TouchableOpacity, View } from "react-native";
 import { $assetId } from "./hooks/asset-id-store";
 import { useBalances } from "./hooks/use-balances";
+import { CurrencyLogoIcon } from "@/components/icons/currency-logo";
 
 export const CurrencySelector = ({ onPress }: { onPress?: () => void }) => {
 	const { currencies } = useBalances();
@@ -23,17 +22,21 @@ export const CurrencySelector = ({ onPress }: { onPress?: () => void }) => {
 				<VStack space="2xl">
 					<HStack space="md">
 						<Avatar className="bg-background-0">
-							<Icon as={TetherUSDT} size="xl" className="stroke-white" />
+							<CurrencyLogoIcon
+								assetId={assetId}
+								height={30}
+								width={30}
+							/>
 						</Avatar>
 						<Box className="align-center justify-center">
 							<Box className="flex-row items-center justify-center space-x-2">
-								<Heading size="sm" className="text-white">
+								<Heading size="sm" className="text-background-tajfi-deep-blue">
 									{currency}
 								</Heading>
 								<Icon
 									as={ChevronDownIcon}
-									size="sm"
-									color={TAB_BAR_ACTIVE_BACKGROUND_COLOR}
+									size="xl"
+									className="stroke-background-tajfi-deep-blue"
 								/>
 							</Box>
 						</Box>

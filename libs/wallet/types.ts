@@ -36,6 +36,14 @@ declare global {
 				signMessage: (message: string) => Promise<string>;
 			};
 		};
+		alby?: {
+			nostr?: {
+				signSchnorr: (message: string) => Promise<string>;
+				enable: () => Promise<void>;
+				signMessage: (message: string) => Promise<string>;
+				getPublicKey: () => Promise<string>;
+			};
+		};
 	}
 }
 
@@ -45,4 +53,4 @@ export type WalletKeys = {
 	providerName: WalletProvider;
 };
 
-export type WalletProvider = "alby" | "oneKey" | "webAuthn" | "none";
+export type WalletProvider = "Alby" | "Nostr" | "OneKey" | "webAuthn" | "none";

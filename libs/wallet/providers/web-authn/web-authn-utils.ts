@@ -11,7 +11,13 @@ export const hexToUint8Array = (hex: string): Uint8Array => {
 		bytes[i / 2] = Number.parseInt(hex.substring(i, i + 2), 16);
 	}
 	return bytes;
-}
+};
+
+export const stringToHex = (str: string): string => {
+	return Array.from(str)
+		.map((char) => char.charCodeAt(0).toString(16).padStart(2, "0"))
+		.join("");
+};
 
 export const base64ToUint8Array = (base64: string): Uint8Array => {
 	const binaryString = atob(base64);

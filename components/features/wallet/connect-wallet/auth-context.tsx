@@ -62,8 +62,6 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 
 	const auth: AuthContextType = { profile, login, logout, error };
 
-	console.log("auth", auth);
-
 	return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
 };
 

@@ -19,8 +19,8 @@ export const UserCurrencies = ({
 	const { userBalances } = useBalances();
 	return (
 		<Actionsheet isOpen={isOpen} onClose={handleClose}>
-			<ActionsheetBackdrop />
-			<ActionsheetContent>
+			<ActionsheetBackdrop className="bg-background-tajfi-blue" />
+			<ActionsheetContent className="bg-background-tajfi-deep-blue border-background-tajfi-deep-blue">
 				<ActionsheetDragIndicatorWrapper>
 					<ActionsheetDragIndicator />
 				</ActionsheetDragIndicatorWrapper>

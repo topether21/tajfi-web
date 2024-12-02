@@ -1,4 +1,3 @@
-import { TAB_BAR_ACTIVE_BACKGROUND_COLOR } from "@/components/containers/tab-bar/colors";
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
@@ -15,7 +14,6 @@ export const SimpleCurrencySelector = ({
 	const { currencies } = useBalances();
 	const receiveAssetId = useStore($receiveAssetId);
 	const currency = currencies.get(receiveAssetId);
-	console.log("currency", currency);
 	if (!currency) return null;
 	return (
 		<VStack space="2xl">
@@ -25,13 +23,13 @@ export const SimpleCurrencySelector = ({
 					onPress={handleOpen}
 				>
 					<Box className="flex-row items-center justify-center space-x-2">
-						<Heading size="sm" className="text-white">
+						<Heading size="sm" className="text-background-tajfi-deep-blue">
 							{currency}
 						</Heading>
 						<Icon
 							as={ChevronDownIcon}
-							size="sm"
-							color={TAB_BAR_ACTIVE_BACKGROUND_COLOR}
+							size="xl"
+							className="stroke-background-tajfi-deep-blue"
 						/>
 					</Box>
 				</TouchableOpacity>

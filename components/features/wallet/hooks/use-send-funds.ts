@@ -39,7 +39,6 @@ export const useSendFunds = () => {
 			tapasAddress: string;
 			fundedPsbt: string;
 		}) => {
-			console.log("sending funds sendFundsComplete");
 			setErrorMessage("");
 			if (!sighashHexToSign) return false;
 			try {

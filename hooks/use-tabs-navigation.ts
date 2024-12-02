@@ -1,5 +1,6 @@
 import { useSegments } from "expo-router";
 
+// TODO: IS THIS USED?
 export const useTabsNavigation = (tabs: string[]) => {
 	const segments = useSegments();
 	const currentTab = segments.join("/");

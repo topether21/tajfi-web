@@ -1,6 +1,4 @@
-import { APP_NAME } from "@/constants/constants";
 import { schnorr } from "@noble/curves/secp256k1";
-import { sha256 } from "@noble/hashes/sha256";
 import * as secp from "@noble/secp256k1";
 import { getP2trAddress } from "../bitcoin";
 import type { AddressInfo, Transaction, WalletStrategy } from "../shared";
@@ -15,23 +13,17 @@ import {
 	base64ToUint8Array,
 	derivePublicKeyFromPrivate,
 	hexToUint8Array,
-	encodeNpub,
 	uint8ArrayToBase64,
+	stringToHex,
 } from "./web-authn-utils";
 import { generateChallenge } from "./web-authn-utils";
-
-interface Wallet {
-	id: string;
-	walletName: string;
-	publicKey: string;
-	npub1Key: string;
-	p2trAddress: string;
-}
+import { APP_NAME } from "@/libs/constants";
 
 export interface WebAuthnProvider {
 	createKeys({ walletName }: { walletName: string }): Promise<{
 		tapasPublicKey: string;
 		tapasAddress: string;
+		privateKey?: string;
 	}>;
 }
 
@@ -69,6 +61,7 @@ export class WebAuthnWallet implements WalletStrategy, WebAuthnProvider {
 	async createKeys({ walletName }: { walletName: string }): Promise<{
 		tapasPublicKey: string;
 		tapasAddress: string;
+		privateKey?: string;
 	}> {
 		const privKey = secp.utils.randomPrivateKey();
 		const pubKey = secp.getPublicKey(privKey, true);
@@ -104,26 +97,21 @@ export class WebAuthnWallet implements WalletStrategy, WebAuthnProvider {
 			const p2trAddress =
 				(await getP2trAddress(compactPublicKey)).address || "";
 
-			// Maybe later we will need to store the npub1 key
-			// const npub1 = encodeNpub(compactPublicKey);
-			// this.currentWallet = {
-			// 	id: keyId,
-			// 	walletName,
-			// 	publicKey: compactPublicKey,
-			// 	npub1Key: npub1,
-			// 	p2trAddress,
-			// };
-
 			return {
 				tapasPublicKey: compactPublicKey,
 				tapasAddress: p2trAddress,
+				privateKey: compactPrivateKey,
 			};
 		} catch (error) {
 			console.error("web-authn: Failed to create keys", error);
 			throw error;
 		}
 	}
-	async getKeys(): Promise<{ tapasPublicKey: string; tapasAddress: string }> {
+	async getKeys(): Promise<{
+		tapasPublicKey: string;
+		tapasAddress: string;
+		privateKey?: string;
+	}> {
 		const storedCurrentId = await getCurrentWalletId();
 		if (!storedCurrentId) {
 			throw new Error("web-authn: No wallet selected");
@@ -152,23 +140,24 @@ export class WebAuthnWallet implements WalletStrategy, WebAuthnProvider {
 		return {
 			tapasPublicKey: compactPublicKey,
 			tapasAddress: p2trAddress,
+			privateKey: decryptedPrivateKey,
 		};
 	}
-	async signSimpleMessage(message: string): Promise<string> {
-		const privKey = await this.retrievePrivateKey();
-		const hash = sha256(new TextEncoder().encode(message));
+	async signSimpleMessage(
+		message: string,
+		options: { privateKey?: string } = {},
+	): Promise<string> {
+		const privKey = options.privateKey || (await this.retrievePrivateKey());
+		const hexMessage = stringToHex(message);
+		const hash = hexToUint8Array(hexMessage);
 		const sig = Buffer.from(await schnorr.sign(hash, privKey)).toString("hex");
 		return sig;
 	}
 	async signTx(transaction: Transaction): Promise<string> {
-		// TODO: it is failing in the backend
 		const privKey = await this.retrievePrivateKey();
 		const hash = hexToUint8Array(transaction);
-		console.log("hash", hash);
 		const signature = await schnorr.sign(hash, privKey);
-		console.log("signature", signature);
 		const hexSignature = Buffer.from(signature).toString("hex");
-		console.log("hexSignature", hexSignature);
 		return hexSignature;
 	}
 	async getP2trAddress(pubkey: string): Promise<AddressInfo> {

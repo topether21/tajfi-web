@@ -6,24 +6,23 @@
 		"paths": {
 			"@/*": ["./*"],
 			"tailwind.config": ["./tailwind.config.js"]
-		}
+		},
+		"skipLibCheck": true
 	},
-	"exclude": [
-		"node_modules",
-		"dist",
-		"test",
-		"labs",
-		"_legacy",
-		"components/ui/**/*.ts",
-		"components/ui/**/*.tsx",
-		"_app_onboard/**/*.ts",
-		"_app_onboard/**/*.tsx"
-	],
 	"include": [
 		"**/*.ts",
 		"**/*.tsx",
 		".expo/types/**/*.ts",
 		"expo-env.d.ts",
 		"nativewind-env.d.ts"
+	],
+	"exclude": [
+		"components/ui/**/*",
+		"node_modules",
+		"dist",
+		"test",
+		"labs",
+		"_legacy",
+		"_app_onboard/**/*.{ts,tsx}"
 	]
 }

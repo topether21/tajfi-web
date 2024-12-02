@@ -1,6 +1,5 @@
 import type { WalletProvider } from "../types";
-import { AlbyWallet } from "./alby";
-import { OneKeyWallet } from "./onekey";
+import { createProvider } from "./nostr";
 import type { WalletStrategy } from "./shared";
 import { WebAuthnWallet } from "./web-authn/web-authn";
 
@@ -8,10 +7,12 @@ export const getProviderStrategy = (
 	provider: WalletProvider,
 ): WalletStrategy => {
 	switch (provider) {
-		case "alby":
-			return new AlbyWallet();
-		case "oneKey":
-			return new OneKeyWallet();
+		case "Alby":
+			return createProvider({ windowKey: "alby", providerName: "Alby" });
+		case "Nostr":
+			return createProvider({ windowKey: "nostr", providerName: "Nostr" });
+		case "OneKey":
+			return createProvider({ windowKey: "$onekey", providerName: "OneKey" });
 		case "webAuthn":
 			return new WebAuthnWallet();
 		default:
@@ -20,6 +21,10 @@ export const getProviderStrategy = (
 };
 
 const isAlbyEnabled = async () => {
+	return typeof window.alby !== "undefined";
+};
+
+const isNostrEnabled = async () => {
 	return typeof window?.nostr?.enable !== "undefined";
 };
 
@@ -36,25 +41,23 @@ const isWebAuthnEnabled = async () => {
 		typeof navigator.credentials.get !== "undefined" &&
 		typeof PublicKeyCredential !== "undefined" &&
 		typeof PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable !==
-			"undefined" &&
+		"undefined" &&
 		(await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable());
 	return supportsWebAuthn;
 };
 
 export const getEnabledProviders = async () => {
-	const [albyEnabled, oneKeyEnabled, webAuthnEnabled] = await Promise.all([
-		isAlbyEnabled(),
-		isOneKeyEnabled(),
-		isWebAuthnEnabled(),
-	]);
+	const [albyEnabled, nostrEnabled, oneKeyEnabled, webAuthnEnabled] =
+		await Promise.all([
+			isAlbyEnabled(),
+			isNostrEnabled(),
+			isOneKeyEnabled(),
+			isWebAuthnEnabled(),
+		]);
 	const providers: WalletProvider[] = [];
-	if (oneKeyEnabled && albyEnabled) {
-		providers.push("oneKey");
-	} else if (oneKeyEnabled) {
-		providers.push("oneKey");
-	} else if (albyEnabled) {
-		providers.push("alby");
-	}
+	if (oneKeyEnabled) providers.push("OneKey");
+	if (albyEnabled) providers.push("Alby");
+	if (nostrEnabled && !albyEnabled && !oneKeyEnabled) providers.push("Nostr");
 	if (webAuthnEnabled) providers.push("webAuthn");
 	return providers;
 };

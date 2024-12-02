@@ -1,6 +1,5 @@
 import { AlbyIcon } from "@/components/icons/alby";
 import { OneKeyIcon } from "@/components/icons/onekey";
-import { TajfiIcon } from "@/components/icons/tajfi";
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
 import { CloseIcon, Icon } from "@/components/ui/icon";
@@ -15,17 +14,8 @@ import {
 import { Text } from "@/components/ui/text";
 import type { WalletProvider } from "@/libs/wallet/types";
 import { TouchableOpacity } from "react-native";
-
-const getIcon = (wallet: WalletProvider) => {
-	switch (wallet) {
-		case "webAuthn":
-			return TajfiIcon;
-		case "oneKey":
-			return OneKeyIcon;
-		case "alby":
-			return AlbyIcon;
-	}
-};
+import { Image } from "expo-image";
+import { TajfiNameLogoDeepBlue } from "@/components/containers/tajfi-logos/tajfi-name-logo-deep-blue";
 
 export const ConnectWalletModal = ({
 	showModal,
@@ -38,6 +28,33 @@ export const ConnectWalletModal = ({
 	wallets: WalletProvider[];
 	login: (provider: WalletProvider) => Promise<void>;
 }) => {
+	const walletIcon = (wallet: WalletProvider) => {
+		if (wallet === "Nostr") {
+			return (
+				<Image
+					source={require("@/assets/icons/nostr.png")}
+					contentFit="cover"
+					style={{ height: 45, width: 45 }}
+				/>
+			);
+		}
+		if (wallet === "webAuthn") {
+			return <TajfiNameLogoDeepBlue width={45} height={45} />;
+		}
+		if (wallet === "OneKey") {
+			return <Icon as={OneKeyIcon} style={{ height: 45, width: 45 }} />;
+		}
+		if (wallet === "Alby") {
+			return <Icon as={AlbyIcon} style={{ height: 45, width: 45 }} />;
+		}
+	};
+
+	const walletName = (wallet: WalletProvider) => {
+		if (wallet !== "webAuthn") {
+			return <Text className="text-sm font-medium">{wallet}</Text>;
+		}
+	};
+
 	return (
 		<Modal isOpen={showModal} onClose={onClose} size="md">
 			<ModalBackdrop />
@@ -55,7 +72,6 @@ export const ConnectWalletModal = ({
 				<ModalBody>
 					<Box className="grid grid-cols-2 gap-4 sm:grid-cols-3 p-4">
 						{wallets.map((wallet) => {
-							const IconComponent = getIcon(wallet);
 							return (
 								<TouchableOpacity
 									key={wallet}
@@ -65,12 +81,9 @@ export const ConnectWalletModal = ({
 									}}
 								>
 									<Box className="rounded-full  flex items-center justify-center">
-										<Icon
-											as={IconComponent}
-											style={{ height: 45, width: 45 }}
-										/>
+										{walletIcon(wallet)}
 									</Box>
-									<Text className="text-sm font-medium">{wallet}</Text>
+									{walletName(wallet)}
 								</TouchableOpacity>
 							);
 						})}

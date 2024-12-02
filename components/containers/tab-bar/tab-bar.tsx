@@ -1,27 +1,25 @@
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useLinkBuilder } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { type LayoutChangeEvent, StyleSheet } from "react-native";
+import { type LayoutChangeEvent, Platform, StyleSheet } from "react-native";
 import Animated, {
 	useAnimatedStyle,
 	useSharedValue,
 	withSpring,
-	withTiming,
 } from "react-native-reanimated";
-import {
-	TAB_BAR_ACTIVE_BACKGROUND_COLOR,
-	TAB_BAR_BACKGROUND_COLOR,
-} from "./colors";
+
 import { TabBarButton } from "./tab-bar-button";
-import { useTabBarVisibility } from "./ tab-bar-visibility-context";
+import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import { useSizes } from "@/hooks/useSizes";
+
+const TAB_BAR_HORIZONTAL_PADDING = 12;
 
 export const BottomTabBar = ({
 	state,
 	descriptors,
 	navigation,
 }: BottomTabBarProps) => {
-	const { isMobile } = useSizes();
+	const { isSmall } = useSizes();
 	const opacity = useSharedValue(1);
 
 	const animatedStyle = useAnimatedStyle(() => ({
@@ -39,6 +37,19 @@ export const BottomTabBar = ({
 		});
 	};
 
+	const calculateTabPositionX = (index: number) => {
+		return buttonWidth * index + buttonWidth / 2 - circleSize / 2 - TAB_BAR_HORIZONTAL_PADDING;
+	};
+
+	const updateTabPositionX = () => {
+		tabPositionX.value = withSpring(
+			calculateTabPositionX(state.index),
+			{
+				duration: 1000,
+			},
+		);
+	};
+
 	const tabPositionX = useSharedValue(0);
 	const animatedBackgroundStyle = useAnimatedStyle(() => {
 		return {
@@ -46,23 +57,22 @@ export const BottomTabBar = ({
 		};
 	});
 
-	useEffect(() => {
-		tabPositionX.value = withSpring(buttonWidth * state.index, {
-			duration: 1500,
-		});
-	}, [state.index, buttonWidth, tabPositionX]);
-
 	const circleSize = Math.min(dimensions.height - 15, buttonWidth - 25);
 
-	const { isVisible } = useTabBarVisibility();
-
+	// biome-ignore lint/correctness/useExhaustiveDependencies: only depends on state.index and dimensions
 	useEffect(() => {
-		opacity.value = withTiming(isVisible ? 1 : 0, { duration: 300 });
-	}, [isVisible, opacity]);
+		updateTabPositionX();
+	}, [state.index, dimensions]);
 
 	return (
 		<Animated.View
-			style={[styles.tabBar, animatedStyle]}
+			style={[
+				styles.tabBar,
+				animatedStyle,
+				{ maxWidth: isSmall ? "100%" : 270 },
+				{ borderRadius: isSmall ? 0 : 35 },
+				{ bottom: isSmall ? 0 : 20 },
+			]}
 			onLayout={onTabBarLayout}
 		>
 			<Animated.View
@@ -71,9 +81,9 @@ export const BottomTabBar = ({
 					animatedBackgroundStyle,
 					{
 						position: "absolute",
-						backgroundColor: TAB_BAR_ACTIVE_BACKGROUND_COLOR,
 						borderRadius: circleSize / 2,
-						marginHorizontal: 12,
+						backgroundColor: HEX_COLORS.tajfiBlue,
+						marginHorizontal: TAB_BAR_HORIZONTAL_PADDING,
 						height: circleSize,
 						width: circleSize,
 					},
@@ -91,9 +101,7 @@ export const BottomTabBar = ({
 				const isFocused = state.index === index;
 
 				const onPress = () => {
-					tabPositionX.value = withSpring(buttonWidth * index, {
-						duration: 1500,
-					});
+					updateTabPositionX();
 					const event = navigation.emit({
 						type: "tabPress",
 						target: route.key,
@@ -135,20 +143,26 @@ const styles = StyleSheet.create({
 	tabBar: {
 		flexDirection: "row",
 		position: "absolute",
-		bottom: 20,
 		justifyContent: "space-between",
 		alignItems: "center",
-		backgroundColor: TAB_BAR_BACKGROUND_COLOR,
+		backgroundColor: HEX_COLORS.tajfiDeepBlue,
 		marginHorizontal: "auto",
-		maxWidth: 270,
 		width: "100%",
 		paddingVertical: 15,
-		borderRadius: 35,
-		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 10 },
-		shadowOpacity: 0.1,
-		shadowRadius: 10,
-		elevation: 1,
+		...Platform.select({
+			ios: {
+				shadowColor: "rgba(0, 0, 0, 0.1)",
+				shadowOffset: { width: 0, height: 10 },
+				shadowOpacity: 1,
+				shadowRadius: 10,
+			},
+			android: {
+				elevation: 10,
+			},
+			web: {
+				boxShadow: "0 10px 10px rgba(0, 0, 0, 0.1)",
+			},
+		}),
 		alignSelf: "center",
 	},
 });
