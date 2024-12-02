@@ -42,7 +42,13 @@ export const useBalances = () => {
 
 	const {
 		data: balances = {
-			userBalances: [],
+			userBalances: [
+				{
+					amount: 0,
+					name: process.env.EXPO_PUBLIC_DEFAULT_ASSET_NAME,
+					assetId: process.env.EXPO_PUBLIC_DEFAULT_ASSET_ID,
+				},
+			],
 			currencies: new Map<string, string>(),
 		},
 		error,

@@ -1,9 +1,8 @@
-import { LoadingIcon } from "@/components/icons/loading-icon";
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { Text } from "@/components/ui/text";
-import { Tooltip, TooltipContent, TooltipText } from "@/components/ui/tooltip";
+import { Spinner } from "@/components/ui/spinner"
 import type { HistoryTransaction } from "@/libs/wallet/api";
 import clsx from "clsx";
 import { ArrowUpRight } from "lucide-react-native";
@@ -12,6 +11,8 @@ import React from "react";
 import { ScrollView, TouchableOpacity } from "react-native";
 import { useBalances } from "../hooks/use-balances";
 import { useHistory } from "../hooks/use-history";
+import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 const TransactionItem = ({
 	transaction,
@@ -21,7 +22,7 @@ const TransactionItem = ({
 	const date = new Date(Number.parseInt(transaction.timestamp) * 1000);
 	const formattedDate = date.toLocaleDateString();
 	const formattedTime = date.toLocaleTimeString();
-	const assetName = currencies.get(transaction.asset_id) || "Unknown";
+	const assetName = currencies.get(transaction.asset_id) || "";
 
 	return (
 		<HStack className="flex items-center justify-between py-4">
@@ -36,22 +37,10 @@ const TransactionItem = ({
 					)}
 				</Box>
 				<Box>
-					{/* <Text className="text-base font-semibold">
-						<Tooltip
-							placement="top"
-							trigger={(triggerProps) => (
-								<TouchableOpacity {...triggerProps}>
-									<Text>{assetName}</Text>
-								</TouchableOpacity>
-							)}
-						>
-							<TooltipContent>
-								<TooltipText>{transaction.asset_id}</TooltipText>
-							</TooltipContent>
-						</Tooltip>
-					</Text> */}
 					<TouchableOpacity>
-						<Text bold>{assetName}</Text>
+						<Animated.View entering={FadeIn} exiting={FadeOut}>
+							<Text bold>{assetName}</Text>
+						</Animated.View>
 					</TouchableOpacity>
 					<Text className="text-sm text-gray-500">
 						{formattedDate} {formattedTime}
@@ -82,21 +71,21 @@ export const HistoryScreen = () => {
 
 	return (
 		<>
-			<Box className="flex-1 items-start justify-start p-4 bg-background-0">
-				<Heading size="lg" className="mb-4 text-white">
+			<Box className="flex-1 items-start justify-start px-4 bg-background-0">
+				<Heading size="lg" className="mb-4 text-background-tajfi-deep-blue">
 					History
 				</Heading>
 				<ScrollView
 					className={clsx(
 						"w-full h-full",
 						loading && "flex-1 items-center justify-center",
-						transfers.length > 0 && "pb-24 justify-start",
+						transfers.length > 0 && "pb-28 justify-start",
 					)}
 				>
 					{loading ? (
-						<LoadingIcon />
+						<Spinner size="small" color={HEX_COLORS.tajfiDeepBlue} />
 					) : (
-						<>
+						<Animated.View entering={FadeIn} exiting={FadeOut}>
 							{transfers.length === 0 && <EmptyHistory />}
 							{transfers.map((transfer) => (
 								<TransactionItem
@@ -105,7 +94,18 @@ export const HistoryScreen = () => {
 									currencies={currencies}
 								/>
 							))}
-						</>
+						</Animated.View>
+						// <Animated.FlatList
+						// 	data={transfers}
+						// 	renderItem={({ item }) => (
+						// 		<TransactionItem
+						// 			transaction={item}
+						// 			currencies={currencies}
+						// 		/>
+						// 	)}
+						// 	keyExtractor={(item) => item.txid}
+						// 	itemLayoutAnimation={LinearTransition}
+						// />
 					)}
 				</ScrollView>
 			</Box>

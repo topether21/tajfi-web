@@ -50,8 +50,8 @@ export const ReceiveScreen = () => {
 	);
 	return (
 		<>
-			<Box className="flex-1 items-start justify-start p-4 bg-background-0">
-				<Heading size="lg" className="mb-4 text-white">
+			<Box className="flex-1 items-start justify-start px-4 bg-background-0">
+				<Heading size="lg" className="mb-4 text-background-tajfi-deep-blue">
 					Receive
 				</Heading>
 

@@ -22,6 +22,24 @@ export const COLORS = {
 	tajfiDeepBlue: hexToRgb(HEX_COLORS.tajfiDeepBlue),
 };
 
+const THEME_COLORS = {
+	"0": COLORS.tajfiDeepBlue,
+	"50": hexToRgb("#5eecff"),
+	"100": hexToRgb("#42e9ff"),
+	"200": COLORS.tajfiDeepBlue,
+	"300": hexToRgb("#09e2ff"),
+	"400": hexToRgb("#00d0eb"),
+	"500": COLORS.tajfiDeepBlue,
+	"600": hexToRgb("#00a0b5"),
+	"700": hexToRgb("#038c9e"),
+	"800": hexToRgb("#067b8b"),
+	"900": hexToRgb("#086b78"),
+	"950": hexToRgb("#0a5b66"),
+	"1000": hexToRgb("#0a4c54"),
+	"1050": hexToRgb("#0a3d44"),
+	"1100": hexToRgb("#092f34"),
+};
+
 export const config = {
 	// deep_blue
 	// Palette size: 14
@@ -145,18 +163,18 @@ export const config = {
 		"--color-typography-950": hexToRgb("#0a5b66"),
 
 		/* Outline */
-		"--color-outline-0": "253 254 254",
-		"--color-outline-50": "243 243 243",
-		"--color-outline-100": "230 230 230",
-		"--color-outline-200": "221 220 219",
-		"--color-outline-300": "211 211 211",
-		"--color-outline-400": "165 163 163",
-		"--color-outline-500": "140 141 141",
-		"--color-outline-600": "115 116 116",
-		"--color-outline-700": "83 82 82",
-		"--color-outline-800": "65 65 65",
-		"--color-outline-900": "39 38 36",
-		"--color-outline-950": "26 23 23",
+		"--color-outline-0": THEME_COLORS["0"],
+		"--color-outline-50": THEME_COLORS["50"],
+		"--color-outline-100": THEME_COLORS["100"],
+		"--color-outline-200": THEME_COLORS["200"],
+		"--color-outline-300": THEME_COLORS["300"],
+		"--color-outline-400": THEME_COLORS["400"],
+		"--color-outline-500": THEME_COLORS["500"],
+		"--color-outline-600": THEME_COLORS["600"],
+		"--color-outline-700": THEME_COLORS["700"],
+		"--color-outline-800": THEME_COLORS["800"],
+		"--color-outline-900": THEME_COLORS["900"],
+		"--color-outline-950": THEME_COLORS["950"],
 
 		/* Background */
 		"--color-background-0": hexToRgb("#ffffff"),

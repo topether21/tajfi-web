@@ -24,6 +24,9 @@ const icons = {
 	receive: (props: FeatherIconProps) => (
 		<Feather name="download" size={24} color="black" {...props} />
 	),
+	marketplace: (props: FeatherIconProps) => (
+		<Feather name="shopping-bag" size={24} color="black" {...props} />
+	),
 	history: (props: FeatherIconProps) => (
 		<Entypo name="back-in-time" size={24} color="black" {...props} />
 	),

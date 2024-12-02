@@ -45,11 +45,6 @@ export const ScannerModal = ({
 							<ActionsheetDragIndicator />
 						</ActionsheetDragIndicatorWrapper>
 						<QrScanner handleClose={handleClose} onQr={onQr} />
-						<View style={styles.buttonContainer}>
-							<Button onPress={handleClose} className="w-full">
-								<ButtonText>Close</ButtonText>
-							</Button>
-						</View>
 					</ActionsheetContent>
 				</Actionsheet>
 			</KeyboardAvoidingView>
@@ -119,10 +114,10 @@ export const QrScanner = ({
 					onPress={handleClose}
 					className="self-end"
 				>
-					<Icon as={CloseIcon} size="xl" color="white" />
+					<Icon as={CloseIcon} size="xl" className="stroke-background-tajfi-white" />
 				</TouchableOpacity>
 				<TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-					<Icon as={SwitchCamera} size="xl" color="white" />
+					<Icon as={SwitchCamera} size="xl" className="stroke-background-tajfi-white" />
 				</TouchableOpacity>
 			</CameraView>
 		</View>

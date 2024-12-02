@@ -5,17 +5,12 @@ import {
 	ActionsheetDragIndicator,
 	ActionsheetDragIndicatorWrapper,
 } from "@/components/ui/actionsheet";
-import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
 import { CloseIcon, Icon } from "@/components/ui/icon";
 import { Scanner } from "@yudiel/react-qr-scanner";
 import {
-	type BarcodeScanningResult,
-	type CameraType,
 	useCameraPermissions,
 } from "expo-camera";
-import { SwitchCamera } from "lucide-react-native";
-import { useState } from "react";
 import {
 	KeyboardAvoidingView,
 	Platform,
@@ -48,12 +43,6 @@ export const ScannerModal = ({
 						</ActionsheetDragIndicatorWrapper>
 
 						<QrScanner handleClose={handleClose} onQr={onQr} />
-
-						{/* <View style={styles.buttonContainer}>
-                            <Button onPress={handleClose} className="w-full">
-                                <ButtonText>Close</ButtonText>
-                            </Button>
-                        </View> */}
 					</ActionsheetContent>
 				</Actionsheet>
 			</KeyboardAvoidingView>

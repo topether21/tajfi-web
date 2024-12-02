@@ -69,7 +69,7 @@ export const BottomTabBar = ({
 			style={[
 				styles.tabBar,
 				animatedStyle,
-				{ maxWidth: isSmall ? "100%" : 270 },
+				{ maxWidth: isSmall ? "100%" : 350 },
 				{ borderRadius: isSmall ? 0 : 35 },
 				{ bottom: isSmall ? 0 : 20 },
 			]}

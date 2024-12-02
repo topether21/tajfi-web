@@ -15,7 +15,6 @@ export const CurrencySelector = ({ onPress }: { onPress?: () => void }) => {
 	const { currencies } = useBalances();
 	const assetId = useStore($assetId);
 	const currency = currencies.get(assetId);
-	if (!currency) return null;
 	return (
 		<View>
 			<TouchableOpacity onPress={() => onPress?.()}>
@@ -23,7 +22,7 @@ export const CurrencySelector = ({ onPress }: { onPress?: () => void }) => {
 					<HStack space="md">
 						<Avatar className="bg-background-0">
 							<CurrencyLogoIcon
-								assetId={assetId}
+								assetId={assetId || process.env.EXPO_PUBLIC_DEFAULT_ASSET_ID}
 								height={30}
 								width={30}
 							/>
@@ -31,7 +30,7 @@ export const CurrencySelector = ({ onPress }: { onPress?: () => void }) => {
 						<Box className="align-center justify-center">
 							<Box className="flex-row items-center justify-center space-x-2">
 								<Heading size="sm" className="text-background-tajfi-deep-blue">
-									{currency}
+									{currency || process.env.EXPO_PUBLIC_DEFAULT_ASSET_NAME}
 								</Heading>
 								<Icon
 									as={ChevronDownIcon}
