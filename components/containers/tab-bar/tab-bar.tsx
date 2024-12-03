@@ -125,8 +125,7 @@ export const BottomTabBar = ({
 					});
 				};
 
-				const href = buildHref(route.name, route.params);
-				console.log({ href, routeName: route.name, params: route.params });
+				const href = buildHref(route.name, route.params)?.replace("/undefined", "/");
 
 				return (
 					<TabBarButton

@@ -102,12 +102,6 @@ export const SendScreen = () => {
 		}, [resetInvoiceDetails, resetSendFunds]),
 	);
 
-	console.log("sent", {
-		error,
-		errorInvoice,
-		errorSend,
-	});
-
 	return (
 		<>
 			<Box className="flex-1 items-start justify-start bg-background-0 px-4">

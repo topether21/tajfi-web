@@ -5,7 +5,7 @@ import { ChevronDownIcon, Icon } from "@/components/ui/icon";
 import { VStack } from "@/components/ui/vstack";
 import { useStore } from "@nanostores/react";
 import { TouchableOpacity } from "react-native";
-import { $receiveAssetId } from "./hooks/asset-id-store";
+import { $receiveAssetId } from "../../../store/asset-id-store";
 import { useBalances } from "./hooks/use-balances";
 
 export const SimpleCurrencySelector = ({

@@ -5499,4 +5499,7 @@ export const ASSETS = [
       "normal"
     ]
   }
-]
+].map((asset) => ({
+  ...asset,
+  id: asset.id.toString(),
+}))

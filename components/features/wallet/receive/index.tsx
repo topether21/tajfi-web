@@ -16,7 +16,7 @@ import { TouchableOpacity } from "react-native";
 import type { View } from "react-native";
 import QRCode from "react-qr-code";
 import useAsync from "react-use/lib/useAsync";
-import { $receiveAssetId, resetReceiveAssetId } from "../hooks/asset-id-store";
+import { $receiveAssetId, resetReceiveAssetId } from "../../../../store/asset-id-store";
 import { useCreateInvoice } from "../hooks/use-create-invoice";
 import { useUserReceiveCurrency } from "../layout/use-user-receive-currency";
 import { UserCurrencies } from "../layout/user-currencies";

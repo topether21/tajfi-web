@@ -1,8 +1,8 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { ASSETS } from './assets'
 
 export type Asset = {
-  id: number
+  id: string
   name: string
   price: number
   image: string
