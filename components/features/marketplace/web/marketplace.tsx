@@ -35,12 +35,12 @@ export const AssetsMarketplace = () => {
         loadMoreItems={loadMoreItems}
         containerRef={containerRef}
       />
-      <Fab
+      {/* <Fab
         size="lg"
         className="bg-primary-600 hover:bg-primary-700 active:bg-primary-800"
       >
         <FabIcon as={ShoppingCartIcon} className="h-4 w-4 stroke-background-tajfi-white" />
-      </Fab>
+      </Fab> */}
       {/* <Fab
         size="lg"
         className="bg-primary-600 hover:bg-primary-700 active:bg-primary-800"

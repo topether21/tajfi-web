@@ -12,6 +12,7 @@ import { router } from 'expo-router'
 import { useStore } from '@nanostores/react'
 import { $checkoutAssetIds, addCheckoutAssetId, removeCheckoutAssetId } from '@/store/checkout-store'
 import { Plus } from 'lucide-react-native'
+import { Button, ButtonText } from '@/components/ui/button'
 
 interface GridAssetItemProps {
   item: Asset
@@ -38,36 +39,31 @@ export const GridAssetItem = ({ item }: GridAssetItemProps) => {
   return (
     <Pressable>
       <Card
-        className="m-2 overflow-hidden relative rounded-t-lg border"
+        className="m-2 overflow-hidden relative rounded-t-lg border group"
         style={{ height: MIN_CARD_HEIGHT }}
       >
-        <Pressable className="absolute top-2 right-2 z-10" onPress={toggleCheckout}>
+        {/* <Pressable className="absolute top-2 right-2 z-10" onPress={toggleCheckout}>
           <Badge className="bg-background-tajfi-deep-blue text-white p-1 rounded-full" >
             {isChecked ? <Check size={16} /> : <Plus size={16} />}
           </Badge>
-        </Pressable>
+        </Pressable> */}
         <Image
           source={item.image}
           alt={item.name}
           contentFit="contain"
-          className="select-none h-[85%] w-full"
+          className="select-none h-[87%] w-full"
           transition={500}
         />
         <Box>
           <Text className="text-xs font-bold capitalize">{item.name}</Text>
           <Text className="text-xs">{formatSatoshis(item.price)} BTC</Text>
         </Box>
+        <Box className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-full">
+          <Button className="bg-background-tajfi-deep-blue text-white w-full rounded-t-lg">
+            <ButtonText>Buy</ButtonText>
+          </Button>
+        </Box>
       </Card>
     </Pressable>
   )
 }
-
-const styles = StyleSheet.create({
-  image: {
-    height: '85%',
-    width: '100%',
-    backgroundColor: '#0553',
-    borderTopLeftRadius: 8,
-    borderTopRightRadius: 8,
-  },
-});
