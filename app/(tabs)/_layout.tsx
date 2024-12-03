@@ -33,6 +33,9 @@ const TabsLayout = () => {
 					/>
 					<Tabs.Screen
 						name="marketplace"
+						getId={
+							() => String(Date.now())
+						}
 						options={{ title: "Marketplace", headerShown: false }}
 					/>
 					<Tabs.Screen

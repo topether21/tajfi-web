@@ -17,7 +17,7 @@ type FeatherIconProps = {
 	size?: number;
 };
 
-const icons = {
+const icons: Record<string, (props: FeatherIconProps) => React.ReactNode> = {
 	send: (props: FeatherIconProps) => (
 		<Feather name="send" size={24} color="black" {...props} />
 	),
@@ -84,9 +84,11 @@ export const TabBarButton = ({
 			href={href}
 		>
 			<Animated.View style={animatedIconStyle}>
-				{icons[routeName as keyof typeof icons]({
-					color: HEX_COLORS.tajfiWhite,
-				})}
+				{icons[routeName as keyof typeof icons]?.(
+					{
+						color: HEX_COLORS.tajfiWhite,
+					}
+				)}
 			</Animated.View>
 			<Animated.Text
 				style={[

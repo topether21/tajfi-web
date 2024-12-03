@@ -11,6 +11,7 @@ import Animated, {
 import { TabBarButton } from "./tab-bar-button";
 import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import { useSizes } from "@/hooks/useSizes";
+import { Href, router } from "expo-router";
 
 const TAB_BAR_HORIZONTAL_PADDING = 12;
 
@@ -109,11 +110,15 @@ export const BottomTabBar = ({
 					});
 
 					if (!isFocused && !event.defaultPrevented) {
-						navigation.navigate(route.name, route.params);
+						console.log({
+							route
+						});
+						router.push(`/${route.name}` as Href);
 					}
 				};
 
 				const onLongPress = () => {
+					updateTabPositionX();
 					navigation.emit({
 						type: "tabLongPress",
 						target: route.key,
@@ -121,6 +126,7 @@ export const BottomTabBar = ({
 				};
 
 				const href = buildHref(route.name, route.params);
+				console.log({ href, routeName: route.name, params: route.params });
 
 				return (
 					<TabBarButton
