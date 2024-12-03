@@ -15,7 +15,7 @@ export default function AssetPage() {
         <>
             <Box className="flex-1 items-start justify-start px-4 bg-background-0">
                 <Heading size="lg" className="mb-4 text-background-tajfi-deep-blue">
-                    Marketplace
+                    My Assets
                 </Heading>
                 <ScrollView
                     className={clsx(

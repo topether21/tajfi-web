@@ -11,7 +11,8 @@ import Animated, {
 import { TabBarButton } from "./tab-bar-button";
 import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import { useSizes } from "@/hooks/useSizes";
-import { Href, router } from "expo-router";
+import type { Href } from "expo-router";
+import { router } from "expo-router";
 
 const TAB_BAR_HORIZONTAL_PADDING = 12;
 

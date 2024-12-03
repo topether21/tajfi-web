@@ -11,6 +11,10 @@ import Animated, {
 	interpolate,
 } from "react-native-reanimated";
 import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { Wallet } from "lucide-react-native";
 
 type FeatherIconProps = {
 	color?: string;
@@ -25,7 +29,10 @@ const icons: Record<string, (props: FeatherIconProps) => React.ReactNode> = {
 		<Feather name="download" size={24} color="black" {...props} />
 	),
 	marketplace: (props: FeatherIconProps) => (
-		<Feather name="shopping-bag" size={24} color="black" {...props} />
+		<AntDesign name="swap" size={24} color="black" {...props} />
+	),
+	profile: (props: FeatherIconProps) => (
+		<Wallet size={24} color="black" {...props} />
 	),
 	history: (props: FeatherIconProps) => (
 		<Entypo name="back-in-time" size={24} color="black" {...props} />
