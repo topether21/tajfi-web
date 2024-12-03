@@ -66,6 +66,7 @@
 		"@gorhom/bottom-sheet": "^5.0.5",
 		"@legendapp/motion": "^2.4.0",
 		"@lottiefiles/dotlottie-react": "^0.10.0",
+		"@nanostores/persistent": "^0.10.2",
 		"@nanostores/react": "^0.8.0",
 		"@noble/curves": "^1.6.0",
 		"@number-flow/react": "^0.3.0",
