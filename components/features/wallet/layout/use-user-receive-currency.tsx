@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { setReceiveAssetId } from "../hooks/asset-id-store";
+import { setReceiveAssetId } from "../../../../store/asset-id-store";
 
 export const useUserReceiveCurrency = () => {
 	const [isOpen, setIsOpen] = useState(false);

@@ -8,7 +8,6 @@ export const isWebView = () => {
         const userAgent = navigator.userAgent || navigator.vendor || window.opera;
         const webview = isWebview(userAgent);
         if (webview) {
-            console.log("isWebView", { userAgent, webview });
             return true
         }
     }

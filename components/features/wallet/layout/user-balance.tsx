@@ -7,7 +7,7 @@ import { useStore } from "@nanostores/react";
 import { LogOut } from "lucide-react-native";
 import { TouchableOpacity } from "react-native";
 import { useWalletAuth } from "../connect-wallet/use-connect-wallet";
-import { $assetId } from "../hooks/asset-id-store";
+import { $assetId } from "../../../../store/asset-id-store";
 import { useBalances } from "../hooks/use-balances";
 import { useUserCurrencies } from "./use-user-currencies";
 import { UserCurrencies } from "./user-currencies";

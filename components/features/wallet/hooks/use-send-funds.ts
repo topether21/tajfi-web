@@ -1,16 +1,17 @@
 import { sendComplete, sendStart } from "@/libs/wallet/api";
 import { getProviderStrategy } from "@/libs/wallet/providers";
 import type { WalletProvider } from "@/libs/wallet/types";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useAsyncFn } from "react-use";
 
 export const useSendFunds = () => {
-	const [errorMessage, setErrorMessage] = useState("");
+	const [error, setError] = useState<string | null>(null);
+
 	const [
-		{ loading: loadingStart, error: errorStart, value: preSignedData },
+		{ loading: loadingStart, value: preSignedData },
 		sendFundsStart,
 	] = useAsyncFn(async (invoice: string) => {
-		setErrorMessage("");
+		setError(null);
 		if (!invoice.trim()) return null;
 		try {
 			const res = await sendStart({ invoice });
@@ -19,13 +20,14 @@ export const useSendFunds = () => {
 				sighashHexToSign: res.sighash_hex_to_sign,
 			};
 		} catch (e) {
-			setErrorMessage((e as Error).message);
+			const message = (e as Error).message || "Unknown error";
+			setError(message);
 			return null;
 		}
-	});
+	}, []);
 
 	const [
-		{ loading: loadingComplete, error: errorComplete, value: isSent },
+		{ loading: loadingComplete, value: isSent },
 		sendFundsComplete,
 	] = useAsyncFn(
 		async ({
@@ -39,13 +41,14 @@ export const useSendFunds = () => {
 			tapasAddress: string;
 			fundedPsbt: string;
 		}) => {
-			setErrorMessage("");
+			setError(null);
 			if (!sighashHexToSign) return false;
 			try {
 				const walletProvider = getProviderStrategy(providerName);
 				const signatureHex = await walletProvider.signTx(sighashHexToSign, {
 					address: tapasAddress,
 				});
+				debugger;
 				await sendComplete({
 					psbt: fundedPsbt,
 					signature_hex: signatureHex,
@@ -53,14 +56,16 @@ export const useSendFunds = () => {
 				});
 				return true;
 			} catch (e) {
-				setErrorMessage((e as Error).message);
+				const message = (e as Error).message || "Unknown error";
+				setError(message);
 				return false;
 			}
 		},
+		[]
 	);
 
-	const reset = () => {
-		setErrorMessage("");
+	const reset = useCallback(() => {
+		setError(null);
 		sendFundsStart("");
 		sendFundsComplete({
 			sighashHexToSign: "",
@@ -68,11 +73,11 @@ export const useSendFunds = () => {
 			tapasAddress: "",
 			fundedPsbt: "",
 		});
-	};
+	}, [sendFundsStart, sendFundsComplete]);
 
 	return {
 		loading: loadingStart || loadingComplete,
-		error: errorMessage || errorStart?.message || errorComplete?.message,
+		error,
 		preSignedData: preSignedData ?? null,
 		isSent: isSent ?? false,
 		sendFundsStart,

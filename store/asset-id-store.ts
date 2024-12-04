@@ -13,3 +13,13 @@ export const setReceiveAssetId = (assetId: string) =>
 
 export const resetReceiveAssetId = () =>
 	$receiveAssetId.set(process.env.EXPO_PUBLIC_DEFAULT_ASSET_ID || "");
+
+export const $checkoutAssetIds = atom<string[]>([]);
+export const setCheckoutAssetIds = (assetIds: string[]) => $checkoutAssetIds.set(assetIds);
+export const resetCheckoutAssetIds = () => $checkoutAssetIds.set([]);
+export const addCheckoutAssetId = (assetId: string) =>
+	$checkoutAssetIds.set([...$checkoutAssetIds.get(), assetId]);
+export const removeCheckoutAssetId = (assetId: string) =>
+	$checkoutAssetIds.set(
+		$checkoutAssetIds.get().filter((id) => id !== assetId),
+	);

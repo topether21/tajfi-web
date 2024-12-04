@@ -11,6 +11,9 @@ export const TajfiNameLogo = ({
 			alt="Tajfi Logo"
 			style={{ width, height }}
 			contentFit={contentFit}
+			role="img"
+			aria-label="Tajfi Company Logo"
+			onError={(error) => console.error('Failed to load Tajfi logo:', error)}
 		/>
 	);
 };

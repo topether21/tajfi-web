@@ -5,6 +5,7 @@ import {
 } from "@/libs/wallet/auth";
 import type { WalletKeys } from "@/libs/wallet/types";
 import type { WalletProvider } from "@/libs/wallet/types";
+import { router } from "expo-router";
 import type { ReactNode } from "react";
 import { createContext, useContext, useState } from "react";
 import useEffectOnce from "react-use/lib/useEffectOnce";
@@ -30,6 +31,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
 			if (prevProfile) {
 				setProfile(prevProfile);
 				setError(null);
+			} else {
+				router.replace("/");
 			}
 		};
 		initSession().catch(console.error);

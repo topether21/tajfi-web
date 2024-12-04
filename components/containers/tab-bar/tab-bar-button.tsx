@@ -11,18 +11,26 @@ import Animated, {
 	interpolate,
 } from "react-native-reanimated";
 import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { Wallet } from "lucide-react-native";
 
 type FeatherIconProps = {
 	color?: string;
 	size?: number;
 };
 
-const icons = {
+const icons: Record<string, (props: FeatherIconProps) => React.ReactNode> = {
 	send: (props: FeatherIconProps) => (
 		<Feather name="send" size={24} color="black" {...props} />
 	),
 	receive: (props: FeatherIconProps) => (
 		<Feather name="download" size={24} color="black" {...props} />
+	),
+	marketplace: (props: FeatherIconProps) => (
+		<AntDesign name="swap" size={24} color="black" {...props} />
+	),
+	profile: (props: FeatherIconProps) => (
+		<Wallet size={24} color="black" {...props} />
 	),
 	history: (props: FeatherIconProps) => (
 		<Entypo name="back-in-time" size={24} color="black" {...props} />
@@ -81,9 +89,11 @@ export const TabBarButton = ({
 			href={href}
 		>
 			<Animated.View style={animatedIconStyle}>
-				{icons[routeName as keyof typeof icons]({
-					color: HEX_COLORS.tajfiWhite,
-				})}
+				{icons[routeName as keyof typeof icons]?.(
+					{
+						color: HEX_COLORS.tajfiWhite,
+					}
+				)}
 			</Animated.View>
 			<Animated.Text
 				style={[

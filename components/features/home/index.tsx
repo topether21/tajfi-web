@@ -166,7 +166,6 @@ export const HomeScreen = () => {
 	if (isLoading || profile) {
 		return <TajfiGradient />;
 	}
-
 	return (
 		<TajfiGradient>
 			{isSmall ? (
@@ -199,3 +198,4 @@ export const HomeScreen = () => {
 		</TajfiGradient>
 	);
 };
+
