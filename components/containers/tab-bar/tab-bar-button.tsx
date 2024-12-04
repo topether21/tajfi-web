@@ -11,8 +11,6 @@ import Animated, {
 	interpolate,
 } from "react-native-reanimated";
 import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { Wallet } from "lucide-react-native";
 
