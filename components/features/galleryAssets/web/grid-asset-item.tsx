@@ -13,12 +13,17 @@ import { useStore } from '@nanostores/react'
 import { $checkoutAssetIds, addCheckoutAssetId, removeCheckoutAssetId } from '@/store/checkout-store'
 import { Plus } from 'lucide-react-native'
 import { Button, ButtonText } from '@/components/ui/button'
+import { useRendersCount } from 'react-use'
+import { useAssetActions } from '../../wallet/hooks/use-asset-actions'
 
 interface GridAssetItemProps {
   item: Asset
+  isOwner?: boolean
 }
 
-export const GridAssetItem = ({ item }: GridAssetItemProps) => {
+export const GridAssetItem = ({ item, isOwner }: GridAssetItemProps) => {
+  const { sellStart } = useAssetActions()
+  const action = isOwner ? 'Sell' : 'Buy'
   const formatSatoshis = (satoshis: number) => {
     return (satoshis / 100000000).toFixed(8)
   }
@@ -35,7 +40,8 @@ export const GridAssetItem = ({ item }: GridAssetItemProps) => {
       addCheckoutAssetId(item.id);
     }
   }
-  console.log('checkoutAssetIds', checkoutAssetIds);
+  const renders = useRendersCount()
+  console.log('renders', renders)
   return (
     <Pressable>
       <Card
@@ -60,7 +66,7 @@ export const GridAssetItem = ({ item }: GridAssetItemProps) => {
         </Box>
         <Box className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-full">
           <Button className="bg-background-tajfi-deep-blue text-white w-full rounded-t-lg">
-            <ButtonText>Buy</ButtonText>
+            <ButtonText>{action}</ButtonText>
           </Button>
         </Box>
       </Card>

@@ -12,12 +12,14 @@ interface AssetsDisplayProps {
   isItemLoaded: (index: number) => boolean
   loadMoreItems: (startIndex: number, stopIndex: number) => Promise<void>
   containerRef: React.RefObject<HTMLDivElement | null>
+  isOwner?: boolean
 }
 
 const calculateColumnCount = (width: number) => Math.max(1, Math.floor(width / CELL_WIDTH))
 const calculateColumnWidth = (width: number, columnCount: number) => Math.floor(width / columnCount)
 
 export const AssetsDisplay: React.FC<AssetsDisplayProps> = ({
+  isOwner,
   filteredAssets,
   isGridView,
   isItemLoaded,
@@ -72,7 +74,7 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = ({
                       }}
                       className="bg-background"
                     >
-                      <GridAssetItem item={filteredAssets[index]} />
+                      <GridAssetItem item={filteredAssets[index]} isOwner={isOwner} />
                     </div>
                   )
                 }}

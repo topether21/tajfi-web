@@ -1,17 +1,14 @@
 'use client'
 
 import React, { useState, useRef } from 'react'
-import type { Asset } from './use-assets'
 
 import { FilterControls } from './filter-controls'
 import { AssetsDisplay } from './assets-display'
 import { useFilteredAssets } from './use-filtered-assets'
 import { Box } from '@/components/ui/box'
-import { ShoppingCartIcon } from 'lucide-react-native'
-import { Fab, FabIcon } from '@/components/ui/fab'
 import type { AssetsMarketplaceProps } from './types'
 
-export const AssetsMarketplace = ({ assets, isItemLoaded, loadMoreItems }: AssetsMarketplaceProps) => {
+export const AssetsMarketplace = ({ assets, isItemLoaded, loadMoreItems, isOwner }: AssetsMarketplaceProps) => {
   const [isGridView, setIsGridView] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [sortBy, setSortBy] = useState('price')
@@ -31,6 +28,7 @@ export const AssetsMarketplace = ({ assets, isItemLoaded, loadMoreItems }: Asset
         totalItems={assets.length}
       />
       <AssetsDisplay
+        isOwner={isOwner}
         filteredAssets={filteredAssets}
         isGridView={isGridView}
         isItemLoaded={isItemLoaded}

@@ -92,10 +92,10 @@ type SendCompleteResponse = {
 	};
 };
 
-const fetchFromApi = async <T>(
+const fetchFromApi = async <B, R>(
 	endpoint: string,
 	method: "GET" | "POST",
-	body: T,
+	body: B,
 	requireAuth = true,
 ) => {
 	const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}${endpoint}`;
@@ -123,7 +123,7 @@ const fetchFromApi = async <T>(
 	}
 
 	const data = await response.json();
-	return data;
+	return data as R;
 };
 
 export const auth = async ({
@@ -195,6 +195,31 @@ export const listTransfers = async (): Promise<HistoryTransaction[]> => {
 
 export const decodeInvoice = async ({
 	address,
-}: { address: string }): Promise<InvoiceInfo> => {
-	return fetchFromApi("/wallet/send/decode", "POST", { address });
+}: { address: string }): Promise<InvoiceInfo> => fetchFromApi("/wallet/send/decode", "POST", { address });
+
+type SellAssetStartResponse = {
+	funded_psbt: string;
+	change_output_index: number;
+	passive_asset_psbts: string[];
+	sighash_hex_to_sign: string;
+};
+
+export const sellAssetStart = async ({
+	assetId,
+	amountToSell,
+}: {
+	assetId: string,
+	amountToSell: number
+}) => {
+	const { funded_psbt,
+		change_output_index,
+		passive_asset_psbts,
+		sighash_hex_to_sign,
+	} = await fetchFromApi<{ asset_id: string, amount_to_sell: number }, SellAssetStartResponse>("/wallet/sell/start", "POST", { asset_id: assetId, amount_to_sell: amountToSell });
+	return {
+		fundedPsbt: funded_psbt,
+		changeOutputIndex: change_output_index,
+		passiveAssetPsbts: passive_asset_psbts,
+		sighashHexToSign: sighash_hex_to_sign,
+	};
 };

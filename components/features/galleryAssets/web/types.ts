@@ -4,4 +4,5 @@ export type AssetsMarketplaceProps = {
     assets: Asset[]
     isItemLoaded: (index: number) => boolean
     loadMoreItems: (startIndex: number, stopIndex: number) => Promise<void>
+    isOwner?: boolean
 }

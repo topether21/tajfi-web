@@ -1,9 +1,8 @@
-import { MarketplaceScreen } from "@/components/features/marketplace";
-import { useAssets } from "@/components/features/marketplace/web/use-assets";
-import { useSegments } from "expo-router";
+import { AssetGalleryScreen } from "@/components/features/galleryAssets";
+import { useAssets } from "@/components/features/galleryAssets/web/use-assets";
 
 
 export default function MarketplacePage() {
     const { assets, isItemLoaded, loadMoreItems } = useAssets()
-    return <MarketplaceScreen assets={assets} isItemLoaded={isItemLoaded} loadMoreItems={loadMoreItems} />;
+    return <AssetGalleryScreen assets={assets} isItemLoaded={isItemLoaded} loadMoreItems={loadMoreItems} />;
 }
