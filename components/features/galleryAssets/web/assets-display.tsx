@@ -1,3 +1,4 @@
+import React from 'react';
 import { VariableSizeGrid as Grid, VariableSizeList as List } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -18,7 +19,7 @@ interface AssetsDisplayProps {
 const calculateColumnCount = (width: number) => Math.max(1, Math.floor(width / CELL_WIDTH))
 const calculateColumnWidth = (width: number, columnCount: number) => Math.floor(width / columnCount)
 
-export const AssetsDisplay: React.FC<AssetsDisplayProps> = ({
+export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(({
   isOwner,
   filteredAssets,
   isGridView,
@@ -72,6 +73,7 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = ({
                         height: MIN_ROW_HEIGHT,
                         boxSizing: 'border-box',
                       }}
+                      key={filteredAssets[index].id}
                       className="bg-background"
                     >
                       <GridAssetItem item={filteredAssets[index]} isOwner={isOwner} />
@@ -104,4 +106,9 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = ({
       }}
     </AutoSizer>
   </div>
-)
+), (prevProps, nextProps) => {
+  return prevProps.isOwner === nextProps.isOwner &&
+    prevProps.isGridView === nextProps.isGridView &&
+    prevProps.filteredAssets.length === nextProps.filteredAssets.length &&
+    prevProps.filteredAssets.every((asset, index) => asset.id === nextProps.filteredAssets[index].id);
+})

@@ -14,5 +14,5 @@ export default function ProfilePage() {
         ordinalNumber: index,
         categories: [],
     }))
-    return <AssetGalleryScreen assets={assets} isItemLoaded={() => true} loadMoreItems={() => Promise.resolve()} isOwner/>;
+    return <AssetGalleryScreen assets={assets} isItemLoaded={() => true} loadMoreItems={() => { }} isOwner />;
 }

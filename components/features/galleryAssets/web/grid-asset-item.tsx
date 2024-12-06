@@ -15,13 +15,14 @@ import { Plus } from 'lucide-react-native'
 import { Button, ButtonText } from '@/components/ui/button'
 import { useRendersCount } from 'react-use'
 import { useAssetActions } from '../../wallet/hooks/use-asset-actions'
+import React, { useEffect } from 'react'
 
 interface GridAssetItemProps {
   item: Asset
   isOwner?: boolean
 }
 
-export const GridAssetItem = ({ item, isOwner }: GridAssetItemProps) => {
+export const GridAssetItem = React.memo(({ item, isOwner }: GridAssetItemProps) => {
   const { sellStart } = useAssetActions()
   const action = isOwner ? 'Sell' : 'Buy'
   const formatSatoshis = (satoshis: number) => {
@@ -42,6 +43,12 @@ export const GridAssetItem = ({ item, isOwner }: GridAssetItemProps) => {
   }
   const renders = useRendersCount()
   console.log('renders', renders)
+  useEffect(() => {
+    console.log('mount', item)
+    return () => {
+      console.log('unmount', item)
+    }
+  }, [item])
   return (
     <Pressable>
       <Card
@@ -72,4 +79,6 @@ export const GridAssetItem = ({ item, isOwner }: GridAssetItemProps) => {
       </Card>
     </Pressable>
   )
-}
+}, (prevProps, nextProps) => {
+  return prevProps.item.id === nextProps.item.id && prevProps.isOwner === nextProps.isOwner;
+})
