@@ -63,6 +63,19 @@ export type HistoryTransaction = {
 	amount: number;
 };
 
+export type Order = {
+	asset_id: string;
+	amount_to_sell: number;
+	amount_sats_to_receive: number;
+	outpoint: {
+		txid: string;
+		output_index: number;
+	};
+	virtual_psbt: string;
+	anchor_psbt: string;
+	passive_asset_psbts: string[];
+};
+
 type SendCompleteResponse = {
 	transfer_timestamp: string;
 	anchor_tx_hash: string;
@@ -191,6 +204,10 @@ export const listBalances = async (): Promise<ListBalancesResponse> => {
 
 export const listTransfers = async (): Promise<HistoryTransaction[]> => {
 	return fetchFromApi("/wallet/transfers", "GET", {});
+};
+
+export const listOrders = async (): Promise<Order[]> => {
+	return fetchFromApi("/orders", "GET", {});
 };
 
 export const decodeInvoice = async ({

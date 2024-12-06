@@ -62,13 +62,13 @@ export const GridAssetItem = React.memo(
             {isChecked ? <Check size={16} /> : <Plus size={16} />}
           </Badge>
         </Pressable> */}
-					<Image
+					{/* <Image
 						source={item.image}
 						alt={item.name}
 						contentFit="contain"
 						className="select-none h-[87%] w-full"
 						transition={500}
-					/>
+					/> */}
 					<Box>
 						<Text className="text-xs font-bold capitalize">{item.name}</Text>
 						<Text className="text-xs">{formatSatoshis(item.price)} BTC</Text>
