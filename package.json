@@ -10,13 +10,13 @@
 		"ios": "DARK_MODE=media expo start --ios",
 		"web": "DARK_MODE=media expo start --web",
 		"test": "jest --watchAll",
-		"lint": "expo lint",
 		"postinstall": "npx setup-skia-web && npx tailwindcss -i ./global.css -o ./node_modules/.cache/nativewind/global.css.web.css",
 		"ts": "bunx --bun tsc -w --noEmit --project tsconfig.json",
-		"format": "bunx @biomejs/biome format --write ./",
+		"format": "bunx @biomejs/biome check --write ./",
 		"prepare": "husky",
 		"build:web": "expo export -p web",
-		"serve:web": "bunx serve dist"
+		"serve:web": "bunx serve dist",
+		"lint": "bun eslint . --fix"
 	},
 	"jest": {
 		"preset": "jest-expo"

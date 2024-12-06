@@ -14,7 +14,8 @@ export const useCreateInvoice = (
 			try {
 				const response = await receive({ amount, assetId });
 				return response;
-			} catch (e) {
+			} catch (error) {
+				console.error(error);
 				setErrorMessage("Failed to create invoice");
 				return null;
 			}

@@ -29,9 +29,7 @@ export const TransactionSummary = ({
 
 	return (
 		<Box className="pt-4 w-full text-background-tajfi-deep-blue">
-			<Heading size="md">
-				Transaction Summary
-			</Heading>
+			<Heading size="md">Transaction Summary</Heading>
 			<Box>
 				<Box className="flex justify-between bg-secondary rounded-lg">
 					<Text className="text-lg font-medium">Amount:</Text>

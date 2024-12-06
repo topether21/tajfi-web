@@ -1,5 +1,6 @@
 import { LoadingIcon } from "@/components/icons/loading-icon";
 import { Box } from "@/components/ui/box";
+import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { Input, InputField } from "@/components/ui/input";
@@ -16,19 +17,21 @@ import { TouchableOpacity } from "react-native";
 import type { View } from "react-native";
 import QRCode from "react-qr-code";
 import useAsync from "react-use/lib/useAsync";
-import { $receiveAssetId, resetReceiveAssetId } from "../../../../store/asset-id-store";
+import {
+	$receiveAssetId,
+	resetReceiveAssetId,
+} from "../../../../store/asset-id-store";
 import { useCreateInvoice } from "../hooks/use-create-invoice";
 import { useUserReceiveCurrency } from "../layout/use-user-receive-currency";
 import { UserCurrencies } from "../layout/user-currencies";
 import { SimpleCurrencySelector } from "../simple-currency-selector";
-import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 
 export const ReceiveScreen = () => {
 	const { isOpen, handleClose, handleOpen } = useUserReceiveCurrency();
 	const { value: sharingAvailable } = useAsync(Sharing.isAvailableAsync);
 	const [assetAmount, setAssetAmount] = useState<string>("");
 	const receiveAssetId = useStore($receiveAssetId);
-	const { loading, invoice, error, createNewInvoice } = useCreateInvoice(
+	const { loading, invoice, createNewInvoice } = useCreateInvoice(
 		assetAmount,
 		receiveAssetId,
 	);

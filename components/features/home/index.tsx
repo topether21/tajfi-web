@@ -1,28 +1,28 @@
+import { useState, useEffect } from "react";
+import { TajfiLogo } from "@/components/containers/tajfi-logos/tajfi-logo";
+import { TajfiNameLogo } from "@/components/containers/tajfi-logos/tajfi-name-logo";
+import { Box } from "@/components/ui/box";
+import { Heading } from "@/components/ui/heading";
+import { HStack } from "@/components/ui/hstack";
 import { useSizes } from "@/hooks/useSizes";
 import { SafeAreaView } from "react-native";
 import { ConnectWalletModal } from "../wallet/connect-wallet";
 import { useHomeLogin } from "./use-home-login";
-import { Box } from "@/components/ui/box";
-import { HStack } from "@/components/ui/hstack";
-import { Heading } from "@/components/ui/heading";
-import { TajfiNameLogo } from "@/components/containers/tajfi-logos/tajfi-name-logo";
-import { TajfiLogo } from "@/components/containers/tajfi-logos/tajfi-logo";
 
-import type { WalletKeys, WalletProvider } from "@/libs/wallet/types";
 import { TajfiGradient } from "@/components/containers/tajfi-gradient";
 import { TajfiLoginButton } from "@/components/containers/tajfi-login-button";
-import { APP_FOOTER_DESCRIPTION } from "@/libs/constants";
-import { Github } from "lucide-react-native";
-import { Text } from "@/components/ui/text";
 import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
+import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
-import { Redirect } from 'expo-router';
+import { APP_FOOTER_DESCRIPTION } from "@/libs/constants";
 import { isWebView } from "@/libs/utils";
+import type { WalletKeys, WalletProvider } from "@/libs/wallet/types";
 import clsx from "clsx";
+import { Redirect } from "expo-router";
+import { Github } from "lucide-react-native";
 
 export const Footer = () => (
 	<HStack className="w-full justify-between items-center p-6 bg-background-tajfi-dark">
-
 		<Text size="sm" className="text-background-tajfi-white">
 			{APP_FOOTER_DESCRIPTION}
 		</Text>
@@ -61,7 +61,12 @@ const MobileHomeView = ({
 	logout,
 	isLoading,
 }: HomeViewProps) => (
-	<SafeAreaView className={clsx("w-full h-full items-center flex flex-col", isWebView() ? "p-4" : "p-10")}>
+	<SafeAreaView
+		className={clsx(
+			"w-full h-full items-center flex flex-col",
+			isWebView() ? "p-4" : "p-10",
+		)}
+	>
 		<Box className="w-full h-full items-center flex flex-col">
 			<HStack className="items-center justify-start w-full mb-9">
 				<TajfiNameLogo />
@@ -141,6 +146,13 @@ const DesktopHomeHero = ({
 	</VStack>
 );
 
+const RedirectToSend = () => <Redirect href="/(tabs)/send" />;
+
+const HardRedirectToSend = () => {
+	window.location.href = "/send";
+	return null;
+};
+
 export const HomeScreen = () => {
 	const {
 		wallets,
@@ -154,18 +166,31 @@ export const HomeScreen = () => {
 	} = useHomeLogin();
 	const { isSmall } = useSizes();
 
-	if (profile && !isLoading) {
-		// Hack for OneKey webview
-		if (isWebView()) {
-			window.location.href = "/send";
-			return null;
+	const [redirectPath, setRedirectPath] = useState<"/send" | "/(tabs)/send" | null>(null);
+
+	useEffect(() => {
+		if (profile && !isLoading) {
+			// Hack for OneKey webview
+			if (isWebView()) {
+				setRedirectPath("/send");
+			} else {
+				setRedirectPath("/(tabs)/send");
+			}
 		}
-		return <Redirect href="/(tabs)/send" />;
+	}, [profile, isLoading]);
+
+	if (redirectPath === "/(tabs)/send") {
+		return <RedirectToSend />;
+	}
+
+	if (redirectPath === "/send") {
+		return <HardRedirectToSend />;
 	}
 
 	if (isLoading || profile) {
 		return <TajfiGradient />;
 	}
+
 	return (
 		<TajfiGradient>
 			{isSmall ? (
@@ -198,4 +223,3 @@ export const HomeScreen = () => {
 		</TajfiGradient>
 	);
 };
-

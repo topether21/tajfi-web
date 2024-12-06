@@ -68,13 +68,13 @@ type SendCompleteResponse = {
 	anchor_tx_hash: string;
 	anchor_tx_height_hint: number;
 	anchor_tx_chain_fees: string;
-	inputs: Array<{
+	inputs: {
 		anchor_point: string;
 		asset_id: string;
 		script_key: string;
 		amount: string;
-	}>;
-	outputs: Array<{
+	}[];
+	outputs: {
 		anchor: object;
 		script_key: string;
 		script_key_is_local: boolean;
@@ -86,7 +86,7 @@ type SendCompleteResponse = {
 		lock_time: string;
 		relative_lock_time: string;
 		proof_delivery_status: string;
-	}>;
+	}[];
 	anchor_tx_block_hash: {
 		incididunt_7: boolean;
 	};
@@ -195,7 +195,8 @@ export const listTransfers = async (): Promise<HistoryTransaction[]> => {
 
 export const decodeInvoice = async ({
 	address,
-}: { address: string }): Promise<InvoiceInfo> => fetchFromApi("/wallet/send/decode", "POST", { address });
+}: { address: string }): Promise<InvoiceInfo> =>
+	fetchFromApi("/wallet/send/decode", "POST", { address });
 
 type SellAssetStartResponse = {
 	funded_psbt: string;
@@ -208,14 +209,21 @@ export const sellAssetStart = async ({
 	assetId,
 	amountToSell,
 }: {
-	assetId: string,
-	amountToSell: number
+	assetId: string;
+	amountToSell: number;
 }) => {
-	const { funded_psbt,
+	const {
+		funded_psbt,
 		change_output_index,
 		passive_asset_psbts,
 		sighash_hex_to_sign,
-	} = await fetchFromApi<{ asset_id: string, amount_to_sell: number }, SellAssetStartResponse>("/wallet/sell/start", "POST", { asset_id: assetId, amount_to_sell: amountToSell });
+	} = await fetchFromApi<
+		{ asset_id: string; amount_to_sell: number },
+		SellAssetStartResponse
+	>("/wallet/sell/start", "POST", {
+		asset_id: assetId,
+		amount_to_sell: amountToSell,
+	});
 	return {
 		fundedPsbt: funded_psbt,
 		changeOutputIndex: change_output_index,

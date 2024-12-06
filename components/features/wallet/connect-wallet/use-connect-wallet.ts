@@ -1,9 +1,8 @@
+import { isWebView } from "@/libs/utils";
 import type { WalletProvider } from "@/libs/wallet/types";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useAuth } from "./auth-context";
-import { Platform } from "react-native";
-import { isWebView } from "@/libs/utils";
 
 export const useWalletAuth = ({ onCancel }: { onCancel?: () => void }) => {
 	const [isConnecting, setIsConnecting] = useState(false);
@@ -30,7 +29,7 @@ export const useWalletAuth = ({ onCancel }: { onCancel?: () => void }) => {
 		// Hack for OneKey webview
 		if (isWebView()) {
 			window.location.href = "/";
-			return
+			return;
 		}
 		router.push("/");
 	};

@@ -3,10 +3,9 @@ import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import * as Clipboard from "expo-clipboard";
 import { useFocusEffect } from "expo-router";
-import { Scan, Clipboard as ClipboardIcon } from "lucide-react-native";
+import { Clipboard as ClipboardIcon, Scan } from "lucide-react-native";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { useAuth } from "../connect-wallet/auth-context";
@@ -125,10 +124,18 @@ export const SendScreen = () => {
 					<InputSlot>
 						<HStack space="xl" className="pr-4">
 							<TouchableOpacity onPress={onOpenScanner}>
-								<InputIcon as={Scan} size="md" className="stroke-background-tajfi-deep-blue" />
+								<InputIcon
+									as={Scan}
+									size="md"
+									className="stroke-background-tajfi-deep-blue"
+								/>
 							</TouchableOpacity>
 							<TouchableOpacity onPress={fetchCopiedText}>
-								<InputIcon as={ClipboardIcon} size={24} className="stroke-background-tajfi-deep-blue" />
+								<InputIcon
+									as={ClipboardIcon}
+									size={24}
+									className="stroke-background-tajfi-deep-blue"
+								/>
 							</TouchableOpacity>
 						</HStack>
 					</InputSlot>

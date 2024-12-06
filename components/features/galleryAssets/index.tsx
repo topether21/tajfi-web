@@ -4,11 +4,27 @@ import clsx from "clsx";
 import { AssetsMarketplace } from "./web/marketplace";
 import type { AssetsMarketplaceProps } from "./web/types";
 
-export const AssetGalleryScreen = ({ assets, isItemLoaded, loadMoreItems, isOwner }: AssetsMarketplaceProps) => {
-    const { isLarge } = useSizes();
-    return (
-        <Box className={clsx("px-4 flex-1", isLarge ? "pb-28" : "pb-16", "bg-background-tajfi-white")}>
-            <AssetsMarketplace assets={assets} isItemLoaded={isItemLoaded} loadMoreItems={loadMoreItems} isOwner={isOwner} />
-        </Box>
-    );
+export const AssetGalleryScreen = ({
+	assets,
+	isItemLoaded,
+	loadMoreItems,
+	isOwner,
+}: AssetsMarketplaceProps) => {
+	const { isLarge } = useSizes();
+	return (
+		<Box
+			className={clsx(
+				"px-4 flex-1",
+				isLarge ? "pb-28" : "pb-16",
+				"bg-background-tajfi-white",
+			)}
+		>
+			<AssetsMarketplace
+				assets={assets}
+				isItemLoaded={isItemLoaded}
+				loadMoreItems={loadMoreItems}
+				isOwner={isOwner}
+			/>
+		</Box>
+	);
 };

@@ -5,10 +5,10 @@ import { TabBarVisibilityProvider } from "@/components/containers/tab-bar/tab-ba
 import { AuthProvider } from "@/components/features/wallet/connect-wallet/auth-context";
 import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();

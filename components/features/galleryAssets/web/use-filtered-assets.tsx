@@ -1,5 +1,4 @@
-import { useMemo } from 'react'
-import type { Asset } from './use-assets'
+import type { Asset } from "./use-assets";
 
 // TODO: Implement this
 // export const useFilteredAssets = (assets: Asset[], searchTerm: string, category: string, sortBy: string) => {
@@ -24,8 +23,11 @@ import type { Asset } from './use-assets'
 //   }, [assets, searchTerm, category, sortBy])
 // }
 
-
-export const useFilteredAssets = (assets: Asset[], searchTerm: string, category: string, sortBy: string) => {
-  return assets
-}
-
+export const useFilteredAssets = (
+	assets: Asset[],
+	searchTerm: string,
+	category: string,
+	sortBy: string,
+) => {
+	return assets;
+};
