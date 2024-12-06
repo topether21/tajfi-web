@@ -34,15 +34,30 @@ const isOneKeyEnabled = async () => {
 };
 
 const isWebAuthnEnabled = async () => {
+	const navigatorAvailable = typeof navigator !== "undefined";
+	const credentialsAvailable = typeof navigator.credentials !== "undefined";
+	const createAvailable = typeof navigator.credentials.create !== "undefined";
+	const getAvailable = typeof navigator.credentials.get !== "undefined";
+	const publicKeyCredentialAvailable = typeof PublicKeyCredential !== "undefined";
+	const isUserVerifyingPlatformAuthenticatorAvailable =
+		typeof PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable !== "undefined";
 	const supportsWebAuthn =
-		typeof navigator !== "undefined" &&
-		typeof navigator.credentials !== "undefined" &&
-		typeof navigator.credentials.create !== "undefined" &&
-		typeof navigator.credentials.get !== "undefined" &&
-		typeof PublicKeyCredential !== "undefined" &&
-		typeof PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable !==
-		"undefined" &&
+		navigatorAvailable &&
+		credentialsAvailable &&
+		createAvailable &&
+		getAvailable &&
+		publicKeyCredentialAvailable &&
+		isUserVerifyingPlatformAuthenticatorAvailable &&
 		(await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable());
+
+	console.log("navigator check:", navigatorAvailable);
+	console.log("navigator.credentials check:", credentialsAvailable);
+	console.log("navigator.credentials.create check:", createAvailable);
+	console.log("navigator.credentials.get check:", getAvailable);
+	console.log("PublicKeyCredential check:", publicKeyCredentialAvailable);
+	console.log("PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable check:", isUserVerifyingPlatformAuthenticatorAvailable);
+	console.log("supportsWebAuthn:", supportsWebAuthn);
+
 	return supportsWebAuthn;
 };
 
