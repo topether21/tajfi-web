@@ -16,6 +16,7 @@ import type { WalletProvider } from "@/libs/wallet/types";
 import { TouchableOpacity } from "react-native";
 import { Image } from "expo-image";
 import { TajfiNameLogoDeepBlue } from "@/components/containers/tajfi-logos/tajfi-name-logo-deep-blue";
+import clsx from "clsx";
 
 export const ConnectWalletModal = ({
 	showModal,
@@ -70,7 +71,18 @@ export const ConnectWalletModal = ({
 					</ModalCloseButton>
 				</ModalHeader>
 				<ModalBody>
-					<Box className="grid grid-cols-2 gap-4 sm:grid-cols-3 p-4">
+					<Box
+						className={clsx(
+							"grid gap-4 p-4",
+							wallets.length === 0 ? "grid-cols-1" : "grid-cols-2 sm:grid-cols-3",
+						)}
+					>
+						{wallets.length === 0 && (
+							<Text className="text-sm text-center">
+								There are no compatible login methods installed on your
+								device.
+							</Text>
+						)}
 						{wallets.map((wallet) => {
 							return (
 								<TouchableOpacity
@@ -80,7 +92,7 @@ export const ConnectWalletModal = ({
 										login(wallet);
 									}}
 								>
-									<Box className="rounded-full  flex items-center justify-center">
+									<Box className="rounded-full flex items-center justify-center">
 										{walletIcon(wallet)}
 									</Box>
 									{walletName(wallet)}
