@@ -24,8 +24,9 @@ interface GridAssetItemProps {
 
 export const GridAssetItem = React.memo(
 	({ item, isOwner }: GridAssetItemProps) => {
-		const { sellStart } = useAssetActions();
-		const action = isOwner ? "Sell" : "Buy";
+		const { sellStart, isLoading, sellComplete } = useAssetActions();
+		const [actionLabel] = isOwner ? ["Sell", sellStart] : ["Buy"];
+
 		const formatSatoshis = (satoshis: number) => {
 			return (satoshis / 100000000).toFixed(8);
 		};
@@ -73,8 +74,12 @@ export const GridAssetItem = React.memo(
 						<Text className="text-xs">{formatSatoshis(item.price)} BTC</Text>
 					</Box>
 					<Box className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-full">
-						<Button className="bg-background-tajfi-deep-blue text-white w-full rounded-t-lg">
-							<ButtonText>{action}</ButtonText>
+						<Button
+							disabled={isLoading}
+							className="bg-background-tajfi-deep-blue text-white w-full rounded-t-lg"
+							onPress={goToAsset}
+						>
+							<ButtonText>{actionLabel}</ButtonText>
 						</Button>
 					</Box>
 				</Card>
@@ -88,3 +93,5 @@ export const GridAssetItem = React.memo(
 		);
 	},
 );
+
+GridAssetItem.displayName = "GridAssetItem";

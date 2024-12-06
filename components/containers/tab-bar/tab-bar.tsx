@@ -16,7 +16,11 @@ import { TabBarButton } from "./tab-bar-button";
 
 const TAB_BAR_HORIZONTAL_PADDING = 12;
 
-const calculateTabPositionX = ({ index, buttonWidth, circleSize }: { index: number, buttonWidth: number, circleSize: number }) => {
+const calculateTabPositionX = ({
+	index,
+	buttonWidth,
+	circleSize,
+}: { index: number; buttonWidth: number; circleSize: number }) => {
 	return (
 		buttonWidth * index +
 		buttonWidth / 2 -
@@ -58,9 +62,12 @@ export const BottomTabBar = ({
 	const circleSize = Math.min(dimensions.height - 15, buttonWidth - 25);
 
 	const updateTabPositionX = useCallback(() => {
-		tabPositionX.value = withSpring(calculateTabPositionX({ index: state.index, buttonWidth, circleSize }), {
-			duration: 1000,
-		});
+		tabPositionX.value = withSpring(
+			calculateTabPositionX({ index: state.index, buttonWidth, circleSize }),
+			{
+				duration: 1000,
+			},
+		);
 	}, [state.index, buttonWidth, circleSize, tabPositionX]);
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: only depends on state.index and dimensions

@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
 import { TajfiLogo } from "@/components/containers/tajfi-logos/tajfi-logo";
 import { TajfiNameLogo } from "@/components/containers/tajfi-logos/tajfi-name-logo";
 import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { useSizes } from "@/hooks/useSizes";
+import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native";
 import { ConnectWalletModal } from "../wallet/connect-wallet";
 import { useHomeLogin } from "./use-home-login";
@@ -166,7 +166,9 @@ export const HomeScreen = () => {
 	} = useHomeLogin();
 	const { isSmall } = useSizes();
 
-	const [redirectPath, setRedirectPath] = useState<"/send" | "/(tabs)/send" | null>(null);
+	const [redirectPath, setRedirectPath] = useState<
+		"/send" | "/(tabs)/send" | null
+	>(null);
 
 	useEffect(() => {
 		if (profile && !isLoading) {

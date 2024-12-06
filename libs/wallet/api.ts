@@ -92,10 +92,10 @@ type SendCompleteResponse = {
 	};
 };
 
-const fetchFromApi = async <B, R>(
+const fetchFromApi = async <Body, Response>(
 	endpoint: string,
 	method: "GET" | "POST",
-	body: B,
+	body: Body,
 	requireAuth = true,
 ) => {
 	const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}${endpoint}`;
@@ -123,7 +123,7 @@ const fetchFromApi = async <B, R>(
 	}
 
 	const data = await response.json();
-	return data as R;
+	return data as Response;
 };
 
 export const auth = async ({
@@ -205,13 +205,15 @@ type SellAssetStartResponse = {
 	sighash_hex_to_sign: string;
 };
 
+export type SellAssetStartBody = {
+	assetId: string;
+	amountToSell: number;
+};
+
 export const sellAssetStart = async ({
 	assetId,
 	amountToSell,
-}: {
-	assetId: string;
-	amountToSell: number;
-}) => {
+}: SellAssetStartBody) => {
 	const {
 		funded_psbt,
 		change_output_index,
@@ -229,5 +231,43 @@ export const sellAssetStart = async ({
 		changeOutputIndex: change_output_index,
 		passiveAssetPsbts: passive_asset_psbts,
 		sighashHexToSign: sighash_hex_to_sign,
+	};
+};
+
+type SellAssetCompleteResponse = {
+	signed_virtual_psbt: string;
+	modified_anchor_psbt: string;
+};
+
+export type SellAssetCompleteBody = {
+	psbt: string;
+	sighashHex: string;
+	signatureHex: string;
+	amountSatsToReceive: number;
+};
+
+export const sellAssetComplete = async ({
+	psbt,
+	sighashHex,
+	signatureHex,
+	amountSatsToReceive,
+}: SellAssetCompleteBody) => {
+	const { signed_virtual_psbt, modified_anchor_psbt } = await fetchFromApi<
+		{
+			psbt: string;
+			sighash_hex: string;
+			signature_hex: string;
+			amount_sats_to_receive: number;
+		},
+		SellAssetCompleteResponse
+	>("/wallet/sell/complete", "POST", {
+		psbt,
+		sighash_hex: sighashHex,
+		signature_hex: signatureHex,
+		amount_sats_to_receive: amountSatsToReceive,
+	});
+	return {
+		signedVirtualPsbt: signed_virtual_psbt,
+		modifiedAnchorPsbt: modified_anchor_psbt,
 	};
 };
