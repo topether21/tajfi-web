@@ -23,7 +23,7 @@ export const DesktopHeader = () => {
 	return (
 		<Box
 			className={clsx(
-				"backdrop-blur-md py-4 px-6 flex flex-row justify-between items-center z-20 relative",
+				"backdrop-blur-md py-4 px-6 flex flex-row justify-between items-center z-20 relative min-h-fit",
 				profile ? "bg-background-tajfi-light-blue" : "bg-transparent",
 			)}
 		>
