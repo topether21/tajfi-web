@@ -80,7 +80,7 @@ export const ConnectWalletModal = ({
 						{wallets.length === 0 && (
 							<Text className="text-sm text-center">
 								There are no compatible login methods installed on your
-								device.
+								device. Try another browser or update your system.
 							</Text>
 						)}
 						{wallets.map((wallet) => {
