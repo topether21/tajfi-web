@@ -7,7 +7,6 @@ type Asset = {
 	image: string;
 	satoshiPrice: number;
 	ordinalNumber: number;
-	categories: string[];
 };
 
 const fetchAssets = async (start: number, size: number): Promise<Asset[]> => {

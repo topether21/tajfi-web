@@ -8,7 +8,7 @@ export type Asset = {
 	image: string;
 	satoshiPrice: number;
 	ordinalNumber: number;
-	categories: string[];
+	units?: number;
 };
 
 const INITIAL_LOAD_SIZE = 20;

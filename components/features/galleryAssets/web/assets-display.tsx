@@ -5,7 +5,7 @@ import {
 	VariableSizeList as List,
 } from "react-window";
 import InfiniteLoader from "react-window-infinite-loader";
-import { CELL_WIDTH, LIST_ITEM_HEIGHT, MIN_ROW_HEIGHT } from "./constants";
+import { CELL_WIDTH, GAP, LIST_ITEM_HEIGHT, MIN_ROW_HEIGHT } from "./constants";
 import { GridAssetItem } from "./grid-asset-item";
 import { ListAssetItem } from "./list-asset-item";
 import type { Asset } from "./use-assets";
@@ -20,9 +20,9 @@ interface AssetsDisplayProps {
 }
 
 const calculateColumnCount = (width: number) =>
-	Math.max(1, Math.floor(width / CELL_WIDTH));
+	Math.max(1, Math.floor(width / (CELL_WIDTH + GAP)));
 const calculateColumnWidth = (width: number, columnCount: number) =>
-	Math.floor(width / columnCount);
+	Math.floor((width - GAP * (columnCount - 1)) / columnCount);
 
 export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 	({
@@ -35,7 +35,7 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 	}) => (
 		<div
 			ref={containerRef as React.LegacyRef<HTMLDivElement>}
-			className="container mx-auto flex-grow overflow-auto"
+			className="container mx-auto flex-grow overflow-auto pt-4"
 		>
 			<AutoSizer>
 				{({ width, height }) => {
@@ -56,6 +56,7 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 									rowCount={rowCount}
 									rowHeight={() => MIN_ROW_HEIGHT}
 									width={width}
+
 									onItemsRendered={({
 										visibleRowStartIndex,
 										visibleRowStopIndex,
@@ -78,6 +79,7 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 										});
 									}}
 									ref={ref}
+									style={{ gap: 8 }}
 								>
 									{({ columnIndex, rowIndex, style }) => {
 										const index = rowIndex * columnCount + columnIndex;
@@ -133,6 +135,7 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 			</AutoSizer>
 		</div>
 	),
+	// TODO: improve this
 	(prevProps, nextProps) => {
 		return (
 			prevProps.isOwner === nextProps.isOwner &&
@@ -140,6 +143,16 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 			prevProps.filteredAssets.length === nextProps.filteredAssets.length &&
 			prevProps.filteredAssets.every(
 				(asset, index) => asset.id === nextProps.filteredAssets[index].id,
+			) &&
+			prevProps.filteredAssets.every(
+				(asset, index) => asset.name === nextProps.filteredAssets[index].name,
+			) &&
+			prevProps.filteredAssets.every(
+				(asset, index) =>
+					asset.price === nextProps.filteredAssets[index].price,
+			) &&
+			prevProps.filteredAssets.every(
+				(asset, index) => asset.units === nextProps.filteredAssets[index].units,
 			)
 		);
 	},

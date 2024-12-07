@@ -8,41 +8,47 @@ import {
 	addCheckoutAssetId,
 	removeCheckoutAssetId,
 } from "@/store/checkout-store";
+
 import { useStore } from "@nanostores/react";
-import { Image } from "expo-image";
 import { router } from "expo-router";
 import React, { useEffect } from "react";
 import { useRendersCount } from "react-use";
 import { useAssetActions } from "../../wallet/hooks/use-asset-actions";
 import { MIN_CARD_HEIGHT } from "./constants";
 import type { Asset } from "./use-assets";
+import { AssetImage } from "./asset-image";
 
 interface GridAssetItemProps {
 	item: Asset;
 	isOwner?: boolean;
 }
 
+const formatSatoshis = (satoshis: number) => {
+	return (satoshis / 100000000).toFixed(8);
+};
+
+// const goToAsset = (id: string) => router.push(`/marketplace/${id}`);
+// const toggleCheckout = () => {
+// 	console.log("toggleCheckout", item.id, isChecked, checkoutAssetIds);
+// 	if (isChecked) {
+// 		console.log("removing from checkout", item.id);
+// 		removeCheckoutAssetId(item.id);
+// 	} else {
+// 		console.log("adding to checkout", item.id);
+// 		addCheckoutAssetId(item.id);
+// 	}
+// };
+
 export const GridAssetItem = React.memo(
 	({ item, isOwner }: GridAssetItemProps) => {
 		const { sellStart, isLoading, sellComplete } = useAssetActions();
 		const [actionLabel] = isOwner ? ["Sell", sellStart] : ["Buy"];
 
-		const formatSatoshis = (satoshis: number) => {
-			return (satoshis / 100000000).toFixed(8);
-		};
+
 		const checkoutAssetIds = useStore($checkoutAssetIds);
 		const isChecked = checkoutAssetIds.find((id) => id === item.id);
-		const goToAsset = () => router.push(`/marketplace/${item.id}`);
-		const toggleCheckout = () => {
-			console.log("toggleCheckout", item.id, isChecked, checkoutAssetIds);
-			if (isChecked) {
-				console.log("removing from checkout", item.id);
-				removeCheckoutAssetId(item.id);
-			} else {
-				console.log("adding to checkout", item.id);
-				addCheckoutAssetId(item.id);
-			}
-		};
+
+
 		const renders = useRendersCount();
 		console.log("renders", renders);
 		useEffect(() => {
@@ -54,7 +60,7 @@ export const GridAssetItem = React.memo(
 		return (
 			<Pressable>
 				<Card
-					className="m-2 overflow-hidden relative rounded-t-lg border group"
+					className="overflow-hidden relative rounded-t-lg border group"
 					style={{ height: MIN_CARD_HEIGHT }}
 				>
 					{/* <Pressable className="absolute top-2 right-2 z-10" onPress={toggleCheckout}>
@@ -62,22 +68,19 @@ export const GridAssetItem = React.memo(
             {isChecked ? <Check size={16} /> : <Plus size={16} />}
           </Badge>
         </Pressable> */}
-					{/* <Image
-						source={item.image}
-						alt={item.name}
-						contentFit="contain"
-						className="select-none h-[87%] w-full"
-						transition={500}
-					/> */}
+					<AssetImage assetId={item.id} />
 					<Box>
-						<Text className="text-xs font-bold capitalize">{item.name}</Text>
-						<Text className="text-xs">{formatSatoshis(item.price)} BTC</Text>
+						<Text className="text-xs font-bold capitalize">{item.units ?? ''} {item.name}</Text>
+						{isOwner ? null : (
+							<Text className="text-xs">
+								{formatSatoshis(item.satoshiPrice)} BTC
+							</Text>
+						)}
 					</Box>
 					<Box className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-full">
 						<Button
 							disabled={isLoading}
 							className="bg-background-tajfi-deep-blue text-white w-full rounded-t-lg"
-							onPress={goToAsset}
 						>
 							<ButtonText>{actionLabel}</ButtonText>
 						</Button>
