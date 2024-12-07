@@ -23,7 +23,7 @@ export default function ProfilePage() {
 		<>
 			<Heading
 				size="lg"
-				className="pb-4 text-background-tajfi-deep-blue px-4 bg-background-0"
+				className="pb-2 text-background-tajfi-deep-blue px-4 bg-background-0"
 			>
 				My Assets
 			</Heading>

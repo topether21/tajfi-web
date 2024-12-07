@@ -14,8 +14,8 @@ export const useSendFunds = () => {
 			try {
 				const res = await sendStart({ invoice });
 				return {
-					fundedPsbt: res.funded_psbt,
-					sighashHexToSign: res.sighash_hex_to_sign,
+					funded_psbt: res.funded_psbt,
+					sighash_hex_to_sign: res.sighash_hex_to_sign,
 				};
 			} catch (e) {
 				const message = (e as Error).message || "Unknown error";

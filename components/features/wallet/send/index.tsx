@@ -68,10 +68,10 @@ export const SendScreen = () => {
 	const onSend = () => {
 		if (!preSignedData || !profile) return;
 		sendFundsComplete({
-			sighashHexToSign: preSignedData.sighashHexToSign,
+			sighashHexToSign: preSignedData.sighash_hex_to_sign,
 			providerName: profile.providerName,
 			tapasAddress: profile.tapasAddress,
-			fundedPsbt: preSignedData.fundedPsbt,
+			fundedPsbt: preSignedData.funded_psbt,
 		});
 	};
 

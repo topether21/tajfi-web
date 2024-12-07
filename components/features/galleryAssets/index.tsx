@@ -15,7 +15,7 @@ export const AssetGalleryScreen = ({
 		<Box
 			className={clsx(
 				"px-4 flex-1",
-				isLarge ? "pb-28" : "pb-16",
+				isLarge ? "pb-28" : "pb-24",
 				"bg-background-tajfi-white",
 			)}
 		>

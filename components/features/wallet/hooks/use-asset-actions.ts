@@ -14,7 +14,9 @@ export const useAssetActions = () => {
 		useAsyncFn(async (body: SellAssetStartBody) => {
 			setError(null);
 			try {
-				return await sellAssetStart(body);
+				const res = await sellAssetStart(body);
+				debugger;
+				return res;
 			} catch (error) {
 				const message = (error as Error).message || "Unknown error";
 				setError(message);
@@ -28,7 +30,9 @@ export const useAssetActions = () => {
 	] = useAsyncFn(async (body: SellAssetCompleteBody) => {
 		setError(null);
 		try {
-			return await sellAssetComplete(body);
+			const res = await sellAssetComplete(body);
+			debugger;
+			return res;
 		} catch (error) {
 			const message = (error as Error).message || "Unknown error";
 			setError(message);

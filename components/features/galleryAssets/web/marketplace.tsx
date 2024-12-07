@@ -7,6 +7,8 @@ import { AssetsDisplay } from "./assets-display";
 import { FilterControls } from "./filter-controls";
 import type { AssetsMarketplaceProps } from "./types";
 import { useFilteredAssets } from "./use-filtered-assets";
+import { useSharedValue } from "react-native-reanimated";
+import type { GridOnScrollProps } from "react-window";
 
 export const AssetsMarketplace = ({
 	assets,
@@ -18,8 +20,13 @@ export const AssetsMarketplace = ({
 	const [searchTerm, setSearchTerm] = useState("");
 	const [sortBy, setSortBy] = useState("All");
 	const containerRef = useRef<HTMLDivElement>(null);
-
 	const filteredAssets = useFilteredAssets(assets, searchTerm, sortBy);
+	const y = useSharedValue(0)
+
+	const scrollHandler = (event: GridOnScrollProps) => {
+		console.log("scroll", event);
+		y.value = event.scrollTop;
+	};
 
 	return (
 		<Box className="flex flex-col h-full bg-background">
@@ -31,6 +38,7 @@ export const AssetsMarketplace = ({
 				isGridView={isGridView}
 				setIsGridView={setIsGridView}
 				totalItems={assets.length}
+				y={y}
 			/>
 			<AssetsDisplay
 				isOwner={isOwner}
@@ -39,6 +47,7 @@ export const AssetsMarketplace = ({
 				isItemLoaded={isItemLoaded}
 				loadMoreItems={loadMoreItems}
 				containerRef={containerRef}
+				scrollHandler={scrollHandler}
 			/>
 			{/* <Fab
         size="lg"

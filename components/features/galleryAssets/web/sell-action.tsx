@@ -42,19 +42,19 @@ export const useSellAction = () => {
 };
 
 const getActionLabel = (sellStartData: SellAssetStartResponse | null | undefined, sellCompleteData: SellAssetCompleteResponse | null | undefined) => {
-    // if (!sellStartData && !sellCompleteData) return "Confirm";
-    // if (sellCompleteData) return "Sell";
-    // return "";
-    // TODO: remove this
-    return "Sell";
+    if (!sellStartData && !sellCompleteData) return "Confirm";
+    if (sellCompleteData) return "Sell";
+    return "";
+    // // TODO: remove this
+    // return "Sell";
 };
 
 const getActionOnPress = (sellStartData: SellAssetStartResponse | null | undefined, sellCompleteData: SellAssetCompleteResponse | null | undefined, handleSellStart: () => void, handleSellComplete: () => void) => {
-    // if (!sellStartData && !sellCompleteData) return handleSellStart;
-    // if (sellStartData) return handleSellComplete;
-    // return () => { };
+    if (!sellStartData && !sellCompleteData) return handleSellStart;
+    if (sellStartData) return handleSellComplete;
+    return () => { };
     // TODO: remove this
-    return handleSellComplete;
+    // return handleSellComplete;
 };
 
 export const SellAction = ({
@@ -71,19 +71,25 @@ export const SellAction = ({
     handleClose: () => void;
     asset: Asset;
     isLoading: boolean;
-    sellStart: (body: SellAssetStartBody) => void;
-    sellComplete: (body: SellAssetCompleteBody) => void;
+    sellStart: (body: SellAssetStartBody) => Promise<SellAssetStartResponse | null>;
+    sellComplete: (body: SellAssetCompleteBody) => Promise<SellAssetCompleteResponse | null>;
     sellStartData: SellAssetStartResponse | null | undefined;
     sellCompleteData: SellAssetCompleteResponse | null | undefined;
 }) => {
     const { profile } = useAuth();
     const [amount, setAmount] = useState<string | undefined>(undefined);
 
-    const handleSellStart = () => {
-        sellStart({
-            asset_id: asset.id,
-            amount_to_sell: amount ? Number.parseInt(amount) : 0,
-        });
+    const handleSellStart = async () => {
+        try {
+            const res = await sellStart({
+                asset_id: asset.id,
+                amount_to_sell: amount ? Number.parseInt(amount) : 0,
+            });
+            return res;
+        } catch (e) {
+            console.error(e);
+            return null;
+        }
     };
 
     const handleSellComplete = async () => {
@@ -93,6 +99,7 @@ export const SellAction = ({
             const signatureHex = await walletProvider.signTx(sellStartData?.sighash_hex_to_sign ?? "", {
                 address: profile?.tapasAddress ?? "",
             });
+            debugger;
             await sellComplete({
                 psbt: sellStartData?.funded_psbt ?? "",
                 sighash_hex: sellStartData?.sighash_hex_to_sign ?? "",
@@ -110,9 +117,9 @@ export const SellAction = ({
     return (
         <>
             <KeyboardAvoidingView
-                behavior={Platform.OS === "ios" ? "padding" : undefined}
+                behavior={Platform.OS === "ios" ? "padding" : 'position'}
             >
-                <Actionsheet isOpen={isOpen} onClose={handleClose}>
+                <Actionsheet isOpen={isOpen} onClose={handleClose} snapPoints={[100]}>
                     <ActionsheetBackdrop />
                     <ActionsheetContent>
                         <ActionsheetDragIndicatorWrapper>
