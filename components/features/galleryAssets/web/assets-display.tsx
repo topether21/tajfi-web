@@ -20,7 +20,7 @@ interface AssetsDisplayProps {
 }
 
 const calculateColumnCount = (width: number) =>
-	Math.max(1, Math.floor(width / (CELL_WIDTH + GAP)));
+	Math.max(1, Math.floor((width + GAP) / (CELL_WIDTH + GAP)));
 const calculateColumnWidth = (width: number, columnCount: number) =>
 	Math.floor((width - GAP * (columnCount - 1)) / columnCount);
 
@@ -36,6 +36,7 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 		<div
 			ref={containerRef as React.LegacyRef<HTMLDivElement>}
 			className="container mx-auto flex-grow overflow-auto pt-4"
+		// Removed padding to avoid outer gaps
 		>
 			<AutoSizer>
 				{({ width, height }) => {
@@ -45,18 +46,17 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 					return isGridView ? (
 						<InfiniteLoader
 							isItemLoaded={isItemLoaded}
-							itemCount={filteredAssets.length + 1}
+							itemCount={filteredAssets.length}
 							loadMoreItems={loadMoreItems}
 						>
 							{({ onItemsRendered, ref }) => (
 								<Grid
 									columnCount={columnCount}
-									columnWidth={() => columnWidth}
+									columnWidth={() => CELL_WIDTH}
 									height={height}
 									rowCount={rowCount}
 									rowHeight={() => MIN_ROW_HEIGHT}
 									width={width}
-
 									onItemsRendered={({
 										visibleRowStartIndex,
 										visibleRowStopIndex,
@@ -79,7 +79,6 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 										});
 									}}
 									ref={ref}
-									style={{ gap: 8 }}
 								>
 									{({ columnIndex, rowIndex, style }) => {
 										const index = rowIndex * columnCount + columnIndex;
@@ -88,12 +87,13 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 											<div
 												style={{
 													...style,
-													width: columnWidth,
+													left: columnIndex * (CELL_WIDTH + GAP),
+													top: rowIndex * (MIN_ROW_HEIGHT + GAP),
+													width: CELL_WIDTH,
 													height: MIN_ROW_HEIGHT,
 													boxSizing: "border-box",
 												}}
 												key={filteredAssets[index].id}
-												className="bg-background"
 											>
 												<GridAssetItem
 													item={filteredAssets[index]}
@@ -115,17 +115,25 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 								<List
 									height={height}
 									itemCount={filteredAssets.length}
-									itemSize={() => LIST_ITEM_HEIGHT}
+									itemSize={() => LIST_ITEM_HEIGHT + GAP} // Include gap between list items
 									width={width}
 									onItemsRendered={onItemsRendered}
 									ref={ref}
 								>
 									{({ index, style }) => (
-										<ListAssetItem
-											index={index}
-											style={style}
-											assets={filteredAssets}
-										/>
+										<div
+											style={{
+												...style,
+												height: LIST_ITEM_HEIGHT,
+												marginBottom: GAP, // Gap between list items
+											}}
+										>
+											<ListAssetItem
+												index={index}
+												style={{ width: '100%', height: '100%' }}
+												assets={filteredAssets}
+											/>
+										</div>
 									)}
 								</List>
 							)}
@@ -135,7 +143,6 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 			</AutoSizer>
 		</div>
 	),
-	// TODO: improve this
 	(prevProps, nextProps) => {
 		return (
 			prevProps.isOwner === nextProps.isOwner &&
