@@ -104,12 +104,11 @@ export const SendScreen = () => {
 	return (
 		<>
 			<Box className="flex-1 items-start justify-start bg-background-0 px-4">
-				<Heading size="lg" className="mb-4 text-background-tajfi-deep-blue">
+				<Heading size="lg" className="mb-2 text-background-tajfi-deep-blue">
 					Send
 				</Heading>
 				<Input
 					variant="outline"
-					size="xl"
 					className="w-full"
 					isDisabled={false}
 					isInvalid={false}

@@ -54,14 +54,13 @@ export const ReceiveScreen = () => {
 	return (
 		<>
 			<Box className="flex-1 items-start justify-start px-4 bg-background-0">
-				<Heading size="lg" className="mb-4 text-background-tajfi-deep-blue">
+				<Heading size="lg" className="mb-2 text-background-tajfi-deep-blue">
 					Receive
 				</Heading>
 
 				<HStack space="xl" className="w-full items-center justify-start pb-6">
 					<Input
 						variant="outline"
-						size="xl"
 						isDisabled={false}
 						isInvalid={false}
 						isReadOnly={false}

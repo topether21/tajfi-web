@@ -13,6 +13,7 @@ import { AssetImage } from "./asset-image";
 import { BuyAction, useBuyAction } from "./buy-action";
 import { SellAction, useSellAction } from "./sell-action";
 import type { Asset } from "./use-assets";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 interface GridAssetItemProps {
 	item: Asset;
@@ -83,7 +84,11 @@ export const GridAssetItem = React.memo(
 					buyStartData={buyStartData}
 					buyCompleteData={buyCompleteData}
 				/>
-				<Pressable style={{ width: "100%", height: "100%" }}>
+				<Animated.View
+					style={{ width: "100%", height: "100%" }}
+					entering={FadeIn}
+					exiting={FadeOut}
+				>
 					<Card
 						className="overflow-hidden relative rounded-t-lg border group h-full"
 						style={{ height: "100%" }}
@@ -112,7 +117,7 @@ export const GridAssetItem = React.memo(
 							</Button>
 						</Box>
 					</Card>
-				</Pressable>
+				</Animated.View>
 			</>
 		);
 	},
