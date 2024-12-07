@@ -235,7 +235,6 @@ export const sellAssetStart = async (body: SellAssetStartBody) =>
 		body,
 	);
 
-
 export type SellAssetCompleteBody = {
 	psbt: string;
 	sighash_hex: string;
@@ -255,3 +254,39 @@ export const sellAssetComplete = async (body: SellAssetCompleteBody) =>
 		body,
 	);
 
+export type BuyAssetStartBody = {
+	psbt: string;
+	anchor_psbt: string;
+};
+
+export type BuyAssetStartResponse = {
+	updated_virtual_psbt: string;
+	updated_anchor_psbt: string;
+};
+
+export const buyAssetStart = async (body: BuyAssetStartBody) =>
+	fetchFromApi<BuyAssetStartBody, BuyAssetStartResponse>(
+		"/wallet/buy/start",
+		"POST",
+		body,
+	);
+
+export type BuyAssetCompleteBody = {
+	psbt: string;
+	anchor_psbt: string;
+	sighash_hex: string;
+	signature_hex: string;
+	amount_sats_to_pay: number;
+};
+
+export type BuyAssetCompleteResponse = {
+	signed_virtual_psbt: string;
+	modified_anchor_psbt: string;
+};
+
+export const buyAssetComplete = async (body: BuyAssetCompleteBody) =>
+	fetchFromApi<BuyAssetCompleteBody, BuyAssetCompleteResponse>(
+		"/wallet/buy/complete",
+		"POST",
+		body,
+	);

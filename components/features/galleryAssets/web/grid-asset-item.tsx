@@ -10,6 +10,7 @@ import React, { useEffect } from "react";
 import { useRendersCount } from "react-use";
 import { useAssetActions } from "../../wallet/hooks/use-asset-actions";
 import { AssetImage } from "./asset-image";
+import { BuyAction, useBuyAction } from "./buy-action";
 import { SellAction, useSellAction } from "./sell-action";
 import type { Asset } from "./use-assets";
 
@@ -31,8 +32,21 @@ export const GridAssetItem = React.memo(
 			sellComplete,
 			sellStartData,
 			sellCompleteData,
+			buyStart,
+			buyComplete,
+			buyStartData,
+			buyCompleteData,
 		} = useAssetActions();
-		const { showSell, handleClose, handleOpen } = useSellAction();
+		const {
+			showSell,
+			handleClose: handleCloseSell,
+			handleOpen: handleOpenSell,
+		} = useSellAction();
+		const {
+			showBuy,
+			handleClose: handleCloseBuy,
+			handleOpen: handleOpenBuy,
+		} = useBuyAction();
 		const [actionLabel] = isOwner ? ["Sell"] : ["Buy"];
 
 		const checkoutAssetIds = useStore($checkoutAssetIds);
@@ -51,13 +65,23 @@ export const GridAssetItem = React.memo(
 			<>
 				<SellAction
 					isOpen={showSell}
-					handleClose={handleClose}
+					handleClose={handleCloseSell}
 					asset={item}
 					isLoading={isLoading}
 					sellStart={sellStart}
 					sellComplete={sellComplete}
 					sellStartData={sellStartData}
 					sellCompleteData={sellCompleteData}
+				/>
+				<BuyAction
+					isOpen={showBuy}
+					handleClose={handleCloseBuy}
+					asset={item}
+					isLoading={isLoading}
+					buyStart={buyStart}
+					buyComplete={buyComplete}
+					buyStartData={buyStartData}
+					buyCompleteData={buyCompleteData}
 				/>
 				<Pressable style={{ width: "100%", height: "100%" }}>
 					<Card
@@ -81,7 +105,7 @@ export const GridAssetItem = React.memo(
 						<Box className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-full">
 							<Button
 								className="bg-background-tajfi-deep-blue text-white w-full rounded-t-lg"
-								onPress={handleOpen}
+								onPress={isOwner ? handleOpenSell : handleOpenBuy}
 								disabled={isLoading}
 							>
 								<ButtonText>{actionLabel}</ButtonText>

@@ -3,12 +3,12 @@
 import React, { useState, useRef } from "react";
 
 import { Box } from "@/components/ui/box";
+import { useSharedValue } from "react-native-reanimated";
+import type { GridOnScrollProps } from "react-window";
 import { AssetsDisplay } from "./assets-display";
 import { FilterControls } from "./filter-controls";
 import type { AssetsMarketplaceProps } from "./types";
 import { useFilteredAssets } from "./use-filtered-assets";
-import { useSharedValue } from "react-native-reanimated";
-import type { GridOnScrollProps } from "react-window";
 
 export const AssetsMarketplace = ({
 	assets,
@@ -21,7 +21,7 @@ export const AssetsMarketplace = ({
 	const [sortBy, setSortBy] = useState("All");
 	const containerRef = useRef<HTMLDivElement>(null);
 	const filteredAssets = useFilteredAssets(assets, searchTerm, sortBy);
-	const y = useSharedValue(0)
+	const y = useSharedValue(0);
 
 	const scrollHandler = (event: GridOnScrollProps) => {
 		console.log("scroll", event);

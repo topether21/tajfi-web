@@ -1,12 +1,13 @@
 import { Box } from "@/components/ui/box";
 import { HStack } from "@/components/ui/hstack";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
-import {
-	Search as SearchIcon,
-} from "lucide-react-native";
+import { Search as SearchIcon } from "lucide-react-native";
 import type { FC } from "react";
 import type { SharedValue } from "react-native-reanimated";
-import Animated, { useAnimatedStyle, withTiming } from "react-native-reanimated";
+import Animated, {
+	useAnimatedStyle,
+	withTiming,
+} from "react-native-reanimated";
 
 interface FilterControlsProps {
 	searchTerm: string;
@@ -40,7 +41,7 @@ export const FilterControls: FC<FilterControlsProps> = ({
 			opacity: withTiming(isHidden ? 0 : 1, { duration: 500 }),
 			height: withTiming(isHidden ? 0 : 50, { duration: 500 }),
 			width: "100%",
-			paddingBottom: -16
+			paddingBottom: -16,
 		};
 	});
 	if (totalItems === 0) return null;
@@ -53,7 +54,11 @@ export const FilterControls: FC<FilterControlsProps> = ({
 						<InputSlot className="pl-3">
 							<InputIcon as={SearchIcon} />
 						</InputSlot>
-						<InputField placeholder="Search..." onChangeText={setSearchTerm} value={searchTerm} />
+						<InputField
+							placeholder="Search..."
+							onChangeText={setSearchTerm}
+							value={searchTerm}
+						/>
 					</Input>
 				</Box>
 			</Animated.View>

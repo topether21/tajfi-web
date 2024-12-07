@@ -1,6 +1,10 @@
 import {
+	type BuyAssetCompleteBody,
+	type BuyAssetStartBody,
 	type SellAssetCompleteBody,
 	type SellAssetStartBody,
+	buyAssetComplete,
+	buyAssetStart,
 	sellAssetComplete,
 	sellAssetStart,
 } from "@/libs/wallet/api";
@@ -40,13 +44,48 @@ export const useAssetActions = () => {
 		}
 	}, []);
 
-	const isLoading = loadingSellStart || loadingSellComplete || false;
+	const [{ loading: loadingBuyStart, value: buyStartData }, buyStart] =
+		useAsyncFn(async (body: BuyAssetStartBody) => {
+			setError(null);
+			try {
+				const res = await buyAssetStart(body);
+				return res;
+			} catch (error) {
+				const message = (error as Error).message || "Unknown error";
+				setError(message);
+				return null;
+			}
+		}, []);
+
+	const [{ loading: loadingBuyComplete, value: buyCompleteData }, buyComplete] =
+		useAsyncFn(async (body: BuyAssetCompleteBody) => {
+			setError(null);
+			try {
+				const res = await buyAssetComplete(body);
+				return res;
+			} catch (error) {
+				const message = (error as Error).message || "Unknown error";
+				setError(message);
+				return null;
+			}
+		}, []);
+
+	const isLoading =
+		loadingSellStart ||
+		loadingSellComplete ||
+		loadingBuyStart ||
+		loadingBuyComplete ||
+		false;
 
 	return {
 		sellStart,
 		sellStartData,
 		sellComplete,
 		sellCompleteData,
+		buyStart,
+		buyStartData,
+		buyComplete,
+		buyCompleteData,
 		isLoading,
 		error,
 	};
