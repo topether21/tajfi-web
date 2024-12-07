@@ -26,7 +26,7 @@ import type {
 } from "@/libs/wallet/api";
 import { getProviderStrategy } from "@/libs/wallet/providers";
 import { Hash } from "lucide-react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Platform } from "react-native";
 import { useAuth } from "../../wallet/connect-wallet/auth-context";
 import { AssetImage } from "./asset-image";
@@ -62,7 +62,7 @@ const getActionOnPress = (
 ) => {
 	if (!sellStartData && !sellCompleteData) return handleSellStart;
 	if (sellStartData) return handleSellComplete;
-	return () => {};
+	return () => { };
 	// TODO: remove this
 	// return handleSellComplete;
 };
@@ -76,6 +76,8 @@ export const SellAction = ({
 	sellComplete,
 	sellStartData,
 	sellCompleteData,
+	startRefreshing,
+	stopRefreshing,
 }: {
 	isOpen: boolean;
 	handleClose: () => void;
@@ -89,6 +91,8 @@ export const SellAction = ({
 	) => Promise<SellAssetCompleteResponse | null>;
 	sellStartData: SellAssetStartResponse | null | undefined;
 	sellCompleteData: SellAssetCompleteResponse | null | undefined;
+	startRefreshing?: () => void;
+	stopRefreshing?: () => void;
 }) => {
 	const { profile } = useAuth();
 	const [amount, setAmount] = useState<string | undefined>(undefined);
@@ -99,6 +103,7 @@ export const SellAction = ({
 				asset_id: asset.id,
 				amount_to_sell: amount ? Number.parseInt(amount) : 0,
 			});
+
 			return res;
 		} catch (e) {
 			console.error(e);
@@ -135,6 +140,15 @@ export const SellAction = ({
 		handleSellStart,
 		handleSellComplete,
 	);
+
+	useEffect(() => {
+		console.log("isOpen", isOpen);
+		if (isOpen) {
+			stopRefreshing?.();
+		} else {
+			startRefreshing?.();
+		}
+	}, [isOpen, startRefreshing, stopRefreshing]);
 
 	return (
 		<>

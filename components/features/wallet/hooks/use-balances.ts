@@ -1,4 +1,5 @@
 import { listBalances } from "@/libs/wallet/api";
+import { useCallback, useState } from "react";
 import useSWR from "swr";
 
 export type AssetBalance = {
@@ -8,6 +9,9 @@ export type AssetBalance = {
 };
 
 export const useBalances = () => {
+	console.log("useBalances");
+	const [isRefreshing, setIsRefreshing] = useState(true);
+
 	const fetcher = () =>
 		listBalances().then((data) => {
 			const balances = Object.entries(data.asset_balances).reduce(
@@ -53,16 +57,26 @@ export const useBalances = () => {
 		},
 		error,
 	} = useSWR("wallet-balance", fetcher, {
-		refreshInterval: 4000,
+		refreshInterval: isRefreshing ? 4000 : 0,
 	});
 
 	const loading = !error && balances.userBalances.length === 0;
 	const currencies = balances.currencies;
+
+	const startRefreshing = useCallback(() => {
+		console.log("startRefreshing");
+	}, []);
+	const stopRefreshing = useCallback(() => {
+		console.log("stopRefreshing");
+		setIsRefreshing(false);
+	}, []);
 
 	return {
 		userBalances: balances.userBalances,
 		currencies,
 		loading,
 		error,
+		startRefreshing,
+		stopRefreshing,
 	};
 };

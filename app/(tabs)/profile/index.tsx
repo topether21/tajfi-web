@@ -5,7 +5,8 @@ import { ASSETS } from "@/components/features/galleryAssets/web/assets";
 import { Heading } from "@/components/ui/heading";
 
 export default function ProfilePage() {
-	const { userBalances, currencies } = useBalances();
+	const { userBalances, currencies, startRefreshing, stopRefreshing } =
+		useBalances();
 	const assets = userBalances
 		.filter((balance) => balance.amount > 0)
 		.map((balance, index) => ({
@@ -32,6 +33,8 @@ export default function ProfilePage() {
 				isItemLoaded={isItemLoaded}
 				loadMoreItems={loadMoreItems}
 				isOwner
+				startRefreshing={startRefreshing}
+				stopRefreshing={stopRefreshing}
 			/>
 		</>
 	);

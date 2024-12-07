@@ -1,23 +1,24 @@
 import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
-import { $checkoutAssetIds } from "@/store/checkout-store";
+// import { $checkoutAssetIds } from "@/store/checkout-store";
 
-import { useStore } from "@nanostores/react";
+// import { useStore } from "@nanostores/react";
 import React, { useEffect } from "react";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { useRendersCount } from "react-use";
 import { useAssetActions } from "../../wallet/hooks/use-asset-actions";
 import { AssetImage } from "./asset-image";
 import { BuyAction, useBuyAction } from "./buy-action";
 import { SellAction, useSellAction } from "./sell-action";
 import type { Asset } from "./use-assets";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 
 interface GridAssetItemProps {
 	item: Asset;
 	isOwner?: boolean;
+	startRefreshing?: () => void;
+	stopRefreshing?: () => void;
 }
 
 // TODO: move to utils
@@ -26,7 +27,7 @@ const formatSatoshis = (satoshis: number) => {
 };
 
 export const GridAssetItem = React.memo(
-	({ item, isOwner }: GridAssetItemProps) => {
+	({ item, isOwner, startRefreshing, stopRefreshing }: GridAssetItemProps) => {
 		const {
 			sellStart,
 			isLoading,
@@ -50,7 +51,7 @@ export const GridAssetItem = React.memo(
 		} = useBuyAction();
 		const [actionLabel] = isOwner ? ["Sell"] : ["Buy"];
 
-		const checkoutAssetIds = useStore($checkoutAssetIds);
+		// const checkoutAssetIds = useStore($checkoutAssetIds);
 		// TODO: continue with checkout card
 		// const isChecked = checkoutAssetIds.find((id) => id === item.id);
 
@@ -73,6 +74,8 @@ export const GridAssetItem = React.memo(
 					sellComplete={sellComplete}
 					sellStartData={sellStartData}
 					sellCompleteData={sellCompleteData}
+					startRefreshing={startRefreshing}
+					stopRefreshing={stopRefreshing}
 				/>
 				<BuyAction
 					isOpen={showBuy}

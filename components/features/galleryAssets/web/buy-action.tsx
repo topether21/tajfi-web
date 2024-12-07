@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/form-control";
 import { HStack } from "@/components/ui/hstack";
 import { CloseIcon, Icon } from "@/components/ui/icon";
-import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Pressable } from "@/components/ui/pressable";
 import { Text } from "@/components/ui/text";
 import { VStack } from "@/components/ui/vstack";
@@ -23,13 +22,7 @@ import type {
 	BuyAssetCompleteResponse,
 	BuyAssetStartBody,
 	BuyAssetStartResponse,
-	SellAssetCompleteBody,
-	SellAssetCompleteResponse,
-	SellAssetStartBody,
-	SellAssetStartResponse,
 } from "@/libs/wallet/api";
-import { getProviderStrategy } from "@/libs/wallet/providers";
-import { Hash } from "lucide-react-native";
 import { useState } from "react";
 import { KeyboardAvoidingView, Platform } from "react-native";
 import { useAuth } from "../../wallet/connect-wallet/auth-context";
@@ -54,8 +47,6 @@ const getActionLabel = (
 	if (!buyStartData && !buyCompleteData) return "Confirm";
 	if (buyCompleteData) return "Buy";
 	return "";
-	// // TODO: remove this
-	// return "Sell";
 };
 
 const getActionOnPress = (
@@ -67,8 +58,6 @@ const getActionOnPress = (
 	if (!buyStartData && !buyCompleteData) return handleBuyStart;
 	if (buyStartData) return handleBuyComplete;
 	return () => {};
-	// TODO: remove this
-	// return handleBuyComplete;
 };
 
 export const BuyAction = ({

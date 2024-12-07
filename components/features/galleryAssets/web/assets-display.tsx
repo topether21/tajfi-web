@@ -19,6 +19,8 @@ interface AssetsDisplayProps {
 	containerRef: React.RefObject<HTMLDivElement | null>;
 	scrollHandler: (event: GridOnScrollProps) => void;
 	isOwner?: boolean;
+	startRefreshing?: () => void;
+	stopRefreshing?: () => void;
 }
 
 const calculateColumnCount = (width: number) =>
@@ -35,6 +37,8 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 		loadMoreItems,
 		containerRef,
 		scrollHandler,
+		startRefreshing,
+		stopRefreshing,
 	}) => {
 		return (
 			<div
@@ -45,7 +49,7 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 				<AutoSizer>
 					{({ width, height }) => {
 						const columnCount = calculateColumnCount(width);
-						const columnWidth = calculateColumnWidth(width, columnCount);
+						// const columnWidth = calculateColumnWidth(width, columnCount);
 						const rowCount = Math.ceil(filteredAssets.length / columnCount);
 						return isGridView ? (
 							<InfiniteLoader
@@ -103,6 +107,8 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 													<GridAssetItem
 														item={filteredAssets[index]}
 														isOwner={isOwner}
+														startRefreshing={startRefreshing}
+														stopRefreshing={stopRefreshing}
 													/>
 												</div>
 											);

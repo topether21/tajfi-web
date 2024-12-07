@@ -15,6 +15,8 @@ export const AssetsMarketplace = ({
 	isItemLoaded,
 	loadMoreItems,
 	isOwner,
+	startRefreshing,
+	stopRefreshing,
 }: AssetsMarketplaceProps) => {
 	const [isGridView, setIsGridView] = useState(true);
 	const [searchTerm, setSearchTerm] = useState("");
@@ -25,7 +27,7 @@ export const AssetsMarketplace = ({
 
 	const scrollHandler = (event: GridOnScrollProps) => {
 		console.log("scroll", event);
-		y.value = event.scrollTop;
+		y.set(event.scrollTop);
 	};
 
 	return (
@@ -48,6 +50,8 @@ export const AssetsMarketplace = ({
 				loadMoreItems={loadMoreItems}
 				containerRef={containerRef}
 				scrollHandler={scrollHandler}
+				startRefreshing={startRefreshing}
+				stopRefreshing={stopRefreshing}
 			/>
 			{/* <Fab
         size="lg"

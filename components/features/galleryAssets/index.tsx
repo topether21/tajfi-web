@@ -9,6 +9,8 @@ export const AssetGalleryScreen = ({
 	isItemLoaded,
 	loadMoreItems,
 	isOwner,
+	startRefreshing,
+	stopRefreshing,
 }: AssetsMarketplaceProps) => {
 	const { isLarge } = useSizes();
 	return (
@@ -24,6 +26,8 @@ export const AssetGalleryScreen = ({
 				isItemLoaded={isItemLoaded}
 				loadMoreItems={loadMoreItems}
 				isOwner={isOwner}
+				startRefreshing={startRefreshing}
+				stopRefreshing={stopRefreshing}
 			/>
 		</Box>
 	);
