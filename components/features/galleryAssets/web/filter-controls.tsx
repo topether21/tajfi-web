@@ -40,7 +40,7 @@ export const FilterControls: FC<FilterControlsProps> = ({
 					<InputField placeholder="Search..." />
 				</Input>
 			</Box>
-			<Center>
+			{/* <Center>
 				<Pressable
 					onPress={() => setIsGridView(!isGridView)}
 					aria-label="Toggle view"
@@ -51,7 +51,7 @@ export const FilterControls: FC<FilterControlsProps> = ({
 						<ListIcon className="stroke-background-tajfi-deep-blue" />
 					)}
 				</Pressable>
-			</Center>
+			</Center> */}
 		</HStack>
 	);
 };

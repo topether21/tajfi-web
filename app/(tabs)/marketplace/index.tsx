@@ -23,7 +23,10 @@ export default function MarketplacePage() {
 	const loadMoreItems = () => Promise.resolve();
 	return (
 		<>
-			<Heading size="lg" className="pb-4 text-background-tajfi-deep-blue px-4 bg-background-0">
+			<Heading
+				size="lg"
+				className="pb-4 text-background-tajfi-deep-blue px-4 bg-background-0"
+			>
 				Trade
 			</Heading>
 			<AssetGalleryScreen

@@ -36,7 +36,7 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 		<div
 			ref={containerRef as React.LegacyRef<HTMLDivElement>}
 			className="container mx-auto flex-grow overflow-auto pt-4"
-		// Removed padding to avoid outer gaps
+			// Removed padding to avoid outer gaps
 		>
 			<AutoSizer>
 				{({ width, height }) => {
@@ -130,7 +130,7 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 										>
 											<ListAssetItem
 												index={index}
-												style={{ width: '100%', height: '100%' }}
+												style={{ width: "100%", height: "100%" }}
 												assets={filteredAssets}
 											/>
 										</div>
@@ -155,8 +155,7 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 				(asset, index) => asset.name === nextProps.filteredAssets[index].name,
 			) &&
 			prevProps.filteredAssets.every(
-				(asset, index) =>
-					asset.price === nextProps.filteredAssets[index].price,
+				(asset, index) => asset.price === nextProps.filteredAssets[index].price,
 			) &&
 			prevProps.filteredAssets.every(
 				(asset, index) => asset.units === nextProps.filteredAssets[index].units,

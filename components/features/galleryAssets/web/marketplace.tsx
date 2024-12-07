@@ -16,10 +16,10 @@ export const AssetsMarketplace = ({
 }: AssetsMarketplaceProps) => {
 	const [isGridView, setIsGridView] = useState(true);
 	const [searchTerm, setSearchTerm] = useState("");
-	const [sortBy, setSortBy] = useState("price");
+	const [sortBy, setSortBy] = useState("All");
 	const containerRef = useRef<HTMLDivElement>(null);
 
-	const filteredAssets = useFilteredAssets(assets, searchTerm, "All", sortBy);
+	const filteredAssets = useFilteredAssets(assets, searchTerm, sortBy);
 
 	return (
 		<Box className="flex flex-col h-full bg-background">

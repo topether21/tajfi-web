@@ -1,5 +1,3 @@
-
-
 import { CurrencyLogoIcon } from "@/components/icons/currency-logo";
 
 // TODO: uncomment this when we have a real image for the asset
@@ -15,10 +13,10 @@ import { CurrencyLogoIcon } from "@/components/icons/currency-logo";
 // };
 
 export const AssetImage = ({ assetId }: { assetId: string }) => {
-    return (
-        <CurrencyLogoIcon
-            assetId={assetId || process.env.EXPO_PUBLIC_DEFAULT_ASSET_ID}
-            className="select-none h-[87%] w-full"
-        />
-    );
+	return (
+		<CurrencyLogoIcon
+			assetId={assetId || process.env.EXPO_PUBLIC_DEFAULT_ASSET_ID}
+			className="select-none h-[87%] w-full"
+		/>
+	);
 };

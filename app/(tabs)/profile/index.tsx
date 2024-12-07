@@ -21,7 +21,10 @@ export default function ProfilePage() {
 	const loadMoreItems = () => Promise.resolve();
 	return (
 		<>
-			<Heading size="lg" className="pb-4 text-background-tajfi-deep-blue px-4 bg-background-0">
+			<Heading
+				size="lg"
+				className="pb-4 text-background-tajfi-deep-blue px-4 bg-background-0"
+			>
 				My Assets
 			</Heading>
 			<AssetGalleryScreen
@@ -31,6 +34,5 @@ export default function ProfilePage() {
 				isOwner
 			/>
 		</>
-
 	);
 }
