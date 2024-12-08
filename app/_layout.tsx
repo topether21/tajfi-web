@@ -9,6 +9,7 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { TabBarIcons } from "@/components/containers/tab-bar/tab-bar-icons";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -40,6 +41,9 @@ export default function RootLayout() {
 					</TabBarVisibilityProvider>
 				</ActionSheetProvider>
 			</GestureHandlerRootView>
+			{/* Hidden icons for prefetching */}
+			{/* TODO: remove this once we have a better way to prefetch icons */}
+			<TabBarIcons />
 		</AuthProvider>
 	);
 }

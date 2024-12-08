@@ -46,7 +46,7 @@ export const FilterControls: FC<FilterControlsProps> = ({
 	});
 	if (totalItems === 0) return null;
 	return (
-		<HStack className="container mx-auto flex-row gap-4 bg-background pb-2">
+		<HStack className="mx-auto flex-row gap-4 bg-background pb-2 w-full">
 			{/* Animated search input */}
 			<Animated.View style={searchInputStyle}>
 				<Box className="relative flex-grow">

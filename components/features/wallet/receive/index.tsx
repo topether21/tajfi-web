@@ -143,6 +143,20 @@ export const ReceiveScreen = () => {
 					createNewInvoice({ amount: Number(assetAmount), assetId });
 				}}
 			/>
+			{/* Hidden icons for prefetching */}
+			{/* TODO: remove this once we have a better way to prefetch icons */}
+			<Box className="hidden">
+				<Ionicons
+					name="copy"
+					size={24}
+					color={HEX_COLORS.tajfiDeepBlue}
+				/>
+				<Entypo
+					name="share"
+					size={24}
+					color={HEX_COLORS.tajfiDeepBlue}
+				/>
+			</Box>
 		</>
 	);
 };
