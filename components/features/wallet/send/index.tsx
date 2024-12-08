@@ -2,7 +2,6 @@ import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
-import { Text } from "@/components/ui/text";
 import * as Clipboard from "expo-clipboard";
 import { useFocusEffect } from "expo-router";
 import { ClipboardPaste as ClipboardIcon, InfoIcon, Scan } from "lucide-react-native";
@@ -131,7 +130,6 @@ export const SendScreen = () => {
 						onChangeText={handleInvoiceChange}
 						className="text-background-tajfi-deep-blue"
 						value={invoice}
-						autoFocus
 					/>
 					<InputSlot>
 						<HStack space="xl" className="pr-4">

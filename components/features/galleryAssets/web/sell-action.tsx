@@ -220,7 +220,6 @@ export const SellAction = ({
 										value={amount?.toString()}
 										onChangeText={handleAmountChange}
 										keyboardType="numeric"
-										autoFocus
 										type="text"
 									/>
 								</Input>
