@@ -7,14 +7,19 @@ import { useSharedValue } from "react-native-reanimated";
 import type { GridOnScrollProps } from "react-window";
 import { AssetsDisplay } from "./assets-display";
 import { FilterControls } from "./filter-controls";
-import type { AssetsMarketplaceProps } from "./types";
 import { useFilteredAssets } from "./use-filtered-assets";
+import type { Asset } from "./use-assets";
+
+export type AssetsMarketplaceProps = {
+	assets: Asset[];
+	isItemLoaded: (index: number) => boolean;
+	loadMoreItems: (startIndex: number, stopIndex: number) => Promise<void>;
+};
 
 export const AssetsMarketplace = ({
 	assets,
 	isItemLoaded,
 	loadMoreItems,
-	isOwner,
 }: AssetsMarketplaceProps) => {
 	const [isGridView, setIsGridView] = useState(true);
 	const [searchTerm, setSearchTerm] = useState("");
@@ -41,7 +46,6 @@ export const AssetsMarketplace = ({
 				y={y}
 			/>
 			<AssetsDisplay
-				isOwner={isOwner}
 				filteredAssets={filteredAssets}
 				isGridView={isGridView}
 				isItemLoaded={isItemLoaded}

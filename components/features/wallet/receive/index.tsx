@@ -88,7 +88,6 @@ export const ReceiveScreen = () => {
 					<SimpleCurrencySelector handleOpen={handleOpen} />
 				</HStack>
 
-
 				{!loading && qrCode && (
 					<Box ref={qrCodeRef} className="mx-auto pb-24">
 						<Animated.View entering={FadeIn} exiting={FadeOut}>
@@ -133,8 +132,8 @@ export const ReceiveScreen = () => {
 								)}
 							</VStack>
 						</Animated.View>
-					</Box>)}
-
+					</Box>
+				)}
 			</Box>
 			<UserCurrencies
 				isOpen={isOpen}

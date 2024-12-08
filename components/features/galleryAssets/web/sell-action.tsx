@@ -82,7 +82,7 @@ const getActionOnPress = ({
 	if (errorMessage) return handleClose;
 	if (!sellStartData && !sellCompleteData) return handleSellStart;
 	if (sellStartData) return handleSellComplete;
-	return () => {};
+	return () => { };
 };
 
 export const SellAction = ({
@@ -210,8 +210,8 @@ export const SellAction = ({
 							<FormControl className="mt-[36px]">
 								<FormControlLabel>
 									<FormControlLabelText>
-										Confirm the amount you want to sell, you have {asset.units}{" "}
-										{asset.name}
+										Confirm the amount you want to sell, you have{" "}
+										{asset.amount ?? ""} {asset.name}
 									</FormControlLabelText>
 								</FormControlLabel>
 								<Input className="w-full">

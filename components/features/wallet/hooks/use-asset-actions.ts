@@ -16,7 +16,7 @@ export const useAssetActions = () => {
 
 	const [{ loading: loadingSellStart, value: sellStartData }, sellStart] =
 		useAsyncFn(async (body: SellAssetStartBody) => {
-			setErrorMessage('');
+			setErrorMessage("");
 			try {
 				const res = await sellAssetStart(body);
 				debugger;
@@ -32,7 +32,7 @@ export const useAssetActions = () => {
 		{ loading: loadingSellComplete, value: sellCompleteData },
 		sellComplete,
 	] = useAsyncFn(async (body: SellAssetCompleteBody) => {
-		setErrorMessage('');
+		setErrorMessage("");
 		try {
 			const res = await sellAssetComplete(body);
 			debugger;
@@ -46,7 +46,7 @@ export const useAssetActions = () => {
 
 	const [{ loading: loadingBuyStart, value: buyStartData }, buyStart] =
 		useAsyncFn(async (body: BuyAssetStartBody) => {
-			setErrorMessage('');
+			setErrorMessage("");
 			try {
 				const res = await buyAssetStart(body);
 				return res;
@@ -59,7 +59,7 @@ export const useAssetActions = () => {
 
 	const [{ loading: loadingBuyComplete, value: buyCompleteData }, buyComplete] =
 		useAsyncFn(async (body: BuyAssetCompleteBody) => {
-			setErrorMessage('');
+			setErrorMessage("");
 			try {
 				const res = await buyAssetComplete(body);
 				return res;

@@ -85,11 +85,7 @@ export const GridAssetItem = React.memo(
 					buyStartData={buyStartData}
 					buyCompleteData={buyCompleteData}
 				/>
-				<Animated.View
-					style={{ width: "100%", height: "100%" }}
-					entering={FadeIn}
-					exiting={FadeOut}
-				>
+				<Box className="w-full h-full">
 					<Card
 						className="overflow-hidden relative rounded-t-lg border group h-full"
 						style={{ height: "100%" }}
@@ -99,13 +95,15 @@ export const GridAssetItem = React.memo(
                             {isChecked ? <Check size={16} /> : <Plus size={16} />}
                         </Badge>
                     </Pressable> */}
-						<AssetImage assetId={item.id} />
+						<AssetImage assetId={item.assetId} />
 						<Box>
 							<Text className="text-xs font-bold capitalize">
-								{item.units ?? ""} {item.name}
+								{item.order?.amount_to_sell ?? ""} {item.name}
 							</Text>
 							<Text className="text-xs">
-								{isOwner ? "" : `${formatSatoshis(item.satoshiPrice)} BTC`}
+								{item.order
+									? `${formatSatoshis(item.order.amount_sats_to_receive)} BTC`
+									: ""}
 							</Text>
 						</Box>
 						<Box className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-full">
@@ -118,15 +116,12 @@ export const GridAssetItem = React.memo(
 							</Button>
 						</Box>
 					</Card>
-				</Animated.View>
+				</Box>
 			</>
 		);
 	},
 	(prevProps, nextProps) => {
-		return (
-			prevProps.item.id === nextProps.item.id &&
-			prevProps.isOwner === nextProps.isOwner
-		);
+		return prevProps.item.id === nextProps.item.id;
 	},
 );
 

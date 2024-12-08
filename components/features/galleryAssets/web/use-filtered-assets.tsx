@@ -18,7 +18,7 @@ export const useFilteredAssets = (
 		}
 
 		if (sortBy === "price") {
-			filteredAssets.sort((a, b) => a.price - b.price);
+			filteredAssets.sort((a, b) => a.amount - b.amount);
 		}
 
 		return filteredAssets;

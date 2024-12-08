@@ -1,27 +1,22 @@
 import { AssetGalleryScreen } from "@/components/features/galleryAssets";
 import {
-	useBalanceRefresh,
 	useCurrencies,
 	useUserBalances,
 } from "@/components/features/wallet/hooks/use-balances";
-
-import { ASSETS } from "@/components/features/galleryAssets/web/assets";
 import { Heading } from "@/components/ui/heading";
+import type { Asset } from "@/components/features/galleryAssets/web/use-assets";
 
 export default function ProfilePage() {
 	const currencies = useCurrencies();
 	const userBalances = useUserBalances();
 
-	const assets = userBalances
+	const assets: Asset[] = userBalances
 		.filter((balance) => balance.amount > 0)
-		.map((balance, index) => ({
-			id: balance.assetId || `${index}`,
-			name: balance.assetId ? currencies.get(balance.assetId) || "" : "",
-			price: balance.amount,
-			image: ASSETS[index].image,
-			satoshiPrice: 0,
-			ordinalNumber: index,
-			units: balance.amount,
+		.map((balance) => ({
+			id: balance.assetId,
+			assetId: balance.assetId,
+			name: currencies.get(balance.assetId) || "",
+			amount: balance.amount,
 		}));
 	const isItemLoaded = (index: number) => true;
 	const loadMoreItems = () => Promise.resolve();
@@ -37,7 +32,6 @@ export default function ProfilePage() {
 				assets={assets}
 				isItemLoaded={isItemLoaded}
 				loadMoreItems={loadMoreItems}
-				isOwner
 			/>
 		</>
 	);

@@ -1,14 +1,13 @@
 import { Box } from "@/components/ui/box";
 import { useSizes } from "@/hooks/useSizes";
 import clsx from "clsx";
+import type { AssetsMarketplaceProps } from "./web/marketplace";
 import { AssetsMarketplace } from "./web/marketplace";
-import type { AssetsMarketplaceProps } from "./web/types";
 
 export const AssetGalleryScreen = ({
 	assets,
 	isItemLoaded,
 	loadMoreItems,
-	isOwner,
 }: AssetsMarketplaceProps) => {
 	const { isLarge } = useSizes();
 	return (
@@ -23,7 +22,6 @@ export const AssetGalleryScreen = ({
 				assets={assets}
 				isItemLoaded={isItemLoaded}
 				loadMoreItems={loadMoreItems}
-				isOwner={isOwner}
 			/>
 		</Box>
 	);

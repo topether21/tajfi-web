@@ -142,18 +142,20 @@ export const SendScreen = () => {
 				{isSent ? (
 					<Text>Transaction confirmed.</Text>
 				) : (
-					(invoiceDetails || error) && <Animated.View
-						entering={FadeIn}
-						exiting={FadeOut}
-						style={{ flex: 1, width: "100%" }}
-					>
-						<TransactionSummary
-							invoiceDetails={invoiceDetails}
-							onSend={onSend}
-							invoice={invoice}
-							error={error}
-						/>
-					</Animated.View>
+					(invoiceDetails || error) && (
+						<Animated.View
+							entering={FadeIn}
+							exiting={FadeOut}
+							style={{ flex: 1, width: "100%" }}
+						>
+							<TransactionSummary
+								invoiceDetails={invoiceDetails}
+								onSend={onSend}
+								invoice={invoice}
+								error={error}
+							/>
+						</Animated.View>
+					)
 				)}
 
 				<ScannerModal

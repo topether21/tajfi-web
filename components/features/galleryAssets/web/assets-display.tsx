@@ -149,7 +149,6 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 	},
 	(prevProps, nextProps) => {
 		return (
-			prevProps.isOwner === nextProps.isOwner &&
 			prevProps.isGridView === nextProps.isGridView &&
 			prevProps.filteredAssets.length === nextProps.filteredAssets.length &&
 			prevProps.filteredAssets.every(
@@ -157,12 +156,6 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 			) &&
 			prevProps.filteredAssets.every(
 				(asset, index) => asset.name === nextProps.filteredAssets[index].name,
-			) &&
-			prevProps.filteredAssets.every(
-				(asset, index) => asset.price === nextProps.filteredAssets[index].price,
-			) &&
-			prevProps.filteredAssets.every(
-				(asset, index) => asset.units === nextProps.filteredAssets[index].units,
 			)
 		);
 	},

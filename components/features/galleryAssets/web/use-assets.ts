@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { ASSETS } from "./assets";
+import type { Order } from "@/libs/wallet/api";
 
 export type Asset = {
 	id: string;
+	assetId: string;
 	name: string;
-	price: number;
-	image: string;
-	satoshiPrice: number;
-	ordinalNumber: number;
-	units?: number;
+	amount: number;
+	image?: string;
+	order?: Omit<Order, "asset_id">;
 };
 
 const INITIAL_LOAD_SIZE = 20;
@@ -21,7 +21,14 @@ export const useAssets = () => {
 
 	useEffect(() => {
 		const loadAssetsCache = async () => {
-			const allAssets = ASSETS;
+			const allAssets = ASSETS.map((asset) => ({
+				id: asset.id,
+				assetId: asset.id,
+				name: asset.name,
+				amount: 0,
+				image: asset.image,
+				order: undefined,
+			}));
 			setAssetsCache(allAssets);
 
 			// Initialize assets with the first set of items

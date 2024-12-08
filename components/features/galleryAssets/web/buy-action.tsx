@@ -45,7 +45,7 @@ const getActionLabel = (
 	buyCompleteData: BuyAssetCompleteResponse | null | undefined,
 ) => {
 	if (!buyStartData && !buyCompleteData) return "Confirm";
-	if (buyCompleteData) return "Buy";
+	if (buyStartData) return "Buy";
 	return "";
 };
 
@@ -86,8 +86,8 @@ export const BuyAction = ({
 	const handleBuyStart = async () => {
 		try {
 			const response = await buyStart({
-				psbt: asset.id,
-				anchor_psbt: "",
+				psbt: asset.order?.virtual_psbt ?? "",
+				anchor_psbt: asset.order?.anchor_psbt ?? "",
 			});
 			return response;
 		} catch (e) {
@@ -143,8 +143,7 @@ export const BuyAction = ({
 							<FormControl className="mt-[36px]">
 								<FormControlLabel>
 									<FormControlLabelText>
-										Confirm the amount you want to buy {asset.units}{" "}
-										{asset.name}
+										You are about to buy {asset.order?.amount_to_sell ?? ""} {asset.name}
 									</FormControlLabelText>
 								</FormControlLabel>
 								<Button

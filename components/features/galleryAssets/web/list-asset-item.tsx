@@ -23,7 +23,7 @@ export const ListAssetItem = ({
 					{assets[index].name}
 				</h3>
 				<p className="text-sm text-muted-foreground">
-					{assets[index].price} BTC
+					{assets[index].order?.amount_sats_to_receive ?? ""} BTC
 				</p>
 			</div>
 		</div>
