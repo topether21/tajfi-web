@@ -12,14 +12,13 @@ import { useState } from "react";
 import { useAsyncFn } from "react-use";
 
 export const useAssetActions = () => {
-	const [errorMessage, setErrorMessage] = useState<string>();
+	const [errorMessage, setErrorMessage] = useState<string>("");
 
 	const [{ loading: loadingSellStart, value: sellStartData }, sellStart] =
 		useAsyncFn(async (body: SellAssetStartBody) => {
 			setErrorMessage("");
 			try {
 				const res = await sellAssetStart(body);
-				debugger;
 				return res;
 			} catch (error) {
 				const message = (error as Error).message || "Unknown error";
@@ -35,7 +34,6 @@ export const useAssetActions = () => {
 		setErrorMessage("");
 		try {
 			const res = await sellAssetComplete(body);
-			debugger;
 			return res;
 		} catch (error) {
 			const message = (error as Error).message || "Unknown error";
@@ -77,6 +75,10 @@ export const useAssetActions = () => {
 		loadingBuyComplete ||
 		false;
 
+	const reset = () => {
+		setErrorMessage("");
+	};
+
 	return {
 		sellStart,
 		sellStartData,
@@ -88,5 +90,6 @@ export const useAssetActions = () => {
 		buyCompleteData,
 		isLoading,
 		errorMessage,
+		reset
 	};
 };

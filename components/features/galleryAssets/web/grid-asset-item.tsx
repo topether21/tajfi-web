@@ -5,9 +5,7 @@ import { Text } from "@/components/ui/text";
 // import { $checkoutAssetIds } from "@/store/checkout-store";
 
 // import { useStore } from "@nanostores/react";
-import React, { useEffect } from "react";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import { useRendersCount } from "react-use";
+import React from "react";
 import { useAssetActions } from "../../wallet/hooks/use-asset-actions";
 import { AssetImage } from "./asset-image";
 import { BuyAction, useBuyAction } from "./buy-action";
@@ -37,6 +35,7 @@ export const GridAssetItem = React.memo(
 			buyStartData,
 			buyCompleteData,
 			errorMessage,
+			reset,
 		} = useAssetActions();
 		const {
 			showSell,
@@ -48,25 +47,37 @@ export const GridAssetItem = React.memo(
 			handleClose: handleCloseBuy,
 			handleOpen: handleOpenBuy,
 		} = useBuyAction();
+
+
+		const onCloseSell = () => {
+			reset();
+			handleCloseSell();
+		};
+
+		const onCloseBuy = () => {
+			reset();
+			handleCloseBuy();
+		};
+
 		const [actionLabel] = isOwner ? ["Sell"] : ["Buy"];
 
 		// const checkoutAssetIds = useStore($checkoutAssetIds);
 		// TODO: continue with checkout card
 		// const isChecked = checkoutAssetIds.find((id) => id === item.id);
 
-		const renders = useRendersCount();
-		console.log("renders", renders);
-		useEffect(() => {
-			console.log("mount", item);
-			return () => {
-				console.log("unmount", item);
-			};
-		}, [item]);
+		// const renders = useRendersCount();
+		// console.log("renders", renders);
+		// useEffect(() => {
+		// 	console.log("mount", item);
+		// 	return () => {
+		// 		console.log("unmount", item);
+		// 	};
+		// }, [item]);
 		return (
 			<>
 				<SellAction
 					isOpen={showSell}
-					handleClose={handleCloseSell}
+					handleClose={onCloseSell}
 					asset={item}
 					isLoading={isLoading}
 					sellStart={sellStart}
@@ -77,13 +88,14 @@ export const GridAssetItem = React.memo(
 				/>
 				<BuyAction
 					isOpen={showBuy}
-					handleClose={handleCloseBuy}
+					handleClose={onCloseBuy}
 					asset={item}
 					isLoading={isLoading}
 					buyStart={buyStart}
 					buyComplete={buyComplete}
 					buyStartData={buyStartData}
 					buyCompleteData={buyCompleteData}
+					errorMessage={errorMessage}
 				/>
 				<Box className="w-full h-full">
 					<Card

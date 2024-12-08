@@ -116,7 +116,6 @@ export const SellAction = ({
 
 	const handleSellStart = async () => {
 		try {
-			debugger;
 			const res = await sellStart({
 				asset_id: asset.id,
 				amount_to_sell: amount ? Number.parseInt(amount) : 0,
@@ -138,7 +137,6 @@ export const SellAction = ({
 					address: profile?.tapasAddress ?? "",
 				},
 			);
-			debugger;
 			await sellComplete({
 				psbt: sellStartData?.funded_psbt ?? "",
 				sighash_hex: sellStartData?.sighash_hex_to_sign ?? "",

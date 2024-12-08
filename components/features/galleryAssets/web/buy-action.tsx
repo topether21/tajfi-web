@@ -28,6 +28,8 @@ import { KeyboardAvoidingView, Platform } from "react-native";
 import { useAuth } from "../../wallet/connect-wallet/auth-context";
 import { AssetImage } from "./asset-image";
 import type { Asset } from "./use-assets";
+import { Alert, AlertIcon, AlertText } from "@/components/ui/alert";
+import { InfoIcon } from "lucide-react-native";
 
 export const useBuyAction = () => {
 	const [showBuy, setShowBuy] = useState(false);
@@ -40,21 +42,37 @@ export const useBuyAction = () => {
 	};
 };
 
-const getActionLabel = (
-	buyStartData: BuyAssetStartResponse | null | undefined,
-	buyCompleteData: BuyAssetCompleteResponse | null | undefined,
-) => {
+const getActionLabel = ({
+	buyStartData,
+	buyCompleteData,
+	errorMessage,
+}: {
+	buyStartData: BuyAssetStartResponse | null | undefined;
+	buyCompleteData: BuyAssetCompleteResponse | null | undefined;
+	errorMessage: string | null | undefined;
+}) => {
+	if (errorMessage) return "Close";
 	if (!buyStartData && !buyCompleteData) return "Confirm";
 	if (buyStartData) return "Buy";
-	return "";
+	return "Close";
 };
 
-const getActionOnPress = (
-	buyStartData: BuyAssetStartResponse | null | undefined,
-	buyCompleteData: BuyAssetCompleteResponse | null | undefined,
-	handleBuyStart: () => void,
-	handleBuyComplete: () => void,
-) => {
+const getActionOnPress = ({
+	buyStartData,
+	buyCompleteData,
+	handleBuyStart,
+	handleBuyComplete,
+	errorMessage,
+	handleClose,
+}: {
+	buyStartData: BuyAssetStartResponse | null | undefined;
+	buyCompleteData: BuyAssetCompleteResponse | null | undefined;
+	handleBuyStart: () => Promise<void>;
+	handleBuyComplete: () => Promise<void>;
+	errorMessage: string | null | undefined;
+	handleClose: () => void;
+}) => {
+	if (errorMessage) return handleClose;
 	if (!buyStartData && !buyCompleteData) return handleBuyStart;
 	if (buyStartData) return handleBuyComplete;
 	return () => { };
@@ -69,6 +87,7 @@ export const BuyAction = ({
 	buyComplete,
 	buyStartData,
 	buyCompleteData,
+	errorMessage,
 }: {
 	isOpen: boolean;
 	handleClose: () => void;
@@ -80,37 +99,45 @@ export const BuyAction = ({
 	) => Promise<BuyAssetCompleteResponse | null>;
 	buyStartData: BuyAssetStartResponse | null | undefined;
 	buyCompleteData: BuyAssetCompleteResponse | null | undefined;
+	errorMessage: string | null | undefined;
 }) => {
 	const { profile } = useAuth();
 
 	const handleBuyStart = async () => {
 		try {
-			const response = await buyStart({
+			await buyStart({
 				psbt: asset.order?.virtual_psbt ?? "",
 				anchor_psbt: asset.order?.anchor_psbt ?? "",
 			});
-			return response;
 		} catch (e) {
 			console.error(e);
-			return null;
 		}
 	};
 
 	const handleBuyComplete = async () => {
 		if (!profile) return;
 		try {
+			await buyComplete({
+				psbt: buyStartData?.updated_virtual_psbt ?? "",
+				anchor_psbt: buyStartData?.updated_anchor_psbt ?? "",
+				sighash_hex: "",  // TODO: get sighash hex
+				signature_hex: "", // TODO: get signature hex
+				amount_sats_to_pay: asset.order?.amount_sats_to_receive ?? 0,
+			});
 		} catch (e) {
 			console.error(e);
 		}
 	};
 
-	const actionLabel = getActionLabel(buyStartData, buyCompleteData);
-	const actionOnPress = getActionOnPress(
+	const actionLabel = getActionLabel({ buyStartData, buyCompleteData, errorMessage });
+	const actionOnPress = getActionOnPress({
 		buyStartData,
 		buyCompleteData,
 		handleBuyStart,
 		handleBuyComplete,
-	);
+		errorMessage,
+		handleClose
+	});
 
 	return (
 		<>
@@ -146,6 +173,12 @@ export const BuyAction = ({
 										You are about to buy {asset.order?.amount_to_sell ?? ""} {asset.name}
 									</FormControlLabelText>
 								</FormControlLabel>
+								{errorMessage ? (
+									<Alert action="error" variant="solid" className="mt-3">
+										<AlertIcon as={InfoIcon} />
+										<AlertText>{errorMessage}</AlertText>
+									</Alert>
+								) : null}
 								<Button
 									onPress={actionOnPress}
 									className="mt-3"
