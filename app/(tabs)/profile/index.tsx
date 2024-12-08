@@ -32,6 +32,7 @@ export default function ProfilePage() {
 				assets={assets}
 				isItemLoaded={isItemLoaded}
 				loadMoreItems={loadMoreItems}
+				isOwner={true}
 			/>
 		</>
 	);

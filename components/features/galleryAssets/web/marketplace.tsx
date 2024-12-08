@@ -14,12 +14,14 @@ export type AssetsMarketplaceProps = {
 	assets: Asset[];
 	isItemLoaded: (index: number) => boolean;
 	loadMoreItems: (startIndex: number, stopIndex: number) => Promise<void>;
+	isOwner?: boolean;
 };
 
 export const AssetsMarketplace = ({
 	assets,
 	isItemLoaded,
 	loadMoreItems,
+	isOwner,
 }: AssetsMarketplaceProps) => {
 	const [isGridView, setIsGridView] = useState(true);
 	const [searchTerm, setSearchTerm] = useState("");
@@ -52,6 +54,7 @@ export const AssetsMarketplace = ({
 				loadMoreItems={loadMoreItems}
 				containerRef={containerRef}
 				scrollHandler={scrollHandler}
+				isOwner={isOwner}
 			/>
 			{/* <Fab
         size="lg"

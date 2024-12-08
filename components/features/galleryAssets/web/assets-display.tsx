@@ -38,7 +38,7 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 			<div
 				ref={containerRef as React.LegacyRef<HTMLDivElement>}
 				className="container mx-auto flex-grow overflow-auto"
-				// Removed padding to avoid outer gaps
+			// Removed padding to avoid outer gaps
 			>
 				<AutoSizer>
 					{({ width, height }) => {

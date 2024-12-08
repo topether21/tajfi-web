@@ -5,7 +5,7 @@ import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import * as Clipboard from "expo-clipboard";
 import { useFocusEffect } from "expo-router";
-import { Clipboard as ClipboardIcon, Scan } from "lucide-react-native";
+import { ClipboardPaste as ClipboardIcon, Scan } from "lucide-react-native";
 import { useCallback, useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { useAuth } from "../connect-wallet/auth-context";
@@ -14,7 +14,6 @@ import { useSendFunds } from "../hooks/use-send-funds";
 import { ScannerModal } from "./camera-expo";
 import { TransactionSummary } from "./send-preview";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import { TajfiSpinnerFullScreen } from "@/components/containers/tajfi-spinner";
 
 const normalizeInvoice = (invoice: string) => {
 	return invoice.replace("tajfi://", "");
@@ -131,7 +130,7 @@ export const SendScreen = () => {
 							<TouchableOpacity onPress={fetchCopiedText}>
 								<InputIcon
 									as={ClipboardIcon}
-									size="md"
+									size="sm"
 									className="stroke-background-tajfi-deep-blue"
 								/>
 							</TouchableOpacity>
