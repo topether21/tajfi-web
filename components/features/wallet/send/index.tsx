@@ -5,7 +5,7 @@ import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import * as Clipboard from "expo-clipboard";
 import { useFocusEffect } from "expo-router";
-import { ClipboardPaste as ClipboardIcon, Scan } from "lucide-react-native";
+import { ClipboardPaste as ClipboardIcon, InfoIcon, Scan } from "lucide-react-native";
 import { useCallback, useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { useAuth } from "../connect-wallet/auth-context";
@@ -14,6 +14,9 @@ import { useSendFunds } from "../hooks/use-send-funds";
 import { ScannerModal } from "./camera-expo";
 import { TransactionSummary } from "./send-preview";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { AlertText } from "@/components/ui/alert";
+import { AlertIcon } from "@/components/ui/alert";
+import { Alert } from "@/components/ui/alert";
 
 const normalizeInvoice = (invoice: string) => {
 	return invoice.replace("tajfi://", "");
@@ -98,6 +101,18 @@ export const SendScreen = () => {
 		}, [resetInvoiceDetails, resetSendFunds]),
 	);
 
+	useEffect(() => {
+		if (isSent) {
+			setInvoice("");
+			const timer = setTimeout(() => {
+				setInvoice("");
+				resetInvoiceDetails();
+				resetSendFunds();
+			}, 5000);
+			return () => clearTimeout(timer);
+		}
+	}, [isSent, resetSendFunds, resetInvoiceDetails]);
+
 	return (
 		<>
 			<Box className="flex-1 items-start justify-start bg-background-0 px-4">
@@ -139,7 +154,10 @@ export const SendScreen = () => {
 				</Input>
 
 				{isSent ? (
-					<Text>Transaction confirmed.</Text>
+					<Alert action="success" variant="solid" className="mt-3">
+						<AlertIcon as={InfoIcon} />
+						<AlertText>Transaction confirmed.</AlertText>
+					</Alert>
 				) : (
 					(invoiceDetails || error) && (
 						<Animated.View
@@ -152,6 +170,7 @@ export const SendScreen = () => {
 								onSend={onSend}
 								invoice={invoice}
 								error={error}
+								isLoading={isLoading}
 							/>
 						</Animated.View>
 					)

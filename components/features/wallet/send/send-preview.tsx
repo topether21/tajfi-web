@@ -9,11 +9,13 @@ export const TransactionSummary = ({
 	invoice,
 	error,
 	onSend,
+	isLoading,
 }: {
 	invoiceDetails: { amount: number; assetId: string } | null;
 	invoice: string | null;
 	error: string;
 	onSend: () => void;
+	isLoading: boolean;
 }) => {
 	const currencies = useCurrencies();
 
@@ -40,8 +42,13 @@ export const TransactionSummary = ({
 					<Text>{currencies.get(invoiceDetails.assetId)}</Text>
 				</Box>
 			</Box>
-			<Button size="sm" onPress={onSend} className="mt-4 w-full">
-				<ButtonText>Confirm</ButtonText>
+			<Button
+				size="sm"
+				onPress={onSend}
+				className="mt-4 w-full"
+				disabled={isLoading}
+			>
+				<ButtonText>{isLoading ? "Sending..." : "Confirm"}</ButtonText>
 			</Button>
 		</Box>
 	);

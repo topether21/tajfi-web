@@ -25,7 +25,7 @@ import { useUserReceiveCurrency } from "../layout/use-user-receive-currency";
 import { UserCurrencies } from "../layout/user-currencies";
 import { SimpleCurrencySelector } from "../simple-currency-selector";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import { TajfiSpinnerFullScreen } from "@/components/containers/tajfi-spinner";
+import { captureRef } from "react-native-view-shot";
 
 export const ReceiveScreen = () => {
 	const { isOpen, handleClose, handleOpen } = useUserReceiveCurrency();
@@ -38,8 +38,33 @@ export const ReceiveScreen = () => {
 	const copyInvoice = async () => {
 		await Clipboard.setStringAsync(qrCode);
 	};
-	const shareInvoice = async () => {
-		await Sharing.shareAsync(qrCode);
+	const shareQRCodeImage = async () => {
+		try {
+			const uri = await captureRef(qrCodeRef, {
+				format: "png",
+				quality: 0.8,
+			});
+
+			// Convert the data URL to a Blob
+			const response = await fetch(uri);
+			const blob = await response.blob();
+
+			// Create a File from the Blob
+			const file = new File([blob], "qr-code.png", { type: "image/png" });
+
+			// Use the Web Share API if available
+			if (navigator?.canShare({ files: [file] })) {
+				await navigator.share({
+					files: [file],
+					title: 'QR Code',
+					text: 'Here is the QR code image.',
+				});
+			} else {
+				console.error("Sharing not supported on this browser.");
+			}
+		} catch (error) {
+			console.error("Error sharing QR code image:", error);
+		}
 	};
 
 	useEffect(() => {
@@ -89,9 +114,9 @@ export const ReceiveScreen = () => {
 				</HStack>
 
 				{!loading && qrCode && (
-					<Box ref={qrCodeRef} className="mx-auto pb-24">
+					<Box className="mx-auto pb-24">
 						<Animated.View entering={FadeIn} exiting={FadeOut}>
-							<Box className="bg-white rounded-lg p-2">
+							<Box ref={qrCodeRef} className="bg-white rounded-lg p-2">
 								<QRCode
 									size={140}
 									style={{
@@ -117,10 +142,10 @@ export const ReceiveScreen = () => {
 									</HStack>
 								</TouchableOpacity>
 								{sharingAvailable && (
-									<TouchableOpacity onPress={shareInvoice}>
+									<TouchableOpacity onPress={shareQRCodeImage}>
 										<HStack space="md">
 											<Text className="text-background-tajfi-deep-blue">
-												Share QR Code
+												Share QR Code Image
 											</Text>
 											<Entypo
 												name="share"
