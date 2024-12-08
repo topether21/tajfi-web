@@ -11,7 +11,7 @@ import { ArrowDownLeft } from "lucide-react-native";
 import React from "react";
 import { ScrollView, TouchableOpacity } from "react-native";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import { useBalances, useCurrencies } from "../hooks/use-balances";
+import { useCurrencies } from "../hooks/use-balances";
 import { useHistory } from "../hooks/use-history";
 import { TajfiSpinner } from "@/components/containers/tajfi-spinner";
 

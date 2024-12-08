@@ -57,7 +57,7 @@ const getActionOnPress = (
 ) => {
 	if (!buyStartData && !buyCompleteData) return handleBuyStart;
 	if (buyStartData) return handleBuyComplete;
-	return () => {};
+	return () => { };
 };
 
 export const BuyAction = ({
@@ -85,6 +85,11 @@ export const BuyAction = ({
 
 	const handleBuyStart = async () => {
 		try {
+			const response = await buyStart({
+				psbt: asset.id,
+				anchor_psbt: "",
+			});
+			return response;
 		} catch (e) {
 			console.error(e);
 			return null;

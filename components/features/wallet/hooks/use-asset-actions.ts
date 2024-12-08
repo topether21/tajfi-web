@@ -12,11 +12,11 @@ import { useState } from "react";
 import { useAsyncFn } from "react-use";
 
 export const useAssetActions = () => {
-	const [errorMessage, setErrorMessage] = useState<string | null>(null);
+	const [errorMessage, setErrorMessage] = useState<string>();
 
 	const [{ loading: loadingSellStart, value: sellStartData }, sellStart] =
 		useAsyncFn(async (body: SellAssetStartBody) => {
-			setErrorMessage(null);
+			setErrorMessage('');
 			try {
 				const res = await sellAssetStart(body);
 				debugger;
@@ -32,7 +32,7 @@ export const useAssetActions = () => {
 		{ loading: loadingSellComplete, value: sellCompleteData },
 		sellComplete,
 	] = useAsyncFn(async (body: SellAssetCompleteBody) => {
-		setErrorMessage(null);
+		setErrorMessage('');
 		try {
 			const res = await sellAssetComplete(body);
 			debugger;
@@ -46,7 +46,7 @@ export const useAssetActions = () => {
 
 	const [{ loading: loadingBuyStart, value: buyStartData }, buyStart] =
 		useAsyncFn(async (body: BuyAssetStartBody) => {
-			setErrorMessage(null);
+			setErrorMessage('');
 			try {
 				const res = await buyAssetStart(body);
 				return res;
@@ -59,7 +59,7 @@ export const useAssetActions = () => {
 
 	const [{ loading: loadingBuyComplete, value: buyCompleteData }, buyComplete] =
 		useAsyncFn(async (body: BuyAssetCompleteBody) => {
-			setErrorMessage(null);
+			setErrorMessage('');
 			try {
 				const res = await buyAssetComplete(body);
 				return res;

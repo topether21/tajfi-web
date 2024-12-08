@@ -131,7 +131,7 @@ export const SendScreen = () => {
 							<TouchableOpacity onPress={fetchCopiedText}>
 								<InputIcon
 									as={ClipboardIcon}
-									size={24}
+									size="md"
 									className="stroke-background-tajfi-deep-blue"
 								/>
 							</TouchableOpacity>
