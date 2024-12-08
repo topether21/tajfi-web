@@ -48,7 +48,7 @@ export const TransactionSummary = ({
 				className="mt-4 w-full"
 				disabled={isLoading}
 			>
-				<ButtonText>{isLoading ? "Sending..." : "Confirm"}</ButtonText>
+				<ButtonText>{isLoading ? "Processing..." : "Confirm"}</ButtonText>
 			</Button>
 		</Box>
 	);

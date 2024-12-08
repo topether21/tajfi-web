@@ -1,6 +1,5 @@
 import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import { LinearGradient } from "@/components/ui/linear-gradient";
-import { Text } from "@/components/ui/text";
 import type { WalletKeys } from "@/libs/wallet/types";
 import clsx from "clsx";
 import type { ReactNode } from "react";
@@ -9,8 +8,6 @@ import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 export const TajfiGradient = ({
 	children,
 	className,
-	isLoading,
-	profile,
 }: {
 	children?: ReactNode;
 	className?: string;
@@ -30,7 +27,6 @@ export const TajfiGradient = ({
 				accessibilityLabel="tajfi-gradient"
 				accessibilityRole="none"
 			>
-				<Text>{JSON.stringify({ profile, isLoading }, null, 2)}</Text>
 				{children}
 			</Animated.View>
 		</LinearGradient>

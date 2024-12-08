@@ -29,38 +29,18 @@ import { UserCurrencies } from "../layout/user-currencies";
 import { SimpleCurrencySelector } from "../simple-currency-selector";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { captureRef } from "react-native-view-shot";
-import { useWindowDimensions } from "@/hooks/use-window-dimensions";
 import { useToast } from "@/components/ui/toast";
 import { Toast, ToastTitle } from "@/components/ui/toast";
 import { Send } from "lucide-react-native";
 import { Icon } from "@/components/ui/icon";
-
-const shareImage = async (uri: string, retries = 1) => {
-	try {
-		// Convert the data URL to a Blob
-		const response = await fetch(uri);
-		const blob = await response.blob();
-
-		// Create a File from the Blob
-		const file = new File([blob], "qr-code.png", { type: "image/png" });
-		await navigator.share({
-			files: [file],
-			title: 'QR Code',
-			text: 'Here is the QR code image.',
-		});
-	} catch (error) {
-		if (retries > 0 && (error as Error).message !== 'Share canceled') {
-			console.warn(`Share failed, retrying... (${retries} retries left)`);
-			await shareImage(uri, retries - 1);
-		} else {
-			throw error; // Re-throw the error if no retries are left
-		}
-	}
-};
+import { TajfiSpinnerFullScreen } from "@/components/containers/tajfi-spinner";
+import { Pressable } from "@/components/ui/pressable";
+import { useSizes } from "@/hooks/useSizes";
+import clsx from "clsx";
 
 export const ReceiveScreen = () => {
+	const { isSmall } = useSizes();
 	const { isOpen, handleClose, handleOpen } = useUserReceiveCurrency();
-	const { value: sharingAvailable } = useAsync(Sharing.isAvailableAsync);
 	const [assetAmount, setAssetAmount] = useState<string>("");
 	const receiveAssetId = useStore($receiveAssetId);
 	const { loading, invoice, createNewInvoice } = useCreateInvoice();
@@ -68,60 +48,79 @@ export const ReceiveScreen = () => {
 	const qrCode = invoice?.encoded && assetAmount ? `${invoice.encoded}` : ""; // TODO: add tajfi:// prefix ???
 	const [isSharing, setIsSharing] = useState(false);
 	const copyInvoice = async () => {
-		await Clipboard.setStringAsync(qrCode);
+		try {
+			await Clipboard.setStringAsync(qrCode);
+
+			// Show toast notification for success
+			toast.show({
+				placement: "top",
+				render: ({ id }) => {
+					const toastId = `toast-${id}`;
+					return (
+						<Toast
+							nativeID={toastId}
+							className="px-5 py-3 gap-4 shadow-soft-1 items-center flex-row"
+						>
+							<Icon
+								as={Send}
+								size="xl"
+								className="fill-typography-100 stroke-none"
+							/>
+							<Divider
+								orientation="vertical"
+								className="h-[30px] bg-outline-200"
+							/>
+							<ToastTitle size="sm">Invoice copied to clipboard.</ToastTitle>
+						</Toast>
+					);
+				},
+			});
+		} catch (error) {
+			// Show toast notification for error
+			toast.show({
+				placement: "top",
+				render: ({ id }) => {
+					const toastId = `toast-${id}`;
+					return (
+						<Toast
+							nativeID={toastId}
+							className="px-5 py-3 gap-4 shadow-soft-1 items-center flex-row"
+						>
+							<Icon
+								as={Send}
+								size="xl"
+								className="fill-typography-100 stroke-none"
+							/>
+							<Divider
+								orientation="vertical"
+								className="h-[30px] bg-outline-200"
+							/>
+							<ToastTitle size="sm">{`Failed to copy invoice: ${(error as Error).message}`}</ToastTitle>
+						</Toast>
+					);
+				},
+			});
+		}
 	};
 
 	const toast = useToast();
 	const shareQRCodeImage = async () => {
-		const uri = await captureRef(qrCodeRef, {
-			format: "png",
-			quality: 0.8,
-		});
+		setIsSharing(true);
 		try {
-			setIsSharing(true);
-			await shareImage(uri, 3);
-		} catch (_) {
-			// Fallback: Copy image to clipboard if sharing fails
-			try {
-				const response = await fetch(uri);
-				const blob = await response.blob();
-				const reader = new FileReader();
+			const uri = await captureRef(qrCodeRef, {
+				format: "png",
+				quality: 0.8,
+			});
+			const response = await fetch(uri);
+			const blob = await response.blob();
+			const reader = new FileReader();
 
-				reader.onloadend = async () => {
-					const base64data = reader.result as string;
-					const base64Image = base64data.split(',')[1]; // Remove the data URL prefix
-					await Clipboard.setImageAsync(base64Image);
+			reader.onloadend = async () => {
+				const base64data = reader.result as string;
+				const base64Image = base64data.split(',')[1]; // Remove the data URL prefix
+				await Clipboard.setImageAsync(base64Image);
 
-					// Show toast notification for success
-					toast.show({
-						placement: "top",
-						render: ({ id }) => {
-							const toastId = `toast-${id}`;
-							return (
-								<Toast
-									nativeID={toastId}
-									className="px-5 py-3 gap-4 shadow-soft-1 items-center flex-row"
-								>
-									<Icon
-										as={Send}
-										size="xl"
-										className="fill-typography-100 stroke-none"
-									/>
-									<Divider
-										orientation="vertical"
-										className="h-[30px] bg-outline-200"
-									/>
-									<ToastTitle size="sm">Image copied to clipboard.</ToastTitle>
-								</Toast>
-							);
-						},
-					});
-				};
-
-				reader.readAsDataURL(blob);
-			} catch (clipboardError) {
-
-				// Show toast notification for clipboard error
+				// Show toast notification for success
 				toast.show({
 					placement: "top",
 					render: ({ id }) => {
@@ -140,18 +139,44 @@ export const ReceiveScreen = () => {
 									orientation="vertical"
 									className="h-[30px] bg-outline-200"
 								/>
-								<ToastTitle size="sm">{`Failed to copy image: ${(clipboardError as Error).message}`}</ToastTitle>
+								<ToastTitle size="sm">Image copied to clipboard.</ToastTitle>
 							</Toast>
 						);
 					},
 				});
-			}
+			};
+
+			reader.readAsDataURL(blob);
+		} catch (clipboardError) {
+
+			// Show toast notification for clipboard error
+			toast.show({
+				placement: "top",
+				render: ({ id }) => {
+					const toastId = `toast-${id}`;
+					return (
+						<Toast
+							nativeID={toastId}
+							className="px-5 py-3 gap-4 shadow-soft-1 items-center flex-row"
+						>
+							<Icon
+								as={Send}
+								size="xl"
+								className="fill-typography-100 stroke-none"
+							/>
+							<Divider
+								orientation="vertical"
+								className="h-[30px] bg-outline-200"
+							/>
+							<ToastTitle size="sm">{`Failed to copy image: ${(clipboardError as Error).message}`}</ToastTitle>
+						</Toast>
+					);
+				},
+			});
 		} finally {
 			setIsSharing(false);
 		}
 	};
-	const { width } = useWindowDimensions();
-	const qrSize = Math.min(width * 0.5, 300);
 
 	useEffect(() => {
 		createNewInvoice({ amount: Number(assetAmount), assetId: receiveAssetId });
@@ -198,24 +223,34 @@ export const ReceiveScreen = () => {
 					<SimpleCurrencySelector handleOpen={handleOpen} />
 				</HStack>
 
+				{loading && (
+					<TajfiSpinnerFullScreen />
+				)}
+
 				{!loading && qrCode && (
 					<Box className="pb-24">
 						<Animated.View entering={FadeIn} exiting={FadeOut}>
 							<Box ref={qrCodeRef} className="bg-white rounded-lg p-2 m-[-8]">
 								<QRCode
-									size={qrSize}
-									style={{
-										height: "auto",
-										maxWidth: "100%",
-										width: "100%",
-										backgroundColor: "white",
-									}}
 									value={qrCode}
+									className={clsx("w-full h-auto bg-white", isSmall ? "max-w-[150px]" : "max-w-[300px]")}
 								/>
 							</Box>
 
 							<VStack space="md" className="pt-4">
-								<TouchableOpacity onPress={copyInvoice}>
+								<Pressable onPress={shareQRCodeImage} >
+									<HStack space="md" className="min-w-24">
+										<Text className="text-background-tajfi-deep-blue">
+											Share QR Code Image
+										</Text>
+										<Entypo
+											name="share"
+											size={24}
+											color={HEX_COLORS.tajfiDeepBlue}
+										/>
+									</HStack>
+								</Pressable>
+								<Pressable onPress={copyInvoice}>
 									<HStack space="md">
 										<Text className="text-background-tajfi-deep-blue">
 											Copy Invoice
@@ -226,23 +261,7 @@ export const ReceiveScreen = () => {
 											color={HEX_COLORS.tajfiDeepBlue}
 										/>
 									</HStack>
-								</TouchableOpacity>
-
-								{sharingAvailable && (
-									<TouchableOpacity onPress={shareQRCodeImage} disabled={isSharing}>
-										<HStack space="md" className="min-w-24">
-											<Text className="text-background-tajfi-deep-blue" disabled={isSharing}>
-												Share QR Code Image
-											</Text>
-											<Entypo
-												name="share"
-												size={24}
-												color={HEX_COLORS.tajfiDeepBlue}
-											/>
-										</HStack>
-									</TouchableOpacity>
-								)}
-
+								</Pressable>
 							</VStack>
 						</Animated.View>
 					</Box>

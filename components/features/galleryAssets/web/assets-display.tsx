@@ -10,6 +10,7 @@ import { CELL_WIDTH, GAP, LIST_ITEM_HEIGHT, MIN_ROW_HEIGHT } from "./constants";
 import { GridAssetItem } from "./grid-asset-item";
 import { ListAssetItem } from "./list-asset-item";
 import type { Asset } from "./use-assets";
+import isEqual from "lodash.isequal";
 
 interface AssetsDisplayProps {
 	filteredAssets: Asset[];
@@ -148,16 +149,8 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 		);
 	},
 	(prevProps, nextProps) => {
-		return (
-			prevProps.isGridView === nextProps.isGridView &&
-			prevProps.filteredAssets.length === nextProps.filteredAssets.length &&
-			prevProps.filteredAssets.every(
-				(asset, index) => asset.id === nextProps.filteredAssets[index].id,
-			) &&
-			prevProps.filteredAssets.every(
-				(asset, index) => asset.name === nextProps.filteredAssets[index].name,
-			)
-		);
+		// 
+		return isEqual(prevProps, nextProps);
 	},
 );
 
