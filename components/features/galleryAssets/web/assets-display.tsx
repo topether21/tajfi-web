@@ -19,8 +19,6 @@ interface AssetsDisplayProps {
 	containerRef: React.RefObject<HTMLDivElement | null>;
 	scrollHandler: (event: GridOnScrollProps) => void;
 	isOwner?: boolean;
-	startRefreshing?: () => void;
-	stopRefreshing?: () => void;
 }
 
 const calculateColumnCount = (width: number) =>
@@ -37,14 +35,12 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 		loadMoreItems,
 		containerRef,
 		scrollHandler,
-		startRefreshing,
-		stopRefreshing,
 	}) => {
 		return (
 			<div
 				ref={containerRef as React.LegacyRef<HTMLDivElement>}
 				className="container mx-auto flex-grow overflow-auto"
-				// Removed padding to avoid outer gaps
+			// Removed padding to avoid outer gaps
 			>
 				<AutoSizer>
 					{({ width, height }) => {
@@ -107,8 +103,6 @@ export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 													<GridAssetItem
 														item={filteredAssets[index]}
 														isOwner={isOwner}
-														startRefreshing={startRefreshing}
-														stopRefreshing={stopRefreshing}
 													/>
 												</div>
 											);

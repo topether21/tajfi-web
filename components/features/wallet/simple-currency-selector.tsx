@@ -6,12 +6,12 @@ import { VStack } from "@/components/ui/vstack";
 import { useStore } from "@nanostores/react";
 import { TouchableOpacity } from "react-native";
 import { $receiveAssetId } from "../../../store/asset-id-store";
-import { useBalances } from "./hooks/use-balances";
+import { useCurrencies } from "./hooks/use-balances";
 
 export const SimpleCurrencySelector = ({
 	handleOpen,
 }: { handleOpen: () => void }) => {
-	const { currencies } = useBalances();
+	const currencies = useCurrencies();
 	const receiveAssetId = useStore($receiveAssetId);
 	const currency = currencies.get(receiveAssetId);
 	if (!currency) return null;

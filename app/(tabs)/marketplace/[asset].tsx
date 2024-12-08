@@ -1,3 +1,4 @@
+import { TajfiSpinner } from "@/components/containers/tajfi-spinner";
 import { Box } from "@/components/ui/box";
 import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import { Heading } from "@/components/ui/heading";
@@ -24,7 +25,7 @@ export default function AssetPage() {
 					)}
 				>
 					{isLoading() ? (
-						<Spinner size="small" color={HEX_COLORS.tajfiDeepBlue} />
+						<TajfiSpinner />
 					) : (
 						<Animated.View entering={FadeIn} exiting={FadeOut}>
 							<Text>Asset</Text>

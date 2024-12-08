@@ -11,7 +11,7 @@ import { LogOut } from "lucide-react-native";
 import { TouchableOpacity } from "react-native";
 import { $assetId } from "../../../../store/asset-id-store";
 import { useWalletAuth } from "../connect-wallet/use-connect-wallet";
-import { useBalances } from "../hooks/use-balances";
+import { useUserBalances } from "../hooks/use-balances";
 import { useUserCurrencies } from "./use-user-currencies";
 import { UserCurrencies } from "./user-currencies";
 
@@ -19,7 +19,7 @@ export const UserBalance = () => {
 	const { isMobile } = useSizes();
 	const { isOpen, handleClose, handleOpen } = useUserCurrencies();
 	const { handleLogout } = useWalletAuth({});
-	const { userBalances } = useBalances();
+	const userBalances = useUserBalances();
 	const assetId = useStore($assetId);
 	const currentAmount =
 		userBalances.find((balance) => balance.assetId === assetId)?.amount || 0;

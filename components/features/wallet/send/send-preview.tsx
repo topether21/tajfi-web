@@ -2,7 +2,7 @@ import { Box } from "@/components/ui/box";
 import { Button, ButtonText } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
-import { useBalances } from "../hooks/use-balances";
+import { useCurrencies } from "../hooks/use-balances";
 
 export const TransactionSummary = ({
 	invoiceDetails,
@@ -15,7 +15,7 @@ export const TransactionSummary = ({
 	onSend: () => void;
 	isLoading: boolean;
 }) => {
-	const { currencies } = useBalances();
+	const currencies = useCurrencies();
 
 	const errorMessage = error?.includes(
 		"The operation either timed out or was not allowed",

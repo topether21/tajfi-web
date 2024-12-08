@@ -1,13 +1,13 @@
+import { TajfiSpinnerFullScreen } from "@/components/containers/tajfi-spinner";
 import { AssetGalleryScreen } from "@/components/features/galleryAssets";
 import { ASSETS } from "@/components/features/galleryAssets/web/assets";
-import { useBalances } from "@/components/features/wallet/hooks/use-balances";
+import { useCurrencies } from "@/components/features/wallet/hooks/use-balances";
 import { useOrders } from "@/components/features/wallet/hooks/use-orders";
 import { Heading } from "@/components/ui/heading";
 
 export default function MarketplacePage() {
-	const { orders } = useOrders();
-	const { currencies } = useBalances();
-
+	const { orders, loading: ordersLoading } = useOrders();
+	const currencies = useCurrencies();
 	const assets = orders
 		.filter((order) => order.amount_to_sell > 0)
 		.map((order, index) => ({
@@ -21,6 +21,7 @@ export default function MarketplacePage() {
 		}));
 	const isItemLoaded = (index: number) => true;
 	const loadMoreItems = () => Promise.resolve();
+	const isLoaded = currencies?.size !== 0 && !ordersLoading;
 	return (
 		<>
 			<Heading
@@ -29,12 +30,16 @@ export default function MarketplacePage() {
 			>
 				Trade
 			</Heading>
-			<AssetGalleryScreen
-				assets={assets}
-				isItemLoaded={isItemLoaded}
-				loadMoreItems={loadMoreItems}
-				isOwner={false}
-			/>
+			{isLoaded ? (
+				<AssetGalleryScreen
+					assets={assets}
+					isItemLoaded={isItemLoaded}
+					loadMoreItems={loadMoreItems}
+					isOwner={false}
+				/>
+			) : (
+				<TajfiSpinnerFullScreen />
+			)}
 		</>
 	);
 }

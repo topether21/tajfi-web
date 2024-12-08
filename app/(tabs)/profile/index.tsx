@@ -1,12 +1,17 @@
 import { AssetGalleryScreen } from "@/components/features/galleryAssets";
-import { useBalances } from "@/components/features/wallet/hooks/use-balances";
+import {
+	useBalanceRefresh,
+	useCurrencies,
+	useUserBalances,
+} from "@/components/features/wallet/hooks/use-balances";
 
 import { ASSETS } from "@/components/features/galleryAssets/web/assets";
 import { Heading } from "@/components/ui/heading";
 
 export default function ProfilePage() {
-	const { userBalances, currencies, startRefreshing, stopRefreshing } =
-		useBalances();
+	const currencies = useCurrencies();
+	const userBalances = useUserBalances();
+
 	const assets = userBalances
 		.filter((balance) => balance.amount > 0)
 		.map((balance, index) => ({
@@ -33,8 +38,6 @@ export default function ProfilePage() {
 				isItemLoaded={isItemLoaded}
 				loadMoreItems={loadMoreItems}
 				isOwner
-				startRefreshing={startRefreshing}
-				stopRefreshing={stopRefreshing}
 			/>
 		</>
 	);

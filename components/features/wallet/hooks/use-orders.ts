@@ -7,15 +7,17 @@ export const useOrders = () => {
 			return data;
 		});
 
-	const { data: orders = [], error } = useSWR("orders", fetcher, {
+	const {
+		data: orders = [],
+		error,
+		isLoading,
+	} = useSWR("orders", fetcher, {
 		refreshInterval: 5000,
 	});
 
-	const loading = !error && orders?.length === 0;
-
 	return {
 		orders: orders || [],
-		loading,
+		loading: isLoading,
 		error,
 	};
 };

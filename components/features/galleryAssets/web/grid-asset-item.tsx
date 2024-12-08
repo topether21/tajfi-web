@@ -17,8 +17,6 @@ import type { Asset } from "./use-assets";
 interface GridAssetItemProps {
 	item: Asset;
 	isOwner?: boolean;
-	startRefreshing?: () => void;
-	stopRefreshing?: () => void;
 }
 
 // TODO: move to utils
@@ -27,7 +25,7 @@ const formatSatoshis = (satoshis: number) => {
 };
 
 export const GridAssetItem = React.memo(
-	({ item, isOwner, startRefreshing, stopRefreshing }: GridAssetItemProps) => {
+	({ item, isOwner }: GridAssetItemProps) => {
 		const {
 			sellStart,
 			isLoading,
@@ -74,8 +72,6 @@ export const GridAssetItem = React.memo(
 					sellComplete={sellComplete}
 					sellStartData={sellStartData}
 					sellCompleteData={sellCompleteData}
-					startRefreshing={startRefreshing}
-					stopRefreshing={stopRefreshing}
 				/>
 				<BuyAction
 					isOpen={showBuy}

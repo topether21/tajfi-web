@@ -31,6 +31,7 @@ import { KeyboardAvoidingView, Platform } from "react-native";
 import { useAuth } from "../../wallet/connect-wallet/auth-context";
 import { AssetImage } from "./asset-image";
 import type { Asset } from "./use-assets";
+import { useBalanceRefresh } from "../../wallet/hooks/use-balances";
 
 export const useSellAction = () => {
 	const [showSell, setShowSell] = useState(false);
@@ -76,8 +77,6 @@ export const SellAction = ({
 	sellComplete,
 	sellStartData,
 	sellCompleteData,
-	startRefreshing,
-	stopRefreshing,
 }: {
 	isOpen: boolean;
 	handleClose: () => void;
@@ -91,19 +90,18 @@ export const SellAction = ({
 	) => Promise<SellAssetCompleteResponse | null>;
 	sellStartData: SellAssetStartResponse | null | undefined;
 	sellCompleteData: SellAssetCompleteResponse | null | undefined;
-	startRefreshing?: () => void;
-	stopRefreshing?: () => void;
 }) => {
+	const { startRefreshing, stopRefreshing } = useBalanceRefresh();
 	const { profile } = useAuth();
 	const [amount, setAmount] = useState<string | undefined>(undefined);
 
 	const handleSellStart = async () => {
 		try {
+			debugger;
 			const res = await sellStart({
 				asset_id: asset.id,
 				amount_to_sell: amount ? Number.parseInt(amount) : 0,
 			});
-
 			return res;
 		} catch (e) {
 			console.error(e);

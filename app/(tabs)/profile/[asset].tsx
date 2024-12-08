@@ -1,7 +1,6 @@
+import { TajfiSpinner } from "@/components/containers/tajfi-spinner";
 import { Box } from "@/components/ui/box";
-import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import { Heading } from "@/components/ui/heading";
-import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
 import clsx from "clsx";
 import { ScrollView } from "react-native";
@@ -24,7 +23,7 @@ export default function AssetPage() {
 					)}
 				>
 					{isLoading() ? (
-						<Spinner size="small" color={HEX_COLORS.tajfiDeepBlue} />
+						<TajfiSpinner />
 					) : (
 						<Animated.View entering={FadeIn} exiting={FadeOut}>
 							<Text>Asset</Text>

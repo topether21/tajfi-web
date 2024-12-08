@@ -15,8 +15,6 @@ export const AssetsMarketplace = ({
 	isItemLoaded,
 	loadMoreItems,
 	isOwner,
-	startRefreshing,
-	stopRefreshing,
 }: AssetsMarketplaceProps) => {
 	const [isGridView, setIsGridView] = useState(true);
 	const [searchTerm, setSearchTerm] = useState("");
@@ -50,8 +48,6 @@ export const AssetsMarketplace = ({
 				loadMoreItems={loadMoreItems}
 				containerRef={containerRef}
 				scrollHandler={scrollHandler}
-				startRefreshing={startRefreshing}
-				stopRefreshing={stopRefreshing}
 			/>
 			{/* <Fab
         size="lg"
