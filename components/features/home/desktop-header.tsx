@@ -1,11 +1,10 @@
+import { TajfiLoginButton } from "@/components/containers/tajfi-login-button";
+import { TajfiNameLogo } from "@/components/containers/tajfi-logos/tajfi-name-logo";
+import { Box } from "@/components/ui/box";
+import { useSizes } from "@/hooks/useSizes";
+import { clsx } from "clsx";
 import { ConnectWalletModal } from "../wallet/connect-wallet";
 import { useHomeLogin } from "./use-home-login";
-import { Box } from "@/components/ui/box";
-import { Button, ButtonText } from "@/components/ui/button";
-import { useSizes } from "@/hooks/useSizes";
-import { TajfiNameLogo } from "@/components/containers/tajfi-logos/tajfi-name-logo";
-import { clsx } from "clsx";
-import { TajfiLoginButton } from "@/components/containers/tajfi-login-button";
 
 export const DesktopHeader = () => {
 	const { isMobile } = useSizes();

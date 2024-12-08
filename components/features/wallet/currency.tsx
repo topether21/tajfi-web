@@ -4,15 +4,15 @@ import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { ChevronDownIcon, Icon } from "@/components/ui/icon";
 
+import { CurrencyLogoIcon } from "@/components/icons/currency-logo";
 import { VStack } from "@/components/ui/vstack";
 import { useStore } from "@nanostores/react";
 import { TouchableOpacity, View } from "react-native";
 import { $assetId } from "../../../store/asset-id-store";
-import { useBalances } from "./hooks/use-balances";
-import { CurrencyLogoIcon } from "@/components/icons/currency-logo";
+import { useCurrencies } from "./hooks/use-balances";
 
 export const CurrencySelector = ({ onPress }: { onPress?: () => void }) => {
-	const { currencies } = useBalances();
+	const currencies = useCurrencies();
 	const assetId = useStore($assetId);
 	const currency = currencies.get(assetId);
 	return (

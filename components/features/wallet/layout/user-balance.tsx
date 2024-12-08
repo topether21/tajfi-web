@@ -4,22 +4,22 @@ import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { useStore } from "@nanostores/react";
 
-import { LogOut } from "lucide-react-native";
-import { TouchableOpacity } from "react-native";
-import { useWalletAuth } from "../connect-wallet/use-connect-wallet";
-import { $assetId } from "../../../../store/asset-id-store";
-import { useBalances } from "../hooks/use-balances";
-import { useUserCurrencies } from "./use-user-currencies";
-import { UserCurrencies } from "./user-currencies";
-import { useSizes } from "@/hooks/useSizes";
 import { NumberContainer } from "@/components/features/wallet/layout/number";
 import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
+import { useSizes } from "@/hooks/useSizes";
+import { LogOut } from "lucide-react-native";
+import { TouchableOpacity } from "react-native";
+import { $assetId } from "../../../../store/asset-id-store";
+import { useWalletAuth } from "../connect-wallet/use-connect-wallet";
+import { useUserBalances } from "../hooks/use-balances";
+import { useUserCurrencies } from "./use-user-currencies";
+import { UserCurrencies } from "./user-currencies";
 
 export const UserBalance = () => {
 	const { isMobile } = useSizes();
 	const { isOpen, handleClose, handleOpen } = useUserCurrencies();
 	const { handleLogout } = useWalletAuth({});
-	const { userBalances } = useBalances();
+	const userBalances = useUserBalances();
 	const assetId = useStore($assetId);
 	const currentAmount =
 		userBalances.find((balance) => balance.assetId === assetId)?.amount || 0;

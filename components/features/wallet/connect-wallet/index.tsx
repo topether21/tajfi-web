@@ -1,3 +1,4 @@
+import { TajfiNameLogoDeepBlue } from "@/components/containers/tajfi-logos/tajfi-name-logo-deep-blue";
 import { AlbyIcon } from "@/components/icons/alby";
 import { OneKeyIcon } from "@/components/icons/onekey";
 import { Box } from "@/components/ui/box";
@@ -13,10 +14,9 @@ import {
 } from "@/components/ui/modal";
 import { Text } from "@/components/ui/text";
 import type { WalletProvider } from "@/libs/wallet/types";
-import { TouchableOpacity } from "react-native";
-import { Image } from "expo-image";
-import { TajfiNameLogoDeepBlue } from "@/components/containers/tajfi-logos/tajfi-name-logo-deep-blue";
 import { clsx } from "clsx";
+import { Image } from "expo-image";
+import { TouchableOpacity } from "react-native";
 
 export const ConnectWalletModal = ({
 	showModal,
@@ -74,13 +74,15 @@ export const ConnectWalletModal = ({
 					<Box
 						className={clsx(
 							"grid gap-4 p-4",
-							wallets.length === 0 ? "grid-cols-1" : "grid-cols-2 sm:grid-cols-3",
+							wallets.length === 0
+								? "grid-cols-1"
+								: "grid-cols-2 sm:grid-cols-3",
 						)}
 					>
 						{wallets.length === 0 && (
 							<Text className="text-sm text-center">
-								There are no compatible login methods installed on your
-								device. Try another browser or update your system.
+								There are no compatible login methods installed on your device.
+								Try another browser or update your system.
 							</Text>
 						)}
 						{wallets.map((wallet) => {

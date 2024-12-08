@@ -2,18 +2,20 @@ import { Box } from "@/components/ui/box";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
-import { Text } from "@/components/ui/text";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import * as Clipboard from "expo-clipboard";
 import { useFocusEffect } from "expo-router";
-import { Scan, Clipboard as ClipboardIcon } from "lucide-react-native";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { ClipboardPaste as ClipboardIcon, InfoIcon, Scan } from "lucide-react-native";
+import { useCallback, useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { useAuth } from "../connect-wallet/auth-context";
 import { useInvoiceDetails } from "../hooks/use-invoice-details";
 import { useSendFunds } from "../hooks/use-send-funds";
 import { ScannerModal } from "./camera-expo";
 import { TransactionSummary } from "./send-preview";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { AlertText } from "@/components/ui/alert";
+import { AlertIcon } from "@/components/ui/alert";
+import { Alert } from "@/components/ui/alert";
 
 const normalizeInvoice = (invoice: string) => {
 	return invoice.replace("tajfi://", "");
@@ -31,6 +33,7 @@ export const SendScreen = () => {
 		fetchInvoiceDetails,
 		reset: resetInvoiceDetails,
 	} = useInvoiceDetails();
+
 	const {
 		loading: loadingSend,
 		error: errorSend,
@@ -40,11 +43,6 @@ export const SendScreen = () => {
 		isSent,
 		reset: resetSendFunds,
 	} = useSendFunds();
-	const inputRef = useRef<HTMLInputElement>(null);
-
-	useEffect(() => {
-		inputRef.current?.focus();
-	}, []);
 
 	const handleInvoiceChange = (text: string) => {
 		const normalizedInvoice = normalizeInvoice(text);
@@ -61,18 +59,18 @@ export const SendScreen = () => {
 
 	// TODO: is it necessary? We can improve this
 	useEffect(() => {
-		if (invoiceDetails && invoice) {
+		if (invoice) {
 			sendFundsStart(invoice);
 		}
-	}, [invoiceDetails, invoice, sendFundsStart]);
+	}, [invoice, sendFundsStart]);
 
 	const onSend = () => {
 		if (!preSignedData || !profile) return;
 		sendFundsComplete({
-			sighashHexToSign: preSignedData.sighashHexToSign,
+			sighashHexToSign: preSignedData.sighash_hex_to_sign,
 			providerName: profile.providerName,
 			tapasAddress: profile.tapasAddress,
-			fundedPsbt: preSignedData.fundedPsbt,
+			fundedPsbt: preSignedData.funded_psbt,
 		});
 	};
 
@@ -102,15 +100,26 @@ export const SendScreen = () => {
 		}, [resetInvoiceDetails, resetSendFunds]),
 	);
 
+	useEffect(() => {
+		if (isSent) {
+			setInvoice("");
+			const timer = setTimeout(() => {
+				setInvoice("");
+				resetInvoiceDetails();
+				resetSendFunds();
+			}, 5000);
+			return () => clearTimeout(timer);
+		}
+	}, [isSent, resetSendFunds, resetInvoiceDetails]);
+
 	return (
 		<>
 			<Box className="flex-1 items-start justify-start bg-background-0 px-4">
-				<Heading size="lg" className="mb-4 text-background-tajfi-deep-blue">
+				<Heading size="lg" className="mb-2 text-background-tajfi-deep-blue">
 					Send
 				</Heading>
 				<Input
 					variant="outline"
-					size="xl"
 					className="w-full"
 					isDisabled={false}
 					isInvalid={false}
@@ -125,25 +134,46 @@ export const SendScreen = () => {
 					<InputSlot>
 						<HStack space="xl" className="pr-4">
 							<TouchableOpacity onPress={onOpenScanner}>
-								<InputIcon as={Scan} size="md" className="stroke-background-tajfi-deep-blue" />
+								<InputIcon
+									as={Scan}
+									size="md"
+									className="stroke-background-tajfi-deep-blue"
+								/>
 							</TouchableOpacity>
 							<TouchableOpacity onPress={fetchCopiedText}>
-								<InputIcon as={ClipboardIcon} size={24} className="stroke-background-tajfi-deep-blue" />
+								<InputIcon
+									as={ClipboardIcon}
+									size="sm"
+									className="stroke-background-tajfi-deep-blue"
+								/>
 							</TouchableOpacity>
 						</HStack>
 					</InputSlot>
 				</Input>
 
 				{isSent ? (
-					<Text>Transaction confirmed.</Text>
+					<Alert action="success" variant="solid" className="mt-3">
+						<AlertIcon as={InfoIcon} />
+						<AlertText>Transaction confirmed.</AlertText>
+					</Alert>
 				) : (
-					<TransactionSummary
-						invoiceDetails={invoiceDetails}
-						isLoading={isLoading}
-						onSend={onSend}
-						error={error}
-					/>
+					(invoiceDetails || error) && (
+						<Animated.View
+							entering={FadeIn}
+							exiting={FadeOut}
+							style={{ flex: 1, width: "100%" }}
+						>
+							<TransactionSummary
+								invoiceDetails={invoiceDetails}
+								onSend={onSend}
+								invoice={invoice}
+								error={error}
+								isLoading={isLoading}
+							/>
+						</Animated.View>
+					)
 				)}
+
 				<ScannerModal
 					showScanner={showScanner}
 					handleClose={onCloseScanner}

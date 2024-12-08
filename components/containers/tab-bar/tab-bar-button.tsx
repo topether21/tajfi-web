@@ -1,7 +1,10 @@
+import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
+import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from "@expo/vector-icons/Entypo";
 import Feather from "@expo/vector-icons/Feather";
 import type { BottomTabNavigationOptions } from "@react-navigation/bottom-tabs";
 import { PlatformPressable } from "@react-navigation/elements";
+import { Wallet } from "lucide-react-native";
 import { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import Animated, {
@@ -10,9 +13,6 @@ import Animated, {
 	useAnimatedStyle,
 	interpolate,
 } from "react-native-reanimated";
-import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
-import AntDesign from '@expo/vector-icons/AntDesign';
-import { Wallet } from "lucide-react-native";
 
 type FeatherIconProps = {
 	color?: string;
@@ -75,8 +75,9 @@ export const TabBarButton = ({
 			: withSpring(1, { duration: 350 });
 	}, [isFocused, scale]);
 
-
-	const activeRouteColor = isFocused ? HEX_COLORS.tajfiDeepBlue : HEX_COLORS.tajfiWhite;
+	const activeRouteColor = isFocused
+		? HEX_COLORS.tajfiDeepBlue
+		: HEX_COLORS.tajfiWhite;
 
 	return (
 		<PlatformPressable
@@ -89,11 +90,9 @@ export const TabBarButton = ({
 			href={href}
 		>
 			<Animated.View style={animatedIconStyle}>
-				{icons[routeName as keyof typeof icons]?.(
-					{
-						color: HEX_COLORS.tajfiWhite,
-					}
-				)}
+				{icons[routeName as keyof typeof icons]?.({
+					color: HEX_COLORS.tajfiWhite,
+				})}
 			</Animated.View>
 			<Animated.Text
 				style={[

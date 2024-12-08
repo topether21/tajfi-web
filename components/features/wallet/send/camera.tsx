@@ -8,9 +8,7 @@ import {
 import { Button, ButtonText } from "@/components/ui/button";
 import { CloseIcon, Icon } from "@/components/ui/icon";
 import { Scanner } from "@yudiel/react-qr-scanner";
-import {
-	useCameraPermissions,
-} from "expo-camera";
+import { useCameraPermissions } from "expo-camera";
 import {
 	KeyboardAvoidingView,
 	Platform,

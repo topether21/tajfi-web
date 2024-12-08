@@ -1,3 +1,4 @@
+import { APP_NAME } from "@/libs/constants";
 import { schnorr } from "@noble/curves/secp256k1";
 import * as secp from "@noble/secp256k1";
 import { getP2trAddress } from "../bitcoin";
@@ -13,11 +14,10 @@ import {
 	base64ToUint8Array,
 	derivePublicKeyFromPrivate,
 	hexToUint8Array,
-	uint8ArrayToBase64,
 	stringToHex,
+	uint8ArrayToBase64,
 } from "./web-authn-utils";
 import { generateChallenge } from "./web-authn-utils";
-import { APP_NAME } from "@/libs/constants";
 
 export interface WebAuthnProvider {
 	createKeys({ walletName }: { walletName: string }): Promise<{

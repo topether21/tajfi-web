@@ -1,22 +1,22 @@
+import { Box } from "@/components/ui/box";
+import clsx from "clsx";
 import { Github } from "lucide-react-native";
 import { MotionDiv } from "./motion";
-import clsx from "clsx";
-import { Box } from "@/components/ui/box";
 
-import { ConnectWalletModal } from "../wallet/connect-wallet";
-import { useHomeLogin } from "./use-home-login";
+import { TajfiLoginButton } from "@/components/containers/tajfi-login-button";
+import { TajfiNameLogo } from "@/components/containers/tajfi-logos/tajfi-name-logo";
+import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
+import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
+import { VStack } from "@/components/ui/vstack";
 import {
 	APP_DESCRIPTION,
 	APP_FOOTER_DESCRIPTION,
-	HOME_HERO_DESCRIPTION,
 	APP_NAME,
+	HOME_HERO_DESCRIPTION,
 } from "@/libs/constants";
-import { TajfiLoginButton } from "@/components/containers/tajfi-login-button";
-import { TajfiNameLogo } from "@/components/containers/tajfi-logos/tajfi-name-logo";
-import { Heading } from "@/components/ui/heading";
-import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
-import { VStack } from "@/components/ui/vstack";
+import { ConnectWalletModal } from "../wallet/connect-wallet";
+import { useHomeLogin } from "./use-home-login";
 
 export const DesktopHomeView = () => {
 	const {

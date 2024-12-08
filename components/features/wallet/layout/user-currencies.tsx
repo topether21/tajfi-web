@@ -6,7 +6,7 @@ import {
 	ActionsheetDragIndicatorWrapper,
 	ActionsheetFlatList,
 } from "@/components/ui/actionsheet";
-import { type AssetBalance, useBalances } from "../hooks/use-balances";
+import { type AssetBalance, useUserBalances } from "../hooks/use-balances";
 import { RenderCurrencyItem } from "./user-currency";
 
 export const UserCurrencies = ({
@@ -16,7 +16,7 @@ export const UserCurrencies = ({
 	isOpen: boolean;
 	handleClose: (assetId?: string) => void;
 }) => {
-	const { userBalances } = useBalances();
+	const userBalances = useUserBalances();
 	return (
 		<Actionsheet isOpen={isOpen} onClose={handleClose}>
 			<ActionsheetBackdrop className="bg-background-tajfi-blue" />

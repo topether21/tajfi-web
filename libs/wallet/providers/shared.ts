@@ -1,5 +1,7 @@
-export type Transaction = any; // TODO: add type for transaction
-export type AddressInfo = any; // TODO: add type for address info
+// biome-ignore lint/suspicious/noExplicitAny: TODO: add type for transaction
+export type Transaction = any;
+// biome-ignore lint/suspicious/noExplicitAny: TODO: add type for address info
+export type AddressInfo = any;
 
 export interface WalletStrategy {
 	getKeys(domain?: string): Promise<{

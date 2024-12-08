@@ -63,18 +63,31 @@ export type HistoryTransaction = {
 	amount: number;
 };
 
+export type Order = {
+	asset_id: string;
+	amount_to_sell: number;
+	amount_sats_to_receive: number;
+	outpoint: {
+		txid: string;
+		output_index: number;
+	};
+	virtual_psbt: string;
+	anchor_psbt: string;
+	passive_asset_psbts: string[];
+};
+
 type SendCompleteResponse = {
 	transfer_timestamp: string;
 	anchor_tx_hash: string;
 	anchor_tx_height_hint: number;
 	anchor_tx_chain_fees: string;
-	inputs: Array<{
+	inputs: {
 		anchor_point: string;
 		asset_id: string;
 		script_key: string;
 		amount: string;
-	}>;
-	outputs: Array<{
+	}[];
+	outputs: {
 		anchor: object;
 		script_key: string;
 		script_key_is_local: boolean;
@@ -86,16 +99,16 @@ type SendCompleteResponse = {
 		lock_time: string;
 		relative_lock_time: string;
 		proof_delivery_status: string;
-	}>;
+	}[];
 	anchor_tx_block_hash: {
 		incididunt_7: boolean;
 	};
 };
 
-const fetchFromApi = async <T>(
+const fetchFromApi = async <Body, Response>(
 	endpoint: string,
 	method: "GET" | "POST",
-	body: T,
+	body: Body,
 	requireAuth = true,
 ) => {
 	const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}${endpoint}`;
@@ -123,7 +136,7 @@ const fetchFromApi = async <T>(
 	}
 
 	const data = await response.json();
-	return data;
+	return data as Response;
 };
 
 export const auth = async ({
@@ -193,8 +206,87 @@ export const listTransfers = async (): Promise<HistoryTransaction[]> => {
 	return fetchFromApi("/wallet/transfers", "GET", {});
 };
 
+export const listOrders = async (): Promise<Order[]> => {
+	return fetchFromApi("/orders", "GET", {});
+};
+
 export const decodeInvoice = async ({
 	address,
-}: { address: string }): Promise<InvoiceInfo> => {
-	return fetchFromApi("/wallet/send/decode", "POST", { address });
+}: { address: string }): Promise<InvoiceInfo> =>
+	fetchFromApi("/wallet/send/decode", "POST", { address });
+
+export type SellAssetStartBody = {
+	asset_id: string;
+	amount_to_sell: number;
 };
+
+// TODO: refactor API types - use same types from backend
+export type SellAssetStartResponse = {
+	funded_psbt: string;
+	change_output_index: number;
+	passive_asset_psbts: string[];
+	sighash_hex_to_sign: string;
+};
+
+export const sellAssetStart = async (body: SellAssetStartBody) =>
+	fetchFromApi<SellAssetStartBody, SellAssetStartResponse>(
+		"/wallet/sell/start",
+		"POST",
+		body,
+	);
+
+export type SellAssetCompleteBody = {
+	psbt: string;
+	sighash_hex: string;
+	signature_hex: string;
+	amount_sats_to_receive: number;
+};
+
+export type SellAssetCompleteResponse = {
+	signed_virtual_psbt: string;
+	modified_anchor_psbt: string;
+};
+
+export const sellAssetComplete = async (body: SellAssetCompleteBody) =>
+	fetchFromApi<SellAssetCompleteBody, SellAssetCompleteResponse>(
+		"/wallet/sell/complete",
+		"POST",
+		body,
+	);
+
+export type BuyAssetStartBody = {
+	psbt: string;
+	anchor_psbt: string;
+};
+
+export type BuyAssetStartResponse = {
+	updated_virtual_psbt: string;
+	updated_anchor_psbt: string;
+};
+
+export const buyAssetStart = async (body: BuyAssetStartBody) =>
+	fetchFromApi<BuyAssetStartBody, BuyAssetStartResponse>(
+		"/wallet/buy/start",
+		"POST",
+		body,
+	);
+
+export type BuyAssetCompleteBody = {
+	psbt: string;
+	anchor_psbt: string;
+	sighash_hex: string;
+	signature_hex: string;
+	amount_sats_to_pay: number;
+};
+
+export type BuyAssetCompleteResponse = {
+	signed_virtual_psbt: string;
+	modified_anchor_psbt: string;
+};
+
+export const buyAssetComplete = async (body: BuyAssetCompleteBody) =>
+	fetchFromApi<BuyAssetCompleteBody, BuyAssetCompleteResponse>(
+		"/wallet/buy/complete",
+		"POST",
+		body,
+	);
