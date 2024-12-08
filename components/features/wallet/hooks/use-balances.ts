@@ -24,6 +24,35 @@ type RefreshSlice = {
 
 type StoreState = BalancesSlice & RefreshSlice;
 
+const haveBalancesChanged = (
+	newBalances: AssetBalance[],
+	currentBalances: AssetBalance[]
+): boolean => {
+	return (
+		newBalances.length !== currentBalances.length ||
+		newBalances.some((newBalance, index) => {
+			const currentBalance = currentBalances[index];
+			return (
+				currentBalance.assetId !== newBalance.assetId ||
+				currentBalance.amount !== newBalance.amount ||
+				currentBalance.name !== newBalance.name
+			);
+		})
+	);
+};
+
+const haveCurrenciesChanged = (
+	newCurrencies: Map<string, string>,
+	currentCurrencies: Map<string, string>
+): boolean => {
+	return (
+		newCurrencies.size !== currentCurrencies.size ||
+		[...newCurrencies].some(
+			([key, value]) => currentCurrencies.get(key) !== value
+		)
+	);
+};
+
 const createBalancesSlice: StateCreator<StoreState, [], [], BalancesSlice> = (
 	set,
 	get,
@@ -63,16 +92,22 @@ const createBalancesSlice: StateCreator<StoreState, [], [], BalancesSlice> = (
 				balances.map((balance) => [balance.assetId, balance.name]),
 			);
 
+			const currentBalances = get().userBalances;
 			const currentCurrencies = get().currencies;
-			if (
-				newCurrencies.size !== currentCurrencies.size ||
-				[...newCurrencies].some(
-					([key, value]) => currentCurrencies.get(key) !== value,
-				)
-			) {
-				set({ userBalances: balances, currencies: newCurrencies, error: null });
-			} else {
-				set({ userBalances: balances, error: null });
+
+			const balancesChanged = haveBalancesChanged(balances, currentBalances);
+			const currenciesChanged = haveCurrenciesChanged(newCurrencies, currentCurrencies);
+
+			if (balancesChanged) {
+				set({ userBalances: balances });
+			}
+
+			if (currenciesChanged) {
+				set({ currencies: newCurrencies });
+			}
+
+			if (!balancesChanged && !currenciesChanged) {
+				set({ error: null });
 			}
 		} catch (err) {
 			set({ error: err as Error });
@@ -85,7 +120,7 @@ const createBalancesSlice: StateCreator<StoreState, [], [], BalancesSlice> = (
 const createRefreshSlice: StateCreator<StoreState, [], [], RefreshSlice> = (
 	set,
 	get,
-	store,
+	_store,
 ) => {
 	let refreshInterval: NodeJS.Timeout | null = null;
 	// Start refreshing by default

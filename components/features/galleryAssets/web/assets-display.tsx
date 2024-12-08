@@ -3,7 +3,7 @@ import AutoSizer from "react-virtualized-auto-sizer";
 import {
 	VariableSizeGrid as Grid,
 	type GridOnScrollProps,
-	type VariableSizeList as List,
+	VariableSizeList as List,
 } from "react-window";
 import InfiniteLoader from "react-window-infinite-loader";
 import { CELL_WIDTH, GAP, LIST_ITEM_HEIGHT, MIN_ROW_HEIGHT } from "./constants";
@@ -23,8 +23,6 @@ interface AssetsDisplayProps {
 
 const calculateColumnCount = (width: number) =>
 	Math.max(1, Math.floor((width + GAP) / (CELL_WIDTH + GAP)));
-const calculateColumnWidth = (width: number, columnCount: number) =>
-	Math.floor((width - GAP * (columnCount - 1)) / columnCount);
 
 export const AssetsDisplay: React.FC<AssetsDisplayProps> = React.memo(
 	({
