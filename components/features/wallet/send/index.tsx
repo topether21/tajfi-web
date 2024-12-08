@@ -6,13 +6,15 @@ import { Text } from "@/components/ui/text";
 import * as Clipboard from "expo-clipboard";
 import { useFocusEffect } from "expo-router";
 import { Clipboard as ClipboardIcon, Scan } from "lucide-react-native";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import { useAuth } from "../connect-wallet/auth-context";
 import { useInvoiceDetails } from "../hooks/use-invoice-details";
 import { useSendFunds } from "../hooks/use-send-funds";
 import { ScannerModal } from "./camera-expo";
 import { TransactionSummary } from "./send-preview";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { TajfiSpinnerFullScreen } from "@/components/containers/tajfi-spinner";
 
 const normalizeInvoice = (invoice: string) => {
 	return invoice.replace("tajfi://", "");
@@ -30,6 +32,7 @@ export const SendScreen = () => {
 		fetchInvoiceDetails,
 		reset: resetInvoiceDetails,
 	} = useInvoiceDetails();
+
 	const {
 		loading: loadingSend,
 		error: errorSend,
@@ -39,11 +42,6 @@ export const SendScreen = () => {
 		isSent,
 		reset: resetSendFunds,
 	} = useSendFunds();
-	const inputRef = useRef<HTMLInputElement>(null);
-
-	useEffect(() => {
-		inputRef.current?.focus();
-	}, []);
 
 	const handleInvoiceChange = (text: string) => {
 		const normalizedInvoice = normalizeInvoice(text);
@@ -60,10 +58,10 @@ export const SendScreen = () => {
 
 	// TODO: is it necessary? We can improve this
 	useEffect(() => {
-		if (invoiceDetails && invoice) {
+		if (invoice) {
 			sendFundsStart(invoice);
 		}
-	}, [invoiceDetails, invoice, sendFundsStart]);
+	}, [invoice, sendFundsStart]);
 
 	const onSend = () => {
 		if (!preSignedData || !profile) return;
@@ -119,6 +117,7 @@ export const SendScreen = () => {
 						onChangeText={handleInvoiceChange}
 						className="text-background-tajfi-deep-blue"
 						value={invoice}
+						autoFocus
 					/>
 					<InputSlot>
 						<HStack space="xl" className="pr-4">
@@ -143,13 +142,20 @@ export const SendScreen = () => {
 				{isSent ? (
 					<Text>Transaction confirmed.</Text>
 				) : (
-					<TransactionSummary
-						invoiceDetails={invoiceDetails}
-						isLoading={isLoading}
-						onSend={onSend}
-						error={error}
-					/>
+					(invoiceDetails || error) && <Animated.View
+						entering={FadeIn}
+						exiting={FadeOut}
+						style={{ flex: 1, width: "100%" }}
+					>
+						<TransactionSummary
+							invoiceDetails={invoiceDetails}
+							onSend={onSend}
+							invoice={invoice}
+							error={error}
+						/>
+					</Animated.View>
 				)}
+
 				<ScannerModal
 					showScanner={showScanner}
 					handleClose={onCloseScanner}

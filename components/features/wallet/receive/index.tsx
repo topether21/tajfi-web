@@ -1,4 +1,3 @@
-import { LoadingIcon } from "@/components/icons/loading-icon";
 import { Box } from "@/components/ui/box";
 import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import { Heading } from "@/components/ui/heading";
@@ -12,7 +11,7 @@ import { useStore } from "@nanostores/react";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
 import * as Sharing from "expo-sharing";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { TouchableOpacity } from "react-native";
 import type { View } from "react-native";
 import QRCode from "react-qr-code";
@@ -25,16 +24,15 @@ import { useCreateInvoice } from "../hooks/use-create-invoice";
 import { useUserReceiveCurrency } from "../layout/use-user-receive-currency";
 import { UserCurrencies } from "../layout/user-currencies";
 import { SimpleCurrencySelector } from "../simple-currency-selector";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { TajfiSpinnerFullScreen } from "@/components/containers/tajfi-spinner";
 
 export const ReceiveScreen = () => {
 	const { isOpen, handleClose, handleOpen } = useUserReceiveCurrency();
 	const { value: sharingAvailable } = useAsync(Sharing.isAvailableAsync);
 	const [assetAmount, setAssetAmount] = useState<string>("");
 	const receiveAssetId = useStore($receiveAssetId);
-	const { loading, invoice, createNewInvoice } = useCreateInvoice(
-		assetAmount,
-		receiveAssetId,
-	);
+	const { loading, invoice, createNewInvoice } = useCreateInvoice();
 	const qrCodeRef = useRef<View>(null);
 	const qrCode = invoice?.encoded && assetAmount ? `${invoice.encoded}` : ""; // TODO: add tajfi:// prefix ???
 	const copyInvoice = async () => {
@@ -43,8 +41,13 @@ export const ReceiveScreen = () => {
 	const shareInvoice = async () => {
 		await Sharing.shareAsync(qrCode);
 	};
+
+	useEffect(() => {
+		createNewInvoice({ amount: Number(assetAmount), assetId: receiveAssetId });
+	}, [assetAmount, receiveAssetId, createNewInvoice]);
 	useFocusEffect(
 		React.useCallback(() => {
+			// reset state on unmount
 			return () => {
 				setAssetAmount("");
 				resetReceiveAssetId();
@@ -85,9 +88,10 @@ export const ReceiveScreen = () => {
 					<SimpleCurrencySelector handleOpen={handleOpen} />
 				</HStack>
 
-				<Box ref={qrCodeRef} className="mx-auto pb-24">
-					{qrCode && (
-						<>
+
+				{!loading && qrCode && (
+					<Box ref={qrCodeRef} className="mx-auto pb-24">
+						<Animated.View entering={FadeIn} exiting={FadeOut}>
 							<Box className="bg-white rounded-lg p-2">
 								<QRCode
 									size={140}
@@ -128,10 +132,9 @@ export const ReceiveScreen = () => {
 									</TouchableOpacity>
 								)}
 							</VStack>
-						</>
-					)}
-					{!qrCode && loading && <LoadingIcon />}
-				</Box>
+						</Animated.View>
+					</Box>)}
+
 			</Box>
 			<UserCurrencies
 				isOpen={isOpen}

@@ -12,6 +12,7 @@ import {
 	FormControlLabel,
 	FormControlLabelText,
 } from "@/components/ui/form-control";
+import { Alert, AlertIcon, AlertText } from "@/components/ui/alert";
 import { HStack } from "@/components/ui/hstack";
 import { CloseIcon, Icon } from "@/components/ui/icon";
 import { Input, InputField, InputIcon, InputSlot } from "@/components/ui/input";
@@ -25,7 +26,7 @@ import type {
 	SellAssetStartResponse,
 } from "@/libs/wallet/api";
 import { getProviderStrategy } from "@/libs/wallet/providers";
-import { Hash } from "lucide-react-native";
+import { InfoIcon, Hash } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { KeyboardAvoidingView, Platform } from "react-native";
 import { useAuth } from "../../wallet/connect-wallet/auth-context";
@@ -44,28 +45,44 @@ export const useSellAction = () => {
 	};
 };
 
-const getActionLabel = (
-	sellStartData: SellAssetStartResponse | null | undefined,
-	sellCompleteData: SellAssetCompleteResponse | null | undefined,
-) => {
+const getActionLabel = ({
+	sellStartData,
+	sellCompleteData,
+	errorMessage,
+	isLoading,
+}: {
+	sellStartData: SellAssetStartResponse | null | undefined;
+	sellCompleteData: SellAssetCompleteResponse | null | undefined;
+	errorMessage: string | undefined;
+	isLoading: boolean;
+}) => {
+	if (errorMessage) return "Close";
+	if (isLoading) return "Processing...";
 	if (!sellStartData && !sellCompleteData) return "Confirm";
-	if (sellCompleteData) return "Sell";
+	if (sellCompleteData) return "Done";
+	if (sellStartData) return "Sell";
 	return "";
-	// // TODO: remove this
-	// return "Sell";
 };
 
-const getActionOnPress = (
-	sellStartData: SellAssetStartResponse | null | undefined,
-	sellCompleteData: SellAssetCompleteResponse | null | undefined,
-	handleSellStart: () => void,
-	handleSellComplete: () => void,
-) => {
+const getActionOnPress = ({
+	sellStartData,
+	sellCompleteData,
+	handleSellStart,
+	handleSellComplete,
+	errorMessage,
+	handleClose,
+}: {
+	sellStartData: SellAssetStartResponse | null | undefined;
+	sellCompleteData: SellAssetCompleteResponse | null | undefined;
+	handleSellStart: () => void;
+	handleSellComplete: () => void;
+	errorMessage: string | undefined;
+	handleClose: () => void;
+}) => {
+	if (errorMessage) return handleClose;
 	if (!sellStartData && !sellCompleteData) return handleSellStart;
 	if (sellStartData) return handleSellComplete;
-	return () => { };
-	// TODO: remove this
-	// return handleSellComplete;
+	return () => {};
 };
 
 export const SellAction = ({
@@ -77,6 +94,7 @@ export const SellAction = ({
 	sellComplete,
 	sellStartData,
 	sellCompleteData,
+	errorMessage,
 }: {
 	isOpen: boolean;
 	handleClose: () => void;
@@ -90,6 +108,7 @@ export const SellAction = ({
 	) => Promise<SellAssetCompleteResponse | null>;
 	sellStartData: SellAssetStartResponse | null | undefined;
 	sellCompleteData: SellAssetCompleteResponse | null | undefined;
+	errorMessage: string | undefined;
 }) => {
 	const { startRefreshing, stopRefreshing } = useBalanceRefresh();
 	const { profile } = useAuth();
@@ -131,13 +150,25 @@ export const SellAction = ({
 		}
 	};
 
-	const actionLabel = getActionLabel(sellStartData, sellCompleteData);
-	const actionOnPress = getActionOnPress(
+	const handleAmountChange = (text: string) => {
+		const numericValue = text.replace(/[^0-9]/g, ""); // Remove non-numeric characters
+		setAmount(numericValue);
+	};
+
+	const actionLabel = getActionLabel({
+		sellStartData,
+		sellCompleteData,
+		errorMessage,
+		isLoading,
+	});
+	const actionOnPress = getActionOnPress({
 		sellStartData,
 		sellCompleteData,
 		handleSellStart,
 		handleSellComplete,
-	);
+		errorMessage,
+		handleClose,
+	});
 
 	useEffect(() => {
 		console.log("isOpen", isOpen);
@@ -179,7 +210,8 @@ export const SellAction = ({
 							<FormControl className="mt-[36px]">
 								<FormControlLabel>
 									<FormControlLabelText>
-										Confirm the amount you want to sell
+										Confirm the amount you want to sell, you have {asset.units}{" "}
+										{asset.name}
 									</FormControlLabelText>
 								</FormControlLabel>
 								<Input className="w-full">
@@ -188,9 +220,18 @@ export const SellAction = ({
 									</InputSlot>
 									<InputField
 										value={amount?.toString()}
-										onChangeText={setAmount}
+										onChangeText={handleAmountChange}
+										keyboardType="numeric"
+										autoFocus
+										type="text"
 									/>
 								</Input>
+								{errorMessage ? (
+									<Alert action="error" variant="solid" className="mt-3">
+										<AlertIcon as={InfoIcon} />
+										<AlertText>{errorMessage}</AlertText>
+									</Alert>
+								) : null}
 								<Button
 									onPress={actionOnPress}
 									className="mt-3"

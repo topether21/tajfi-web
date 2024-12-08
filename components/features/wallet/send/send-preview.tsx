@@ -6,14 +6,14 @@ import { useCurrencies } from "../hooks/use-balances";
 
 export const TransactionSummary = ({
 	invoiceDetails,
+	invoice,
 	error,
 	onSend,
-	isLoading,
 }: {
 	invoiceDetails: { amount: number; assetId: string } | null;
+	invoice: string | null;
 	error: string;
 	onSend: () => void;
-	isLoading: boolean;
 }) => {
 	const currencies = useCurrencies();
 
@@ -23,12 +23,12 @@ export const TransactionSummary = ({
 		? ""
 		: error;
 
-	if (isLoading) return <Text>Loading...</Text>;
-	if (errorMessage) return <Text className="text-red-500">{error}</Text>;
+	if (errorMessage && invoice)
+		return <Text className="text-error-500">{error}</Text>;
 	if (!invoiceDetails) return null;
 
 	return (
-		<Box className="pt-4 w-full text-background-tajfi-deep-blue">
+		<Box className="pt-4 w-full text-background-tajfi-deep-blue flex-1">
 			<Heading size="md">Transaction Summary</Heading>
 			<Box>
 				<Box className="flex justify-between bg-secondary rounded-lg">

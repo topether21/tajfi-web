@@ -2,10 +2,7 @@ import { receive } from "@/libs/wallet/api";
 import { useState } from "react";
 import { useAsyncFn } from "react-use";
 
-export const useCreateInvoice = (
-	amount: string,
-	assetId: string | undefined,
-) => {
+export const useCreateInvoice = () => {
 	const [errorMessage, setErrorMessage] = useState("");
 	const [{ loading, error, value }, createNewInvoice] = useAsyncFn(
 		async ({ amount, assetId }: { amount: number; assetId: string }) => {
@@ -20,7 +17,6 @@ export const useCreateInvoice = (
 				return null;
 			}
 		},
-		[amount, assetId],
 	);
 	return {
 		loading,

@@ -12,18 +12,18 @@ import { useState } from "react";
 import { useAsyncFn } from "react-use";
 
 export const useAssetActions = () => {
-	const [error, setError] = useState<string | null>(null);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
 	const [{ loading: loadingSellStart, value: sellStartData }, sellStart] =
 		useAsyncFn(async (body: SellAssetStartBody) => {
-			setError(null);
+			setErrorMessage(null);
 			try {
 				const res = await sellAssetStart(body);
 				debugger;
 				return res;
 			} catch (error) {
 				const message = (error as Error).message || "Unknown error";
-				setError(message);
+				setErrorMessage(message);
 				return null;
 			}
 		}, []);
@@ -32,40 +32,40 @@ export const useAssetActions = () => {
 		{ loading: loadingSellComplete, value: sellCompleteData },
 		sellComplete,
 	] = useAsyncFn(async (body: SellAssetCompleteBody) => {
-		setError(null);
+		setErrorMessage(null);
 		try {
 			const res = await sellAssetComplete(body);
 			debugger;
 			return res;
 		} catch (error) {
 			const message = (error as Error).message || "Unknown error";
-			setError(message);
+			setErrorMessage(message);
 			return null;
 		}
 	}, []);
 
 	const [{ loading: loadingBuyStart, value: buyStartData }, buyStart] =
 		useAsyncFn(async (body: BuyAssetStartBody) => {
-			setError(null);
+			setErrorMessage(null);
 			try {
 				const res = await buyAssetStart(body);
 				return res;
 			} catch (error) {
 				const message = (error as Error).message || "Unknown error";
-				setError(message);
+				setErrorMessage(message);
 				return null;
 			}
 		}, []);
 
 	const [{ loading: loadingBuyComplete, value: buyCompleteData }, buyComplete] =
 		useAsyncFn(async (body: BuyAssetCompleteBody) => {
-			setError(null);
+			setErrorMessage(null);
 			try {
 				const res = await buyAssetComplete(body);
 				return res;
 			} catch (error) {
 				const message = (error as Error).message || "Unknown error";
-				setError(message);
+				setErrorMessage(message);
 				return null;
 			}
 		}, []);
@@ -87,6 +87,6 @@ export const useAssetActions = () => {
 		buyComplete,
 		buyCompleteData,
 		isLoading,
-		error,
+		errorMessage,
 	};
 };

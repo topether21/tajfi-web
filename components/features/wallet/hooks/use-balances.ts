@@ -26,7 +26,7 @@ type StoreState = BalancesSlice & RefreshSlice;
 
 const haveBalancesChanged = (
 	newBalances: AssetBalance[],
-	currentBalances: AssetBalance[]
+	currentBalances: AssetBalance[],
 ): boolean => {
 	return (
 		newBalances.length !== currentBalances.length ||
@@ -43,12 +43,12 @@ const haveBalancesChanged = (
 
 const haveCurrenciesChanged = (
 	newCurrencies: Map<string, string>,
-	currentCurrencies: Map<string, string>
+	currentCurrencies: Map<string, string>,
 ): boolean => {
 	return (
 		newCurrencies.size !== currentCurrencies.size ||
 		[...newCurrencies].some(
-			([key, value]) => currentCurrencies.get(key) !== value
+			([key, value]) => currentCurrencies.get(key) !== value,
 		)
 	);
 };
@@ -96,7 +96,10 @@ const createBalancesSlice: StateCreator<StoreState, [], [], BalancesSlice> = (
 			const currentCurrencies = get().currencies;
 
 			const balancesChanged = haveBalancesChanged(balances, currentBalances);
-			const currenciesChanged = haveCurrenciesChanged(newCurrencies, currentCurrencies);
+			const currenciesChanged = haveCurrenciesChanged(
+				newCurrencies,
+				currentCurrencies,
+			);
 
 			if (balancesChanged) {
 				set({ userBalances: balances });

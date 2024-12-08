@@ -8,7 +8,7 @@ export const TajfiSpinner = () => {
 
 export const TajfiSpinnerFullScreen = () => {
 	return (
-		<Box className="flex-1 justify-center items-center bg-background-tajfi-white">
+		<Box className="flex-1 justify-center items-center bg-background-tajfi-white w-full h-full">
 			<TajfiSpinner />
 		</Box>
 	);

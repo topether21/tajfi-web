@@ -36,6 +36,7 @@ export const GridAssetItem = React.memo(
 			buyComplete,
 			buyStartData,
 			buyCompleteData,
+			errorMessage,
 		} = useAssetActions();
 		const {
 			showSell,
@@ -72,6 +73,7 @@ export const GridAssetItem = React.memo(
 					sellComplete={sellComplete}
 					sellStartData={sellStartData}
 					sellCompleteData={sellCompleteData}
+					errorMessage={errorMessage}
 				/>
 				<BuyAction
 					isOpen={showBuy}
