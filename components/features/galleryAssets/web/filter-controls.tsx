@@ -33,15 +33,10 @@ export const FilterControls: FC<FilterControlsProps> = ({
 	const searchInputStyle = useAnimatedStyle(() => {
 		const isHidden = y.value > 50;
 		return {
-			// transform: [
-			// 	{
-			// 		translateY: withTiming(isHidden ? -100 : 0, { duration: 300 }),
-			// 	},
-			// ],
 			opacity: withTiming(isHidden ? 0 : 1, { duration: 500 }),
 			height: withTiming(isHidden ? 0 : 50, { duration: 500 }),
 			width: "100%",
-			paddingBottom: -16,
+			paddingBottom: -16, // TODO: fix me
 		};
 	});
 	if (totalItems === 0) return null;

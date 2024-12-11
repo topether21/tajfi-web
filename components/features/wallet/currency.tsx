@@ -10,11 +10,12 @@ import { useStore } from "@nanostores/react";
 import { TouchableOpacity, View } from "react-native";
 import { $assetId } from "../../../store/asset-id-store";
 import { useCurrencies } from "./hooks/use-balances";
+import { DEFAULT_ASSET_ID, DEFAULT_ASSET_NAME } from "@/libs/constants";
 
 export const CurrencySelector = ({ onPress }: { onPress?: () => void }) => {
 	const currencies = useCurrencies();
-	const assetId = useStore($assetId);
-	const currency = currencies.get(assetId);
+	const assetId = useStore($assetId) || DEFAULT_ASSET_ID;
+	const currency = currencies.get(assetId) || DEFAULT_ASSET_NAME;
 	return (
 		<View>
 			<TouchableOpacity onPress={() => onPress?.()}>
@@ -22,7 +23,7 @@ export const CurrencySelector = ({ onPress }: { onPress?: () => void }) => {
 					<HStack space="md">
 						<Avatar className="bg-background-0">
 							<CurrencyLogoIcon
-								assetId={assetId || process.env.EXPO_PUBLIC_DEFAULT_ASSET_ID}
+								assetId={assetId}
 								height={30}
 								width={30}
 							/>
@@ -30,7 +31,7 @@ export const CurrencySelector = ({ onPress }: { onPress?: () => void }) => {
 						<Box className="align-center justify-center">
 							<Box className="flex-row items-center justify-center space-x-2">
 								<Heading size="sm" className="text-background-tajfi-deep-blue">
-									{currency || process.env.EXPO_PUBLIC_DEFAULT_ASSET_NAME}
+									{currency}
 								</Heading>
 								<Icon
 									as={ChevronDownIcon}
