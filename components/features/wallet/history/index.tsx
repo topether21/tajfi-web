@@ -1,18 +1,19 @@
 import { Box } from "@/components/ui/box";
+import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
+import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
-import { Spinner } from "@/components/ui/spinner"
 import type { HistoryTransaction } from "@/libs/wallet/api";
 import clsx from "clsx";
 import { ArrowUpRight } from "lucide-react-native";
 import { ArrowDownLeft } from "lucide-react-native";
 import React from "react";
 import { ScrollView, TouchableOpacity } from "react-native";
-import { useBalances } from "../hooks/use-balances";
-import { useHistory } from "../hooks/use-history";
-import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
+import { useCurrencies } from "../hooks/use-balances";
+import { useHistory } from "../hooks/use-history";
+import { TajfiSpinner } from "@/components/containers/tajfi-spinner";
 
 const TransactionItem = ({
 	transaction,
@@ -67,7 +68,7 @@ const EmptyHistory = () => {
 
 export const HistoryScreen = () => {
 	const { transfers, loading } = useHistory();
-	const { currencies } = useBalances();
+	const currencies = useCurrencies();
 
 	return (
 		<>
@@ -83,7 +84,7 @@ export const HistoryScreen = () => {
 					)}
 				>
 					{loading ? (
-						<Spinner size="small" color={HEX_COLORS.tajfiDeepBlue} />
+						<TajfiSpinner />
 					) : (
 						<Animated.View entering={FadeIn} exiting={FadeOut}>
 							{transfers.length === 0 && <EmptyHistory />}

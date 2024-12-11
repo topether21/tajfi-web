@@ -114,10 +114,18 @@ export const QrScanner = ({
 					onPress={handleClose}
 					className="self-end"
 				>
-					<Icon as={CloseIcon} size="xl" className="stroke-background-tajfi-white" />
+					<Icon
+						as={CloseIcon}
+						size="xl"
+						className="stroke-background-tajfi-white"
+					/>
 				</TouchableOpacity>
 				<TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
-					<Icon as={SwitchCamera} size="xl" className="stroke-background-tajfi-white" />
+					<Icon
+						as={SwitchCamera}
+						size="xl"
+						className="stroke-background-tajfi-white"
+					/>
 				</TouchableOpacity>
 			</CameraView>
 		</View>

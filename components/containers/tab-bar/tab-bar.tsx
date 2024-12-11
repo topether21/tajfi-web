@@ -1,6 +1,6 @@
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { useLinkBuilder } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { type LayoutChangeEvent, Platform, StyleSheet } from "react-native";
 import Animated, {
 	useAnimatedStyle,
@@ -8,13 +8,26 @@ import Animated, {
 	withSpring,
 } from "react-native-reanimated";
 
-import { TabBarButton } from "./tab-bar-button";
 import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import { useSizes } from "@/hooks/useSizes";
 import type { Href } from "expo-router";
 import { router } from "expo-router";
+import { TabBarButton } from "./tab-bar-button";
 
 const TAB_BAR_HORIZONTAL_PADDING = 12;
+
+const calculateTabPositionX = ({
+	index,
+	buttonWidth,
+	circleSize,
+}: { index: number; buttonWidth: number; circleSize: number }) => {
+	return (
+		buttonWidth * index +
+		buttonWidth / 2 -
+		circleSize / 2 -
+		TAB_BAR_HORIZONTAL_PADDING
+	);
+};
 
 export const BottomTabBar = ({
 	state,
@@ -39,19 +52,6 @@ export const BottomTabBar = ({
 		});
 	};
 
-	const calculateTabPositionX = (index: number) => {
-		return buttonWidth * index + buttonWidth / 2 - circleSize / 2 - TAB_BAR_HORIZONTAL_PADDING;
-	};
-
-	const updateTabPositionX = () => {
-		tabPositionX.value = withSpring(
-			calculateTabPositionX(state.index),
-			{
-				duration: 1000,
-			},
-		);
-	};
-
 	const tabPositionX = useSharedValue(0);
 	const animatedBackgroundStyle = useAnimatedStyle(() => {
 		return {
@@ -61,10 +61,19 @@ export const BottomTabBar = ({
 
 	const circleSize = Math.min(dimensions.height - 15, buttonWidth - 25);
 
+	const updateTabPositionX = useCallback(() => {
+		tabPositionX.value = withSpring(
+			calculateTabPositionX({ index: state.index, buttonWidth, circleSize }),
+			{
+				duration: 1000,
+			},
+		);
+	}, [state.index, buttonWidth, circleSize, tabPositionX]);
+
 	// biome-ignore lint/correctness/useExhaustiveDependencies: only depends on state.index and dimensions
 	useEffect(() => {
 		updateTabPositionX();
-	}, [state.index, dimensions]);
+	}, [state.index, dimensions, updateTabPositionX]);
 
 	return (
 		<Animated.View
@@ -112,7 +121,7 @@ export const BottomTabBar = ({
 
 					if (!isFocused && !event.defaultPrevented) {
 						console.log({
-							route
+							route,
 						});
 						router.push(`/${route.name}` as Href);
 					}
@@ -126,7 +135,10 @@ export const BottomTabBar = ({
 					});
 				};
 
-				const href = buildHref(route.name, route.params)?.replace("/undefined", "/");
+				const href = buildHref(route.name, route.params)?.replace(
+					"/undefined",
+					"/",
+				);
 
 				return (
 					<TabBarButton

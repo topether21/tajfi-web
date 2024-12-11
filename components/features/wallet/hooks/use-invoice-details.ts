@@ -15,7 +15,8 @@ export const useInvoiceDetails = () => {
 					assetId: res.asset_id,
 					assetType: res.asset_type,
 				};
-			} catch (e) {
+			} catch (error) {
+				console.error(error);
 				setErrorMessage("Invalid invoice");
 				return null;
 			}

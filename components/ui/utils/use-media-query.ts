@@ -10,7 +10,7 @@ type QueryKeys =
 type SubQuery = {
   [queryKey in QueryKeys]?: number | string;
 };
-type Query = Array<SubQuery>;
+type Query = SubQuery[];
 
 export function useMediaQuery(query: SubQuery | Query) {
   const dims = useWindowDimensions();

@@ -1,9 +1,9 @@
 import useAsync from "react-use/lib/useAsync";
 
-import { useState } from "react";
-import { useWalletAuth } from "../wallet/connect-wallet/use-connect-wallet";
 import { getEnabledProviders } from "@/libs/wallet/providers";
 import type { WalletProvider } from "@/libs/wallet/types";
+import { useState } from "react";
+import { useWalletAuth } from "../wallet/connect-wallet/use-connect-wallet";
 
 export const useHomeLogin = () => {
 	const [showModal, setShowModal] = useState(false);

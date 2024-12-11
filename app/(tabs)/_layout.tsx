@@ -1,11 +1,11 @@
 import { BottomTabBar } from "@/components/containers/tab-bar/tab-bar";
 import { DesktopHeader } from "@/components/features/home/desktop-header";
 import { UserBalance } from "@/components/features/wallet/layout/user-balance";
+import { Box } from "@/components/ui/box";
+import { useWindowDimensions } from "@/hooks/use-window-dimensions";
 import { useSizes } from "@/hooks/useSizes";
 import { Tabs } from "expo-router";
 import { StyleSheet, View } from "react-native";
-import { useWindowDimensions } from "@/hooks/use-window-dimensions";
-import { Box } from "@/components/ui/box";
 
 const TabsLayout = () => {
 	const { isSmall } = useSizes();
@@ -33,9 +33,7 @@ const TabsLayout = () => {
 					/>
 					<Tabs.Screen
 						name="marketplace"
-						getId={
-							() => String(Date.now())
-						}
+						getId={() => String(Date.now())}
 						options={{ title: "Trade", headerShown: false }}
 					/>
 					<Tabs.Screen

@@ -1,5 +1,5 @@
-import { Button, ButtonText } from "@/components/ui/button";
 import { Box } from "@/components/ui/box";
+import { Button, ButtonText } from "@/components/ui/button";
 import type { WalletKeys, WalletProvider } from "@/libs/wallet/types";
 
 export const TajfiLoginButton = ({
@@ -36,7 +36,9 @@ export const TajfiLoginButton = ({
 				accessibilityLabel={profile ? "Logout" : loginButtonText}
 				disabled={isLoading}
 			>
-				<ButtonText>{isLoading ? "Please wait..." : (profile ? "Logout" : loginButtonText)}</ButtonText>
+				<ButtonText>
+					{isLoading ? "Please wait..." : profile ? "Logout" : loginButtonText}
+				</ButtonText>
 			</Button>
 		</Box>
 	);
