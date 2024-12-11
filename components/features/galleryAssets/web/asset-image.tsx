@@ -1,4 +1,5 @@
 import { CurrencyLogoIcon } from "@/components/icons/currency-logo";
+import { DEFAULT_ASSET_ID } from "@/libs/constants";
 
 // TODO: uncomment this when we have a real image for the asset
 // import { Image } from "expo-image";
@@ -15,7 +16,7 @@ import { CurrencyLogoIcon } from "@/components/icons/currency-logo";
 export const AssetImage = ({ assetId }: { assetId: string }) => {
 	return (
 		<CurrencyLogoIcon
-			assetId={assetId || process.env.EXPO_PUBLIC_DEFAULT_ASSET_ID}
+			assetId={assetId || DEFAULT_ASSET_ID}
 			className="select-none h-[87%] w-full"
 		/>
 	);

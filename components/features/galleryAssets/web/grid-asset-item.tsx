@@ -118,17 +118,19 @@ export const GridAssetItem = React.memo(
 									: ""}
 							</Text>
 						</Box>
-						<Box className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 w-full">
+						<Box className="absolute bottom-0 left-0 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-300 w-full">
 							<Button
 								className="bg-background-tajfi-deep-blue text-white w-full rounded-t-lg"
 								onPress={isOwner ? handleOpenSell : handleOpenBuy}
 								disabled={isLoading}
+								aria-label={`${actionLabel} ${item.name}`}
+								tabIndex={0}
 							>
 								<ButtonText>{actionLabel}</ButtonText>
 							</Button>
 						</Box>
-					</Card>
-				</Box>
+					</Card >
+				</Box >
 			</>
 		);
 	},

@@ -1,3 +1,4 @@
+import { PUBLIC_API_URL } from "../constants";
 import { getAuthToken } from "./db";
 
 type AuthBody = {
@@ -111,7 +112,7 @@ const fetchFromApi = async <Body, Response>(
 	body: Body,
 	requireAuth = true,
 ) => {
-	const apiUrl = `${process.env.EXPO_PUBLIC_API_URL}${endpoint}`;
+	const apiUrl = `${PUBLIC_API_URL}${endpoint}`;
 	const headers: HeadersInit = {
 		"Content-Type": "application/json",
 		Accept: "application/json",

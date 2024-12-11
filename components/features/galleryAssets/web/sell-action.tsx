@@ -149,6 +149,8 @@ export const SellAction = ({
 	};
 
 	const handleAmountChange = (text: string) => {
+		// Allow only positive numbers
+		if (text.includes("-")) return;
 		const numericValue = text.replace(/[^0-9]/g, ""); // Remove non-numeric characters
 		setAmount(numericValue);
 	};
@@ -221,6 +223,7 @@ export const SellAction = ({
 										onChangeText={handleAmountChange}
 										keyboardType="numeric"
 										type="text"
+										maxLength={10}
 									/>
 								</Input>
 								{errorMessage ? (

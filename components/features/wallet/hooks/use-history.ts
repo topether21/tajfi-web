@@ -7,15 +7,13 @@ export const useHistory = () => {
 			return data;
 		});
 
-	const { data: transfers = [], error } = useSWR("wallet-transfers", fetcher, {
+	const { data: transfers = [], error, isLoading } = useSWR("wallet-transfers", fetcher, {
 		refreshInterval: 5000,
 	});
 
-	const loading = !error && transfers?.length === 0;
-
 	return {
 		transfers: transfers || [],
-		loading,
+		loading: isLoading,
 		error,
 	};
 };

@@ -126,8 +126,12 @@ const createRefreshSlice: StateCreator<StoreState, [], [], RefreshSlice> = (
 	_store,
 ) => {
 	let refreshInterval: NodeJS.Timeout | null = null;
+	let initialTimeout: NodeJS.Timeout | null = null;
 	// Start refreshing by default
-	setTimeout(() => get().startRefreshing(), 0);
+	initialTimeout = setTimeout(() => {
+		get().startRefreshing();
+		initialTimeout = null;
+	}, 0);
 	return {
 		isRefreshing: false,
 		startRefreshing: () => {
@@ -143,6 +147,10 @@ const createRefreshSlice: StateCreator<StoreState, [], [], RefreshSlice> = (
 				if (refreshInterval) {
 					clearInterval(refreshInterval);
 					refreshInterval = null;
+				}
+				if (initialTimeout) {
+					clearTimeout(initialTimeout);
+					initialTimeout = null;
 				}
 			}
 		},

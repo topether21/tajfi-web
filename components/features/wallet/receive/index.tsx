@@ -10,15 +10,10 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useStore } from "@nanostores/react";
 import { useFocusEffect } from "@react-navigation/native";
 import * as Clipboard from "expo-clipboard";
-import * as Sharing from "expo-sharing";
 import React, { useEffect, useRef, useState } from "react";
 import { Divider } from "@/components/ui/divider"
-import {
-	TouchableOpacity
-} from "react-native";
 import type { View } from "react-native";
 import QRCode from "react-qr-code";
-import useAsync from "react-use/lib/useAsync";
 import {
 	$receiveAssetId,
 	resetReceiveAssetId,

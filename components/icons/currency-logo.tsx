@@ -1,6 +1,7 @@
 import type { SvgProps } from "react-native-svg";
 import { TetherUSDT } from "./tether";
 import { UnknownLogo } from "./unknown";
+import { DEFAULT_ASSET_ID } from "@/libs/constants";
 
 export const CurrencyLogoIcon = ({
 	assetId,
@@ -15,7 +16,7 @@ export const CurrencyLogoIcon = ({
 			return <TetherUSDT {...props} />;
 	}
 	switch (assetId) {
-		case process.env.EXPO_PUBLIC_DEFAULT_ASSET_ID:
+		case DEFAULT_ASSET_ID:
 			return <TetherUSDT {...props} />;
 		default:
 			return <UnknownLogo name={assetId ?? ""} {...props} />;

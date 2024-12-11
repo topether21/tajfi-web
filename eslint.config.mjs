@@ -51,6 +51,7 @@ export default [
 		],
 	},
 	...compat.extends("expo"),
+	...compat.extends("plugin:react-hooks/recommended"),
 	{
 		plugins: {
 			"react-compiler": reactCompiler,
