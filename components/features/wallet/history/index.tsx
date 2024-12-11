@@ -1,6 +1,8 @@
 import { Box } from "@/components/ui/box";
+import { HEX_COLORS } from "@/components/ui/gluestack-ui-provider/config";
 import { Heading } from "@/components/ui/heading";
 import { HStack } from "@/components/ui/hstack";
+import { Spinner } from "@/components/ui/spinner";
 import { Text } from "@/components/ui/text";
 import type { HistoryTransaction } from "@/libs/wallet/api";
 import clsx from "clsx";
